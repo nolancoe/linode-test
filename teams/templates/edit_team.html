@@ -9,7 +9,7 @@
           <h1>Manage Your Team</h1>
         </div>
         <div class="card-body text-center">
-
+          <p>Team will be eligible in {{ team.eligible_at|timeuntil }}</p>
           {% if request.user == team.owner %}
             <div class="text-center">
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#disbandTeamModal">Disband Team</button>

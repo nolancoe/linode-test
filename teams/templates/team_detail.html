@@ -20,6 +20,18 @@
             </span>
         </div>
         <div class="card-body">
+
+            {% if team.eligible %}
+              <div class= "text-center">
+                <p>Eligibility <i class="fa-solid fa-square-check" style="color: #5cb85c;"></i></p>
+              </div>
+            {% else %}
+              <div class= "text-center">
+                <p>Eligibility <i class="fa-solid fa-square-xmark" style="color: #d9534f;"></i></p>
+                
+              </div>
+            {% endif %}
+
             {% if team.logo %}
               <div class="text-center">
                 <img src="{{ team.logo.url }}" alt="{{ team.name }} Logo" width="300" height="300" class="img-fluid">
@@ -37,6 +49,7 @@
             </div>
               
             <p class="text-center">Est. {{ team.established|date:"F d, Y" }}</p>
+            
             {% if request.user == team.owner %}
                 <div class="text-center">
                     <div class="text-center">
@@ -171,6 +184,8 @@
                           </div>
                       </div>
                   {% endif %}
+                {% else %}
+                  <p class="mt-3 text-center">No pending matches.</p>
                 {% endif %}
               {% endfor %}
             </div>
