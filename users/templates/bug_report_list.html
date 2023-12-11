@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Open Bug Reports -->
+            <div class="card border-5 border-primary mb-4">
+                <div class="card-header border-primary">
+                    <h4 class="card-title text-center">Open Bug Reports</h4>
+                </div>
+                <div class="card-body text-center">
+                    <ul class="list-group">
+                        {% for bug_report in open_bug_reports %}
+                            <li class="list-group-item">
+                                <a href="{% if bug_report.id %}{% url 'bug_report_detail' bug_report_id=bug_report.id %}{% endif %}">{{ bug_report }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Closed Bug Reports -->
+            <div class="card border-5 border-danger">
+                <div class="card-header border-danger">
+                    <h4 class="card-title text-center">Closed Bug Reports</h4>
+                </div>
+                <div class="card-body text-center">
+                    <ul class="list-group">
+                        {% for bug_report in closed_bug_reports %}
+                            <li class="list-group-item">
+                                <a href="{% if bug_report.id %}{% url 'bug_report_detail' bug_report_id=bug_report.id %}{% endif %}">{{ bug_report }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

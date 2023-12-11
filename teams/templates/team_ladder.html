@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+  <div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-8 mx-auto">
+        <div class="card border-5 border-primary mt-5 shadow-lg">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Team Ladder</h1>
+          </div>
+          <div class="card-body text-center">
+            <div class="scrollable-container-team-ladder">
+              <div class="text-center mt-4">
+                <table class="table-bordered border-primary border-5 mx-auto table-striped" style="width=5px">
+                  <thead>
+                    <tr>
+                      <th class="px-2">Rank</th>
+                      <th class="px-2">Team</th>
+                      <th class="px-2">Roster</th>
+                      <th class="px-2">Rating</th>
+                      <th class="px-2">Wins</th>
+                      <th class="px-2">Losses</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for team in active_teams %}
+                      <tr>
+                        <td><h1 class="px-2">{{ forloop.counter }}</h1></td>
+                        <td>
+                          <div class="d-flex flex-column align-items-center">
+
+                            <p><a href="{% url 'team_detail' team_id=team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ team.name }}</h1></a><p>
+                            <img src="{{ team.logo.url }}" alt="{{ team.name }} Logo" width="200" height="200" class="img-fluid mb-2 px-2">
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex flex-column">
+                            {% for player in team.players.all %}
+                              <span class="px-3"><h2><a href="{% url 'other_user_profile' username=player.username %}"class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ player.username }}</a></h2></span>
+                            {% endfor %}
+                          </div>
+                        </td>
+                        <td><h1 class="px-2">{{ team.formatted_rating }}</h1></td>
+                        <td><h1 class="px-2 text-success">{{ team.wins }}</h1></td>
+                        <td><h1 class="px-2 text-danger">{{ team.losses }}</h1></td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</br></br>
+{% endblock %}

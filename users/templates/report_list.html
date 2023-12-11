@@ -1,0 +1,26 @@
+<!-- report_list.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-5 border-primary">
+        <div class="card-header border-primary">
+          <h4 class="card-title text-center">Report List</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            {% for report in reports %}
+              <li class="list-group-item">
+                <a href="{% url 'report_detail' report.id %}">{{ report }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

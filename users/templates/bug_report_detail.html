@@ -1,0 +1,37 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-5 border-primary">
+            <div class="card-header border-primary">
+                <h4 class="card-title text-center">Bug Details</h4>
+            </div>
+            <div class="card-body text-center">
+                <div>
+
+                    <p>{{ bug_report.description }}</p>
+                </div>
+                <div>
+                    <p><strong>Status:</strong> {{ bug_report.status }}</p>
+                </div>
+                <div>
+                    <p><strong>Reported At:</strong> {{ bug_report.reported_at }}</p>
+                </div>
+
+                <!-- Button change status -->
+                <form method="post" action="{% url 'change_bug_status' bug_report.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Mark as Closed</button>
+                </form>
+
+            </div>   
+            
+        </div>
+    </div>
+</div>
+    <!-- Add more details if needed based on your BugReport model -->
+</div>
+{% endblock %}

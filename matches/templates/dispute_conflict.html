@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center mx-auto">
+    <div class="col-md-6 mx-auto">
+      <div class="card border-5 border-primary mt-5 shadow-lg">
+        <div class="card-header border-primary">
+          <h1 class="card-title text-center">Disputed Match</h1>
+        </div>
+        <div class="card-body text-center">
+          <span>You can not create or accept new challenges while your previous match is still disputed. Please go to the <a href="{% url 'dispute_proofs_list' %}">"My Disputes"</a> page and submit dispute proof if you haven't already.</span>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br></br>
+{% endblock %}

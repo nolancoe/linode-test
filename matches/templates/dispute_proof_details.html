@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Dispute Proof Details</h1>
+  <p><strong>Match:</strong> {{ dispute_proof.match }}</p>
+  <p><strong>Owner:</strong> {{ dispute_proof.owner }}</p>
+  <p><strong>Claim:</strong> {{ dispute_proof.claim }}</p>
+
+  {% if dispute_proof.game1_screenshot %}
+    <p><strong>Game 1 Screenshot:</strong></p>
+    <img src="{{ dispute_proof.game1_screenshot.url }}" alt="game 1 Screenshot">
+  {% endif %}
+  {% if dispute_proof.game2_screenshot %}
+    <p><strong>Game 2 Screenshot:</strong></p>
+    <img src="{{ dispute_proof.game2_screenshot.url }}" alt="game 2 Screenshot">
+  {% endif %}
+  {% if dispute_proof.game3_screenshot %}
+    <p><strong>Game 3 Screenshot:</strong></p>
+    <img src="{{ dispute_proof.game3_screenshot.url }}" alt="game 3 Screenshot">
+  {% endif %}
+</br></br>
+  <p><strong>Additional Evidence:</strong> {{ dispute_proof.additional_evidence }}</p>
+
+</br></br>
+{% endblock %}

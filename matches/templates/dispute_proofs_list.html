@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  /* Custom CSS for hover effect */
+  .link-light:hover {
+    color: #FFC107 !important; /* Yellow color */
+  }
+</style>
+
+  <div class="col-md-8 mx-auto">
+  <div class="card border border-2 border-primary rounded shadow-lg mt-5">
+    <div class="card-header border-2 border-primary text-center">
+        <h1>Pending Disputes</h1>
+    </div> 
+      <div class="card-body text-center">
+          <ul>
+            {% for proof in dispute_proofs %}
+              {% if proof.match.match_completed %}
+                No Pending Disputes
+              {% else %}
+                <li>
+                  <a href="{% url 'match_details' match_id=proof.match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">
+                    {{ proof.match }}
+                  </a>
+                  <a href="{% url 'update_dispute_proof' proof.id %}">Submit Proof</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+    
+  </div>
+</div>
+{% endblock %}

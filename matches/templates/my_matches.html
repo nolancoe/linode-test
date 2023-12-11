@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+
+<style>
+  /* Custom CSS for hover effect */
+  .link-light:hover {
+    color: #FFC107 !important; /* Yellow color */
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="text-center mt-3">
+      <a href="{% url 'my_past_match_list' %}" class="btn btn-primary">My Results</a>
+    </div>
+    <div class="col-md-8">
+    </br>
+      <div class="card border-5 border-primary rounded text-center shadow-lg">
+        <div class="card-header border-primary text-center">
+          <h2>My Matches</h2>
+        </div>
+        <div class="card-body text-center">
+          <div class="scrollable-container-challenges">
+            <div class="row">
+              {% for match in matches|dictsort:"date" %}
+                {% if not match.match_completed %}
+                  {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
+                      <div class="col-md-7 mx-auto my-4">
+                          <div class="card border-primary rounded shadow-lg">
+                              <div class="card-header border-primary text-center">
+                                  <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                                      <h3><img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"></h3>
+                                  </a>
+                                  <p class="text-center">
+                                      
+                                      {% if  match.date > now %}
+                                      <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning border border rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
+                                      {% elif match.match_completed %}
+                                      <span class="text-success">Completed</span>
+                                      {% else %}
+                                        {% if match.match_disputed %}
+                                          <button type="button" class="btn border border-warning btn-danger" disabled>DISPUTED</button>
+                                        {% else %}
+                                          <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-light bg-danger border border rounded">Live</span>
+                                        {% endif %}
+                                      {% endif %}
+              
+                                  </p>
+                                  </div>
+                                  <div class="card-body">
+                                  {% if match.search_only %}
+                                    <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
+                                  {% endif %}
+                                  <p class="text-center">
+                                      1: {{ match.game1 }}
+                                      <br>
+                                      2: {{ match.game2 }}
+                                      <br>
+                                      3: {{ match.game3 }}
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br></br>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-5 border-primary">
+            <div class="card-header border-primary">
+                <h4 class="card-title text-center">Suggestion Details</h4>
+            </div>
+            <div class="card-body text-center">
+                <div>
+
+                    <p>{{ suggestion.description }}</p>
+                </div>
+                <div>
+                    <p><strong>Status:</strong> {{ suggestion.status }}</p>
+                </div>
+                <div>
+                    <p><strong>Suggested At:</strong> {{ suggestion.reported_at }}</p>
+                </div>
+
+                <!-- Button change status -->
+                <form method="post" action="{% url 'change_suggestion_status' suggestion.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Mark as Closed</button>
+                </form>
+
+            </div>   
+            
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}
