@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block content %}
+<body>
+    <h1>List of Users with Messages</h1>
+    <ul>
+        {% for user in users_with_messages %}
+            <li><a href="{% url 'message_details' username=user.username %}">{{ user.username }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

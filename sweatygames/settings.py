@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'core',
     'teams',
     'matches',
+    'messaging',
 
     #3rd Party Apps
     'django_countries',
