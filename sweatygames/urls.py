@@ -113,7 +113,6 @@ urlpatterns = [
     path('messages/<str:username>/', message_details, name='message_details'),
     path('messages/<str:username>/send/', send_message, name='send_message'),
 
-    path("__debug__/", include("debug_toolbar.urls")),
 
     path('', include('core.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -8,9 +8,115 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-        <!--Play Dropdown-->
+        
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+          <!--User Profile Dropdown -->
+          {% if user.is_authenticated %}
+              
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user 
+                  {% for match in matches %}
+                    {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
+                      {% if not match.match_completed %}
+                        {% if not match.date > now %}
+                          fa-bounce
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% if unread_messages %}
+                    fa-bounce
+                  {% endif %}">
+                </i> {{ user.username }}
+              </a>
+              <ul class="dropdown-menu">
+                
+                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+
+                <li>
+                  <a class="dropdown-item" href="{% url 'messages' %}" class="btn btn-primary">
+                    Messages 
+                    {% if unread_messages %}
+                        <i class="fa-solid fa-envelope fa-beat-fade" style="color: #ffff00;"></i>
+                        {# Display the envelope icon only if there are unread messages #}
+                    {% endif %}
+                  </a>
+                </li>
+
+                {%if user.current_team %}
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'team_detail' team_id=request.user.current_team.id %}">My Team</a></li>
+
+                  <li>
+                    <a class="dropdown-item" href="{% url 'my_match_list' %}" class="btn btn-primary">
+                      My Matches
+                      {% for match in matches %}
+                        {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
+                          {% if not match.match_completed %}
+                            {% if not match.date > now and match.match_disputed != True %}
+                              <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                            {% endif %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </a>
+                  </li>
+
+                  <li><a class="dropdown-item" href="{% url 'my_past_match_list' %}" class="btn btn-primary">My Results</a></li>
+
+                  <li>
+                    <a class="dropdown-item" href="{% url 'dispute_proofs_list' %}">
+                      My Disputes
+                      {% for proof in dispute_proofs %}
+                        {% if not proof.match.match_completed %}
+                            <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+
+
+                    </a>
+                  </li>
+                {% endif %}
+
+                
+                {% if not user.current_team %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'pending_team_invites' %}">Team Invites</a></li>
+                <li><a class="dropdown-item" href="{% url 'create_team' %}">Create A Team</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'socialaccount_connections' %}">Connected Accounts</a></li>
+                <li><a class="dropdown-item" href="{% url 'customize_profile' %}">Settings</a></li>
+
+                {% if user.is_staff %}
+                <li><hr class="dropdown-divider"></li>
+                  <!-- Link to Admin Center (if user is staff) -->
+                  <li><a class="dropdown-item" href="{% url 'admin_center' %}">Admin Center</a></li>
+                {% endif %}
+
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>  
+                
+              </ul>
+            </li>
+          {% else %}
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user"></i> Login
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/accounts/login">Login</a></li>
+                <li><a class="dropdown-item" href="/accounts/signup">Signup</a></li>
+              </ul>
+            </li>
+
+          {% endif %}
+
+          <!--Play Dropdown-->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-gamepad
@@ -61,99 +167,9 @@
               <li><a class="dropdown-item" href="{% url 'team_ladder' %}">Teams</a></li>
               <li><a class="dropdown-item" href="{% url 'player_ladder' %}">Players</a></li>
             </ul>
-
-        <!--User Profile Dropdown -->
-        {% if user.is_authenticated %}
-          
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-user 
-                {% for match in matches %}
-                  {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
-                    {% if not match.match_completed %}
-                      {% if not match.date > now %}
-                        fa-bounce
-                      {% endif %}
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}">
-              </i> {{ user.username }}
-            </a>
-            <ul class="dropdown-menu">
-              
-              <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-              {%if user.current_team %}
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{% url 'team_detail' team_id=request.user.current_team.id %}">My Team</a></li>
-
-                <li>
-                  <a class="dropdown-item" href="{% url 'my_match_list' %}" class="btn btn-primary">
-                    My Matches
-                    {% for match in matches %}
-                      {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
-                        {% if not match.match_completed %}
-                          {% if not match.date > now and match.match_disputed != True %}
-                            <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
-                          {% endif %}
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
-                  </a>
-                </li>
-
-                <li><a class="dropdown-item" href="{% url 'my_past_match_list' %}" class="btn btn-primary">My Results</a></li>
-
-                <li>
-                  <a class="dropdown-item" href="{% url 'dispute_proofs_list' %}">
-                    My Disputes
-                    {% for proof in dispute_proofs %}
-                      {% if not proof.match.match_completed %}
-                          <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
-                      {% endif %}
-                    {% endfor %}
-
-
-                  </a>
-                </li>
-              {% endif %}
-
-              {% if not user.current_team %}
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'pending_team_invites' %}">Team Invites</a></li>
-              <li><a class="dropdown-item" href="{% url 'create_team' %}">Create A Team</a></li>
-              {% endif %}
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'socialaccount_connections' %}">Connected Accounts</a></li>
-              <li><a class="dropdown-item" href="{% url 'customize_profile' %}">Settings</a></li>
-
-              {% if user.is_staff %}
-              <li><hr class="dropdown-divider"></li>
-                <!-- Link to Admin Center (if user is staff) -->
-                <li><a class="dropdown-item" href="{% url 'admin_center' %}">Admin Center</a></li>
-              {% endif %}
-
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>  
-              
-            </ul>
-          </li>
-        {% else %}
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-user"></i>Login
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/accounts/login">Login</a></li>
-              <li><a class="dropdown-item" href="/accounts/signup">Signup</a></li>
-            </ul>
-          </li>
-
-        {% endif %}
+        
         </ul>
 
-      
-        
       </div>
     </div>
   </nav>

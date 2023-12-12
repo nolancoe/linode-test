@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.battlenet',
     'allauth.socialaccount.providers.discord',
     'allauth.socialaccount.providers.twitch',
-    "debug_toolbar",
     "anymail",
 
 
@@ -71,7 +70,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'users.custom_middleware.BanCheckMiddleware',
     
 ]
@@ -97,6 +95,7 @@ TEMPLATES = [
                 'core.context_processors.matches_context',
                 'core.context_processors.dispute_proofs_context',
                 'core.context_processors.direct_challenge_context',
+                'core.context_processors.message_context',
 
             ],
         },

@@ -5,9 +5,9 @@
 <div class="container">
     <div class="row justify-content-center mx-auto">
         <div class="col-md-6 mx-auto">
-            <div class="card border-5 border-primary mt-5 shadow-lg">
+            <div class="card border-5 border-primary mt-5 custom-shadow">
                 <div class="card-header border-primary">
-                <h1 class="card-title text-center">Support Request For <a class="link-light" href="{% url 'match_details' match.id %}">{{ match }}</a></h1>
+                <h1 class="card-title text-center">Support Request For<a class="link-underline-dark link-light link-offset-1 p-3 mt-3 link-underline-opacity-0 link-underline-opacity-0-hover" href="{% url 'match_details' match.id %}">{{ match }}</a></h1>
                 </div>
                 <div class="card-body text-center">
                     <form method="POST">

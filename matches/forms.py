@@ -51,8 +51,8 @@ class DisputeProofForm(forms.ModelForm):
         model = DisputeProof
         fields = ['game1_screenshot', 'game2_screenshot', 'game3_screenshot', 'claim', 'additional_evidence']
         widgets = {
-            'claim': forms.Textarea(attrs={'rows': 4}),
-            'additional_evidence': forms.Textarea(attrs={'rows': 4}),
+            'claim': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'additional_evidence': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
         }
     
 class MatchSupportForm(forms.ModelForm):

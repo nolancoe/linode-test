@@ -12,7 +12,7 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-4">
-      <div class="card border-5 border-primary shadow-lg">
+      <div class="card border-5 rounded-4 border-primary custom-shadow">
         <div class="card-header border-primary text-center" >
             <h1>{{ team.name }}</h1>
             <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
@@ -53,7 +53,7 @@
             {% if request.user == team.owner %}
                 <div class="text-center">
                     <div class="text-center">
-                      <a href="{% url 'edit_team' team_id=team.id %}" class="btn btn-primary">Manage Team</a>
+                      <a href="{% url 'edit_team' team_id=team.id %}" class="btn btn-primary custom-shadow-small rounded-3">Manage Team</a>
                     </div>
                 </div>
             {% elif request.user.current_team == team %}
@@ -93,13 +93,13 @@
 <div class="container mt-5 ">
   <div class="row justify-content-center my-4">
     <div class="col-md-8 my-2">
-      <div class="card border-primary border-5 border-primary">
+      <div class="card border-primary rounded-4 border-5 custom-shadow border-primary">
         <div class="card-header border-primary text-center"><h2>Roster</h2></div>
-          <div class="card-body text-center shadow-lg">
+          <div class="card-body text-center ">
             <div class="row justify-content-center">
               {% for player in team.players.all %}
                 <div class="col-md-6 my-4">
-                  <div class="card mx-2 border text-center mb-4">
+                  <div class="card mx-2 border custom-shadow-small rounded-4 text-center mb-4">
                     <div class="card-header text-center">
                       <h1><a href="{% url 'other_user_profile' username=player.username %}"class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">{{ player.username }}</a></h1>
                       <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
@@ -134,7 +134,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
       </br>
-        <div class="card border-5 border-primary rounded text-center shadow-lg">
+        <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
           <div class="card-header border-primary text-center">
             <h2>Matches</h2>
           </div>
@@ -144,24 +144,24 @@
                 {% if not match.match_completed %}
                   {% if match.team1 == team or match.team2 == team %}
                       <div class="col-md-7 mx-auto my-4">
-                          <div class="card border-primary rounded shadow-lg">
+                          <div class="card border-primary custom-shadow-small rounded-4">
                               <div class="card-header border-primary text-center">
                                   <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
-                                      <h3><img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"></h3>
+                                    <h3><img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"></h3>
                                   </a>
                                   <p class="text-center">
                                       
-                                      {% if  match.date > now %}
-                                      <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning border border rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
-                                      {% elif match.match_completed %}
-                                      <span class="text-success">Completed</span>
+                                    {% if  match.date > now %}
+                                    <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning border border rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
+                                    {% elif match.match_completed %}
+                                    <span class="text-success">Completed</span>
+                                    {% else %}
+                                      {% if match.match_disputed %}
+                                        <button type="button" class="btn border border-warning btn-danger" disabled>DISPUTED</button>
                                       {% else %}
-                                        {% if match.match_disputed %}
-                                          <button type="button" class="btn border border-warning btn-danger" disabled>DISPUTED</button>
-                                        {% else %}
-                                          <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-light bg-danger border border rounded">Live</span>
-                                        {% endif %}
+                                        <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-light bg-danger border border rounded">Live</span>
                                       {% endif %}
+                                    {% endif %}
               
                                   </p>
                                   </div>
@@ -202,7 +202,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
       </br>
-        <div class="card border-primary border-5 rounded text-center shadow-lg">
+        <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
           <div class="card-header border-primary text-center">
             <h2>Results</h2>
           </div>
@@ -212,7 +212,7 @@
                 {% if match.match_completed %}
                   {% if match.team1 == team or match.team2 == team %}
                       <div class="col-md-7 mx-auto my-4">
-                      <div class="card border-primary rounded shadow-lg">
+                      <div class="card border-primary custom-shadow-small rounded-4">
                           <div class="card-header border-primary text-center">
                               <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                                   <h4>

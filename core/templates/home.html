@@ -17,7 +17,7 @@
                 <h1>Welcome back {{ request.user.username }}!</h1>
             {% else %}
                 <div class="row justify-content-center">
-                    <div class="card border-5 border-primary text-center shadow-lg col-md-8">
+                    <div class="card border-5 border-primary text-center rounded-4 custom-shadow col-md-8">
                         <a href="/accounts/signup" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>Click here to sign up!</h1></a>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
 <div class="container">
     <div class="row justify-content-center mt-5">
       <div class="col-md-8">
-            <div class="card border-5 border-primary text-center shadow-lg">
+            <div class="card border-5 border-primary text-center custom-shadow rounded-5">
                 <div class="card-body text-center">
                     <img src="\media\sweatygameslogo1.png" width="280" height="120" class="d-inline-block align-top" alt="Welcome To Sweaty Games">
                     <hr class="mx-auto border-5 border-primary" style="width:40%">
@@ -59,16 +59,17 @@
 
                     <div class="container">
                         <div class="row justify-content-center mt-4">
-                            <div class="col-md-8">
+                            <div class="col-md-8 pb-5">
                                 <div class="card border-3 border-warning text-center shadow-lg mb-3">
                                     <div class="card-header border-warning"><h1>Suggestions</h1></div>
                                         <div class="card-body text-center">  
                                             
-                                            <p>If you have any ideas for what we should do differently, or what should be added to make Sweaty Games better please <a href='report_bug' class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">click here</a> to submmit your suggestion.</p>
+                                            <p>If you have any ideas for what we should do differently, or what should be added to make Sweaty Games better please <a href='create_suggestion' class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">click here</a> to submmit your suggestion.</p>
                         
                                         </div>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -80,5 +81,5 @@
         </div>
     </div>
 </div>
-</br>
+</br></br></br>
 {% endblock %}

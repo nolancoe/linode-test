@@ -32,7 +32,8 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
 class ReportForm(forms.Form):
-    reason = forms.CharField(widget=forms.Textarea(attrs={'rows': 4}), max_length=1000)
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+
 
 class BugReportForm(forms.ModelForm):
     class Meta:

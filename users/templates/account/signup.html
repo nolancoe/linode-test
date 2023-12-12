@@ -17,12 +17,12 @@
 <div class="container mt-5">
   <div class="row justify-content-center text-center">
     <div class="col-md-4">
-      <div class="card border-5 border-primary shadow-lg">
+      <div class="card border-5 border-primary custom-shadow rounded-4">
         <div class="card-header border-primary text-center">
           <h1>{% trans "Sign Up" %}</h1>
         </div>
 
-        <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">sign in</a>.{% endblocktrans %}</p>
+        <p>{% blocktrans %}Already have an account? <a href="{{ login_url }}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">Login here</a>.{% endblocktrans %}</p>
 
         <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
           {% csrf_token %}

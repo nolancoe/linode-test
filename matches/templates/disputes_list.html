@@ -3,7 +3,7 @@
 {% block content %}
   {% if user.is_staff %}
     <h1>Disputes List</h1>
-    <ul>
+    <ul class="list-unstyled">
       {% for dispute in disputes %}
         <li>
           <a href="{% url 'dispute_details' dispute_id=dispute.id %}">

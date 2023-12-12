@@ -8,154 +8,11 @@
       <!-- Your buttons for posting a challenge, viewing the team, and creating a team -->
       <!-- ... -->
       
-      <!-- Card for displaying active open challenges -->
-      <div class="card border border-5 border-primary shadow-lg">
-        <h1 class="card-header border border-primary text-center">Open Challenges</h1>
-        <div class="card-body shadow-lg">
-          <div class="scrollable-container-challenges">
-            <ul class="list-group-item text-center mt-3">
-              {% if my_challenges %}
-                {% for challenge in my_challenges %}
-                  </br>
-                  <div class="row justify-content-center mb-5">
-                    <li class="col-md-8 rounded">
-                      <div class="card border-2 border shadow-lg">
-                        <div class="card-header border text-center">
-                          <h4>{{ challenge.team.name }}</h4>
-                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-                            <h2>{{ challenge.team.formatted_rating }}</h2>
-                          </span>
-                        </div>
-                        <div class="card-body text-center">
-                          <p class="p-1 bg-warning text-dark border border rounded col-md-8 mx-auto">
-                            <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
-                          {% if challenge.team.logo %}
-                            <div class="text-center">
-                              <img src="{{ challenge.team.logo.url }}" alt="{{ challenge.team.name }} Logo" 
-                                  width="300" height="300" class="img-fluid">
-                            </div>
-                          {% endif %}
-                          <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
-                          {% if challenge.search_only %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
-                          {% endif %}
 
-                          
-                        </div>
-
-                        {% if request.user == challenge.team.owner %}
-                            <div>
-                              <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelChallengeModal">Cancel Challenge</button>
-                            </div>
-                            <!-- Modal for cancel challenge -->
-                            <div class="modal fade" id="cancelChallengeModal" tabindex="-1" aria-labelledby="cancelChallengeModal" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title ms-auto" id="cancelChallengeModal">Cancel Challenge?</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                    Are you sure you want to cancel this challenge?
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                        {% endif %}
-
-                      </div>
-                    </li>
-                  </div>
-
-                {% endfor %}
-              {% else %}
-                <p class="mt-3 text-center">No pending Challenges.</p>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card for displaying active direct challenges where the user's team is the challenging team -->
-      <div class="card border border-5 border-primary shadow-lg mt-3">
-        <h1 class="card-header border border-primary text-center">Challenged</h1>
-        <div class="card-body shadow-lg">
-          <div class="scrollable-container-challenges">
-            <ul class="list-group-item text-center mt-3">
-              <!-- Display details for challenging direct challenges -->
-              {% if my_challenging_direct_challenges%}
-                {% for direct_challenge in my_challenging_direct_challenges %}
-                  <div class="row justify-content-center">
-                    <li class="col-md-8 rounded my-2">
-                      <div class="card border-2 border shadow-lg">
-                        <div class="card-header border text-center">
-                          <h4>{{ direct_challenge.challenged_team.name }}</h4>
-                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-                            <h2>{{ direct_challenge.challenged_team.formatted_rating }}</h2>
-                          </span>
-                        </div>
-                        <div class="card-body text-center">
-                          <p class="p-1 bg-warning text-dark border border rounded col-md-6 mx-auto">
-                            <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
-                          {% if direct_challenge.challenged_team.logo %}
-                            <div class="text-center">
-                              <img src="{{ direct_challenge.challenged_team.logo.url }}" alt="{{ direct_challenge.challenged_team.name }} Logo" 
-                                  width="300" height="300" class="img-fluid">
-                            </div>
-                          {% endif %}
-                          <p>{{ direct_challenge.scheduled_date|timezone:request.user.timezone }}</p>
-                          {% if challenge.search_only %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
-                          {% endif %}
-                          <!-- Additional challenge details here -->
-                          <!-- ... -->
-                        </div>
-
-                        {% if request.user == direct_challenge.challenging_team.owner %}
-                          <div>
-                            <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelDirectChallengeModal">Cancel Challenge</button>
-                          </div>
-                          <!-- Modal for confirming match result submission -->
-                          <div class="modal fade" id="cancelDirectChallengeModal" tabindex="-1" aria-labelledby="cancelDirectChallengeModal" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title ms-auto" id="cancelDirectChallengeModal">Cancel Challenge?</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                Are you sure you want to cancel this challenge?
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a href="{% url 'cancel_direct_challenge' direct_challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        {% endif %}
-
-                      </div>
-                    </li>
-                  </div>
-
-                {% endfor %}
-              {% else %}
-                <p class="mt-3 text-center">No pending Challenges.</p>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-      </div>
 
       <!-- Card for displaying active direct challenges where the user's team is the challenged team -->
-      <div class="card border border-5 border-primary shadow-lg mt-4">
-        <h1 class="card-header border border-primary text-center">Challenged By</h1>
+      <div class="card rounded-4 border-5 border-primary custom-shadow mt-4">
+        <h1 class="card-header border-primary text-center">Challenged By</h1>
         <div class="card-body shadow-lg">
           <div class="scrollable-container-challenges">
             <ul class="list-group-item text-center mt-3">
@@ -184,8 +41,8 @@
 
                   <div class="row justify-content-center">
                     <li class="col-md-8 rounded my-2">
-                      <div class="card border-2 border shadow-lg">
-                        <div class="card-header border text-center">
+                      <div class="card border-4 rounded-4 shadow-lg">
+                        <div class="card-header text-center">
                           <h4>{{ direct_challenge.challenging_team.name }}</h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ direct_challenge.challenging_team.formatted_rating }}</h2>
@@ -200,8 +57,12 @@
                             </div>
                           {% endif %}
                           <p>{{ direct_challenge.scheduled_date|timezone:request.user.timezone }}</p>
+
+
                           {% if challenge.search_only %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
+                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% else %}
+                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                           {% endif %}
                           
                           {% if request.user.current_team and request.user.current_team.owner == request.user %}
@@ -255,6 +116,162 @@
           </div>
         </div>
       </div>
+
+    </br>
+
+      <!-- Card for displaying active open challenges -->
+      <div class="card border border-5 rounded-4 border-primary custom-shadow">
+        <h1 class="card-header border-primary text-center">Open Challenges</h1>
+        <div class="card-body shadow-lg">
+          <div class="scrollable-container-challenges">
+            <ul class="list-group-item text-center mt-3">
+              {% if my_challenges %}
+                {% for challenge in my_challenges %}
+                  </br>
+                  <div class="row justify-content-center mb-5">
+                    <li class="col-md-8 rounded">
+                      <div class="card border-4 rounded-4 shadow-lg">
+                        <div class="card-header text-center">
+                          <h4>{{ challenge.team.name }}</h4>
+                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                            <h2>{{ challenge.team.formatted_rating }}</h2>
+                          </span>
+                        </div>
+                        <div class="card-body text-center">
+                          <p class="p-1 bg-warning text-dark border border rounded col-md-8 mx-auto">
+                            <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
+                          {% if challenge.team.logo %}
+                            <div class="text-center">
+                              <img src="{{ challenge.team.logo.url }}" alt="{{ challenge.team.name }} Logo" 
+                                  width="300" height="300" class="img-fluid">
+                            </div>
+                          {% endif %}
+                          <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
+                          {% if challenge.search_only %}
+                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% else %}
+                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                          {% endif %}
+
+                          
+                        </div>
+
+                        {% if request.user == challenge.team.owner %}
+                            <div>
+                              <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelChallengeModal">Cancel Challenge</button>
+                            </div>
+                            <!-- Modal for cancel challenge -->
+                            <div class="modal fade" id="cancelChallengeModal" tabindex="-1" aria-labelledby="cancelChallengeModal" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title ms-auto" id="cancelChallengeModal">Cancel Challenge?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Are you sure you want to cancel this challenge?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                        {% endif %}
+
+                      </div>
+                    </li>
+                  </div>
+
+                {% endfor %}
+              {% else %}
+                <p class="mt-3 text-center">No pending Challenges.</p>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card for displaying active direct challenges where the user's team is the challenging team -->
+      <div class="card border-5 border-primary rounded-4 custom-shadow mt-3">
+        <h1 class="card-header border-primary text-center">Challenged</h1>
+        <div class="card-body shadow-lg">
+          <div class="scrollable-container-challenges">
+            <ul class="list-group-item text-center mt-3">
+              <!-- Display details for challenging direct challenges -->
+              {% if my_challenging_direct_challenges%}
+                {% for direct_challenge in my_challenging_direct_challenges %}
+                  <div class="row justify-content-center">
+                    <li class="col-md-8 rounded my-2">
+                      <div class="card border-4 rounded-4 shadow-lg">
+                        <div class="card-header text-center">
+                          <h4>{{ direct_challenge.challenged_team.name }}</h4>
+                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                            <h2>{{ direct_challenge.challenged_team.formatted_rating }}</h2>
+                          </span>
+                        </div>
+                        <div class="card-body text-center">
+                          <p class="p-1 bg-warning text-dark border border rounded col-md-6 mx-auto">
+                            <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
+                          {% if direct_challenge.challenged_team.logo %}
+                            <div class="text-center">
+                              <img src="{{ direct_challenge.challenged_team.logo.url }}" alt="{{ direct_challenge.challenged_team.name }} Logo" 
+                                  width="300" height="300" class="img-fluid">
+                            </div>
+                          {% endif %}
+
+                          <p>{{ direct_challenge.scheduled_date|timezone:request.user.timezone }}</p>
+
+                          {% if challenge.search_only %}
+                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% else %}
+                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                          {% endif %}
+
+                          <!-- Additional challenge details here -->
+                          <!-- ... -->
+                        </div>
+
+                        {% if request.user == direct_challenge.challenging_team.owner %}
+                          <div>
+                            <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelDirectChallengeModal">Cancel Challenge</button>
+                          </div>
+                          <!-- Modal for confirming match result submission -->
+                          <div class="modal fade" id="cancelDirectChallengeModal" tabindex="-1" aria-labelledby="cancelDirectChallengeModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title ms-auto" id="cancelDirectChallengeModal">Cancel Challenge?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                Are you sure you want to cancel this challenge?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a href="{% url 'cancel_direct_challenge' direct_challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+
+                      </div>
+                    </li>
+                  </div>
+
+                {% endfor %}
+              {% else %}
+                <p class="mt-3 text-center">No pending Challenges.</p>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      
 
     </div>
   </div>

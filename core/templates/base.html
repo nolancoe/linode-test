@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   {% load static %}
+  {% load tz %}
 
   <head>
     <meta charset="utf-8">
@@ -13,10 +14,15 @@
     <link rel="icon" type="image/png" href="/media/favicon.ico">
   </head>
   <body>
-    {% load tz %}
+    
     {% include 'navbar.html' %}
     
     <style>
+
+      .card .card-body .custom-form {
+        max-width: 100%; /* Adjust this value as needed */
+        margin: 0 auto; /* Center the form horizontally */
+    }
 
       .card-img {
         max-width: 100%;
@@ -48,6 +54,18 @@
         max-height: 400px; /* Set the desired maximum height */
         overflow-y: auto;
         border-radius: 5%;
+      }
+
+      .custom-shadow {
+        box-shadow: 0 0 20px 0 rgba(0, 186, 255, 0.5), 0 0 40px 0 rgba(0, 189, 255, 0.2);
+      }
+
+      .custom-shadow-small {
+        box-shadow: 0 0 5px 0 rgba(0, 186, 255, 0.5), 0 0 5px 0 rgba(0, 189, 255, 0.2);
+      }
+
+      .custom-shadow-danger {
+        box-shadow: 0 0 5px 0 rgba(255, 0, 0, 0.4), 0 0 5px 0 rgba(0, 189, 255, 0.2);
       }
 
   </style>

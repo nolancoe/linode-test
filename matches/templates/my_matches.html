@@ -18,7 +18,7 @@
     </div>
     <div class="col-md-8">
     </br>
-      <div class="card border-5 border-primary rounded text-center shadow-lg">
+      <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
           <h2>My Matches</h2>
         </div>
@@ -29,7 +29,7 @@
                 {% if not match.match_completed %}
                   {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
                       <div class="col-md-7 mx-auto my-4">
-                          <div class="card border-primary rounded shadow-lg">
+                          <div class="card border-primary rounded-4 shadow-lg">
                               <div class="card-header border-primary text-center">
                                   <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                                       <h3><img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"></h3>
