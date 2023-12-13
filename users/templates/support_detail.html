@@ -1,0 +1,46 @@
+
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-5 custom-shadow rounded-4 border-primary">
+            <div class="card-header border-primary">
+                <h4 class="card-title text-center"><a class="link-underline-dark link-light link-offset-1 p-3 mt-3 link-underline-opacity-0 link-underline-opacity-0-hover" href="{% url 'match_details' support.match.id %}">{{support.match}}</h4></a>
+            </div>
+            <div class="card-body text-center">
+
+                <div>
+                    <p>Requester:<a href="{% url 'other_user_profile' username=support.player.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ support.player.username }}</a></p>
+                </div>
+
+                <div>
+                    <p>{{ support.description }}</p>
+                </div>
+                <div>
+                    <p><strong>Status:</strong> {{ support.status }}</p>
+                </div>
+                <div>
+                    <p><strong>submitted at:</strong> {{ support.created_at|timezone:request.user.timezone }}</p>
+                </div>
+
+                <div>
+                    <a href="{% url 'message_details' username=support.player.username %}" class="btn btn-primary custom-shadow-small rounded-3 mb-3">Message</a>
+                </div>
+
+                <!-- Button change status -->
+                <form method="post" action="{% url 'change_support_status' support.id %}" >
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger custom-shadow-danger rounded-3">Mark as Closed</button>
+                </form>
+
+            </div>   
+            
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

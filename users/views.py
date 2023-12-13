@@ -13,6 +13,7 @@ from django.http import HttpResponse, JsonResponse
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth import get_user_model
 from .models import Report, Profile, BugReport, Suggestion
+from matches.models import MatchSupport
 from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from allauth.account.models import EmailAddress
@@ -268,6 +269,25 @@ def suggestion_list(request):
 
     return render(request, 'suggestion_list.html', context)
 
+
+@user_passes_test(is_admin)
+def support_list(request):
+    open_support = MatchSupport.objects.filter(status='open')
+    closed_support = MatchSupport.objects.filter(status='closed')
+
+    context = {
+        'open_support': open_support,
+        'closed_support': closed_support,
+    }
+
+    return render(request, 'support_list.html', context)
+
+
+@user_passes_test(is_admin)
+def support_detail(request, support_id):
+    support = get_object_or_404(MatchSupport, id=support_id)
+    return render(request, 'support_detail.html', {'support': support})
+
 @user_passes_test(is_admin)
 def bug_report_detail(request, bug_report_id):
     bug_report = get_object_or_404(BugReport, id=bug_report_id)
@@ -357,3 +377,11 @@ def change_suggestion_status(request, suggestion_id):
     suggestion.status = 'closed'
     suggestion.save()
     return redirect('suggestion_detail', suggestion_id=suggestion_id)
+
+@user_passes_test(is_admin)
+def change_support_status(request, support_id):
+    support = MatchSupport.objects.get(pk=support_id)
+    # Update the status to 'Closed'
+    support.status = 'closed'
+    support.save()
+    return redirect('support_detail', support_id=support_id)

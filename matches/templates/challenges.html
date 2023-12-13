@@ -12,10 +12,9 @@
       <div class="text-center mt-3">
         
         {% if request.user.current_team %}
-          <a href="{% url 'create_challenge' %}" class="btn btn-primary">Post A Challenge</a>
-          <a href="{% url 'team_detail' team_id=request.user.current_team.id %}" class="btn btn-primary ml-3">My Team</a>
+          <a href="{% url 'create_challenge' %}" class="btn btn-primary custom-shadow-small rounded-3">Post A Challenge</a>
         {% else %}
-          <a href="{% url 'create_team' %}" class="btn btn-primary ml-3">Create A Team</a>
+          <a href="{% url 'create_team' %}" class="btn btn-primary custom-shadow-small rounded-3 ml-3">Create A Team</a>
         {% endif %}
       </div>
       </br>
@@ -23,7 +22,7 @@
         <div class="card-header border-primary text-center">
           <h1>Open Challenges</h1>
         </div>
-        <div class="card-body shadow-lg">
+        <div class="card-body custom-shadow-small">
           <div class="scrollable-container-challenges">
             <ul class="list-group-item text-center mt-3">
               {% if challenges %}
@@ -42,7 +41,7 @@
                                   </div>
                                   <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                      <a href="{% url 'accept_challenge' challenge.pk %}" class="btn btn-primary">Accept</a>
+                                      <a href="{% url 'accept_challenge' challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept</a>
                                   </div>
                               </div>
                           </div>
@@ -50,15 +49,15 @@
 
                         <div class="row justify-content-center">
                           <li class="col-md-8 rounded my-2">
-                            <div class="card border-2 rounded-4 border shadow-lg">
-                              <div class="card-header border text-center">
-                                <h4>{{ challenge.team.name }}</h4>
+                            <div class="card border-2 rounded-4 border custom-shadow-small">
+                              <div class="card-header text-center">
+                                <h4><a href="{% url 'team_detail' team_id=challenge.team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenge.team.name }}</a></h4>
                                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                                     <h2>{{ challenge.team.formatted_rating }}</h2>
                                 </span>
                               </div>
                               <div class="card-body text-center">
-                                <p class="p-1 bg-warning text-dark border border rounded col-md-8 mx-auto"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
+                                <p class="p-1 bg-warning text-dark border custom-shadow-warning rounded col-md-8 mx-auto"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
 
                                 {% if challenge.team.logo %}
                                 <div class="text-center">
@@ -77,13 +76,13 @@
                                         {% if challenge.accepted %}
                                         <span class="badge badge-success">Challenge Accepted!</span>
                                         {% else %}
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ challenge.pk }}">Accept Challenge</button>
+                                        <button type="button" class="btn btn-primary custom-shadow-small rounded-3s" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ challenge.pk }}">Accept Challenge</button>
 
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
                                 {% if request.user == challenge.team.owner %}
-                                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelChallengeModal">Cancel Challenge</button>
+                                  <button type="button" class="btn btn-danger custom-shadow-danger" data-bs-toggle="modal" data-bs-target="#cancelChallengeModal">Cancel Challenge</button>
                                   <!-- Modal for confirming match result submission -->
                                   <div class="modal fade" id="cancelChallengeModal" tabindex="-1" aria-labelledby="cancelChallengeModal" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
@@ -97,7 +96,7 @@
                                           </div>
                                           <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
+                                            <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger custom-shadow-danger">Cancel Challenge</a>
                                           </div>
                                       </div>
                                     </div>

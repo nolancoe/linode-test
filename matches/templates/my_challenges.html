@@ -43,13 +43,13 @@
                     <li class="col-md-8 rounded my-2">
                       <div class="card border-4 rounded-4 shadow-lg">
                         <div class="card-header text-center">
-                          <h4>{{ direct_challenge.challenging_team.name }}</h4>
+                          <h4><a href="{% url 'team_detail' team_id=direct_challenge.challenging_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenging_team.name }}</a></h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ direct_challenge.challenging_team.formatted_rating }}</h2>
                           </span>
                         </div>
                         <div class="card-body text-center">
-                          <p class="p-1 bg-warning text-dark border border rounded col-md-6 mx-auto">
+                          <p class="p-1 bg-warning text-dark border custom-shadow-warning rounded col-md-6 mx-auto">
                             <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
                           {% if direct_challenge.challenging_team.logo %}
                             <div class="text-center">
@@ -70,7 +70,7 @@
                                   {% if direct_challenge.accepted %}
                                   <span class="badge badge-success">Challenge Accepted!</span>
                                   {% else %}
-                                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ direct_challenge.pk }}">Accept Challenge</button>
+                                  <button type="button" class="btn btn-primary custom-shadow-small" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ direct_challenge.pk }}">Accept Challenge</button>
 
                                   {% endif %}
                               {% endif %}
@@ -82,7 +82,7 @@
                           
                           <!-- Button for declining direct challenge -->
                           <div>
-                            <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#declineDirectChallengeModal{{ direct_challenge.pk }}">Decline Challenge</button>
+                            <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#declineDirectChallengeModal{{ direct_challenge.pk }}">Decline Challenge</button>
                           </div>
                           <!-- Modal for confirming decline of direct challenge -->
                           <div class="modal fade" id="declineDirectChallengeModal{{ direct_challenge.pk }}" tabindex="-1" aria-labelledby="declineDirectChallengeModalLabel{{ direct_challenge.pk }}" aria-hidden="true">
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <a href="{% url 'decline_direct_challenge' direct_challenge.pk %}" class="btn btn-danger">Decline Challenge</a>
+                                  <a href="{% url 'decline_direct_challenge' direct_challenge.pk %}" class="btn btn-danger custom-shadow-danger rounded-3">Decline Challenge</a>
                                 </div>
                               </div>
                             </div>
@@ -132,13 +132,13 @@
                     <li class="col-md-8 rounded">
                       <div class="card border-4 rounded-4 shadow-lg">
                         <div class="card-header text-center">
-                          <h4>{{ challenge.team.name }}</h4>
+                          <h4><a href="{% url 'team_detail' team_id=challenge.team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenge.team.name }}</a></h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ challenge.team.formatted_rating }}</h2>
                           </span>
                         </div>
                         <div class="card-body text-center">
-                          <p class="p-1 bg-warning text-dark border border rounded col-md-8 mx-auto">
+                          <p class="p-1 bg-warning text-dark border custom-shadow-warning rounded col-md-8 mx-auto">
                             <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
                           {% if challenge.team.logo %}
                             <div class="text-center">
@@ -158,7 +158,7 @@
 
                         {% if request.user == challenge.team.owner %}
                             <div>
-                              <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelChallengeModal">Cancel Challenge</button>
+                              <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#cancelChallengeModal">Cancel Challenge</button>
                             </div>
                             <!-- Modal for cancel challenge -->
                             <div class="modal fade" id="cancelChallengeModal" tabindex="-1" aria-labelledby="cancelChallengeModal" aria-hidden="true">
@@ -173,7 +173,7 @@
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
+                                    <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger custom-shadow-danger rounded-3">Cancel Challenge</a>
                                   </div>
                                 </div>
                               </div>
@@ -207,13 +207,13 @@
                     <li class="col-md-8 rounded my-2">
                       <div class="card border-4 rounded-4 shadow-lg">
                         <div class="card-header text-center">
-                          <h4>{{ direct_challenge.challenged_team.name }}</h4>
+                          <h4><a href="{% url 'team_detail' team_id=direct_challenge.challenged_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenged_team.name }}</a></h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ direct_challenge.challenged_team.formatted_rating }}</h2>
                           </span>
                         </div>
                         <div class="card-body text-center">
-                          <p class="p-1 bg-warning text-dark border border rounded col-md-6 mx-auto">
+                          <p class="p-1 bg-warning text-dark border custom-shadow-warning rounded col-md-6 mx-auto">
                             <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
                           {% if direct_challenge.challenged_team.logo %}
                             <div class="text-center">
@@ -236,7 +236,7 @@
 
                         {% if request.user == direct_challenge.challenging_team.owner %}
                           <div>
-                            <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelDirectChallengeModal">Cancel Challenge</button>
+                            <button type="button" class="btn btn-danger rounded-3 custom-shadow-danger mb-3" data-bs-toggle="modal" data-bs-target="#cancelDirectChallengeModal">Cancel Challenge</button>
                           </div>
                           <!-- Modal for confirming match result submission -->
                           <div class="modal fade" id="cancelDirectChallengeModal" tabindex="-1" aria-labelledby="cancelDirectChallengeModal" aria-hidden="true">
@@ -251,7 +251,7 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a href="{% url 'cancel_direct_challenge' direct_challenge.id %}" class="btn btn-danger">Cancel Challenge</a>
+                                <a href="{% url 'cancel_direct_challenge' direct_challenge.id %}" class="btn custom-shadow-danger rounded-3 btn-danger">Cancel Challenge</a>
                                 </div>
                               </div>
                             </div>

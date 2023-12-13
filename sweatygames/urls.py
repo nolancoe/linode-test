@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include  # Import the include function
 from django.conf.urls.static import static
 from django.conf import settings
-from users.views import create_suggestion, suggestion_list, change_suggestion_status, suggestion_detail, terms, email_verified_required, privacy_policy, request_verification, resend_verification, login_view, logout_view, player_ladder_view, banned_page, report_user, report_detail, admin_center, unban_user, banned_users_list, report_list, customize_profile_view, profile_view, redirect_after_steam_login, other_profile_view, report_bug, bug_report_list, bug_report_detail, change_bug_status
+from users.views import support_list, change_support_status, support_detail, create_suggestion, suggestion_list, change_suggestion_status, suggestion_detail, terms, email_verified_required, privacy_policy, request_verification, resend_verification, login_view, logout_view, player_ladder_view, banned_page, report_user, report_detail, admin_center, unban_user, banned_users_list, report_list, customize_profile_view, profile_view, redirect_after_steam_login, other_profile_view, report_bug, bug_report_list, bug_report_detail, change_bug_status
 from teams.views import create_team, already_a_player, team_ladder, invitation_sent, invitation_already_sent, transfer_ownership, edit_team, user_is_teammate, send_invitation, pending_team_invites, accept_invitation, team_detail, remove_player_from_team, leave_team, deny_invitation, disband_team
 from matches.views import support_request_success, rules, request_match_support, submit_results_success, dispute_conflict, team_not_eligible, decline_direct_challenge, match_farming, schedule_conflict, accept_challenge, accept_direct_challenge, create_challenge, challenges, match_details, submit_results, dispute_proofs_list, update_dispute_proof, dispute_proof_details, dispute_details, disputes_list, match_list, past_match_list, my_match_list, my_past_match_list, cancel_challenge, cancel_direct_challenge, my_challenges_view, dispute_expired, create_direct_challenge
 from messaging.views import messages, message_details, send_message
@@ -107,11 +107,15 @@ urlpatterns = [
 
     path('request_match_support/<int:match_id>/', request_match_support, name='request_match_support'),
     path('support_request_success/', support_request_success, name='support_request_success'),
+    path('support_detail/<int:support_id>/', support_detail, name='support_detail'),
+    path('support_detail/<int:support_id>/change_status/', change_support_status, name='change_support_status'),
+    path('support_list/', support_list, name='support_list'),
 
 
-    path('messages/', messages, name='messages'),
-    path('messages/<str:username>/', message_details, name='message_details'),
-    path('messages/<str:username>/send/', send_message, name='send_message'),
+
+    path('messages/', email_verified_required(messages), name='messages'),
+    path('messages/<str:username>/', email_verified_required(message_details), name='message_details'),
+    path('messages/<str:username>/send/', email_verified_required(send_message), name='send_message'),
 
 
     path('', include('core.urls')),

@@ -191,6 +191,11 @@ class MatchSupport(models.Model):
     description = models.TextField(blank=True, null=True)
     additional_evidence = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='open')
 
     
     def __str__(self):

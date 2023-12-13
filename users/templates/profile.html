@@ -61,7 +61,7 @@
             <div>
               
               <div class="text-center">
-                <hr class="mx-auto border-5" style="width:80%">
+                <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
                 {% if profile.socialaccount_set.all %}
                     {% for social_account in profile.socialaccount_set.all %}
                         {% if social_account.provider == 'twitch' %}
@@ -115,7 +115,7 @@
                   <button onclick="copyActivisionToClipboard('{{ profile.activision_id }}')" class="btn btn-dark mx-1"><i class="fa-solid fa-person-rifle fa-flip-horizontal"></i> Activision ID</button>
                 {% endif %}
 
-                <hr class="mx-auto border-5" style="width:80%">
+                <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
                 
               </div>
             </div>
