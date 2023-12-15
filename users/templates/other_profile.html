@@ -59,7 +59,7 @@
 
             
             <div class="text-center">
-              <hr class="mx-auto border-5" style="width:80%">
+              <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
               {% if other_user.socialaccount_set.all %}
                 {% for social_account in other_user.socialaccount_set.all %}
                   {% if social_account.provider == 'twitch' %}
@@ -122,7 +122,7 @@
               
 
             </div>
-            <hr class="mx-auto border-5" style="width:80%">
+            <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
 
             <div>
               {% if user.is_authenticated and user.current_team and user.current_team.full_team != True and user.current_team.owner == user and other_user.current_team == null %}
@@ -131,7 +131,7 @@
                   
 
 
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inviteToTeamModal">Invite to {{request.user.current_team}}</button>
+                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#inviteToTeamModal">Invite to {{request.user.current_team}}</button>
 
                     <!-- Modal for confirming team invitaion send -->
                     <div class="modal fade" id="inviteToTeamModal" tabindex="-1" aria-labelledby="inviteToTeamModal" aria-hidden="true">
@@ -158,13 +158,13 @@
                 </form>
               {% endif %}
 
+              
               <div>
-                <a href="{% url 'report_user' reported_user.username %}" class="btn btn-danger custom-shadow-danger rounded-3 mb-3">Report {{other_user.username}}</a>
+                <a href="{% url 'message_details' username=other_user.username %}" class="btn btn-primary custom-shadow-small rounded-3 mb-3">Message</a>
               </div>
               <div>
-                <a href="{% url 'message_details' username=other_user.username %}" class="btn btn-primary custom-shadow-small rounded-3">Message</a>
+                <a href="{% url 'report_user' reported_user.username %}" class="btn btn-danger custom-shadow-danger rounded-3 ">Report {{other_user.username}}</a>
               </div>
-
 
             </div>
           </div>
@@ -203,7 +203,7 @@
                     {% if user.is_authenticated and other_user.current_team == user.current_team and user.current_team.owner == user %}
                       <div class="mt-auto text-center">
 
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#kickFromTeamModal">Kick {{ other_user.username }} From {{request.user.current_team}}</button>
+                        <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#kickFromTeamModal">Kick {{ other_user.username }} From {{request.user.current_team}}</button>
 
                         <!-- Modal for confirming Kicking Player -->
                         <div class="modal fade" id="kickFromTeamModal" tabindex="-1" aria-labelledby="kickFromTeamModal" aria-hidden="true">
@@ -225,7 +225,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#transferOwnershipModal">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</button>
+                        <button type="button" class="btn btn-success custom-shadow-success rounded-3" data-bs-toggle="modal" data-bs-target="#transferOwnershipModal">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</button>
 
                         <!-- Modal for confirming Ownership Transfer -->
                         <div class="modal fade" id="transferOwnershipModal" tabindex="-1" aria-labelledby="transferOwnershipModal" aria-hidden="true">
@@ -377,7 +377,7 @@
                 {% if match.match_completed %}
                   {% if match.team1 == other_user.current_team or match.team2 == other_user.current_team %}
                     <div class="col-md-7 mx-auto my-4">
-                      <div class="card border-primary rounded shadow-lg">
+                      <div class="card border-primary custom-shadow-small rounded-4">
                         <div class="card-header border-primary text-center">
                           <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                               <h4>

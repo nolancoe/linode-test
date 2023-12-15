@@ -5,7 +5,7 @@ from django.utils import timezone
 from .models import TeamInvitation, Team
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from users.models import Profile
+from users.models import Profile, Badge
 from django.contrib import messages
 from pathlib import Path
 from django.core.files import File
@@ -132,7 +132,7 @@ def accept_invitation(request, invitation_id):
     invitation = get_object_or_404(TeamInvitation, id=invitation_id)
 
     # Call team eligibility check
-    reset_team_eligibility(team)
+    reset_team_eligibility(invitation.team)
 
     # Ensure the user can only accept invitations sent to them
     if request.user != invitation.invited_user:
@@ -154,6 +154,11 @@ def accept_invitation(request, invitation_id):
 
         # Save the team
         invitation.team.save()
+
+        #award J up badge
+        badge_id_to_grant = 13
+        badge = Badge.objects.get(id=badge_id_to_grant)
+        request.user.badges.add(badge)
 
         # Update the team's rating with the average rating of the players
         invitation.team.update_team_rating()
