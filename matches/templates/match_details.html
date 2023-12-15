@@ -19,12 +19,12 @@
     {% if match.date > now %}
       <button type="button" class="btn btn-lg btn-warning custom-shadow-warning" disabled><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</button>
     {% elif match.match_completed %}
-      <button type="button" class="btn btn-lg border border-primary btn-success" disabled>FINAL</button>
+      <button type="button" class="btn btn-lg border-primary custom-shadow-small btn-success" disabled>FINAL</button>
     {% else %}
       {% if match.match_disputed %}
-        <button type="button" class="btn btn-lg border border-warning custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+        <button type="button" class="btn btn-lg border-warning custom-shadow-warning btn-danger" disabled>DISPUTED</button>
       {% else %}
-        <button type="button" class="btn btn-lg border border-warning custom-shadow-warning btn-danger" disabled>LIVE</button>
+        <button type="button" class="btn btn-lg border-warning custom-shadow-warning btn-danger" disabled>LIVE</button>
       {% endif %}
     {% endif %}
   </div>

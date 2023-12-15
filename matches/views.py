@@ -1,6 +1,7 @@
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Challenge, Match, MatchResult, DisputeProof, Dispute, DirectChallenge, Team
+from users.models import Badge
 from .forms import ChallengeForm, MatchResultForm, DisputeProofForm, DirectChallengeForm, MatchSupportForm
 from django.utils import timezone
 from .glicko2 import update_ratings, process_match_result
@@ -76,6 +77,14 @@ def create_challenge(request):
                         challenge.scheduled_date = scheduled_date_user_timezone
 
                         challenge.save()
+
+                        badge_id = 15
+                        has_badge = request.user.badges.filter(id=badge_id).exists()
+
+                        if not has_badge:
+                            badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
+                            request.user.badges.add(badge)  # Assign the badge to the user
+
                         return redirect('challenges')   
     else:
         form = ChallengeForm()
@@ -150,6 +159,15 @@ def create_direct_challenge(request, team_id):
                         challenge.scheduled_date = scheduled_date_user_timezone
 
                         challenge.save()
+
+                        badge_id = 16
+                        has_badge = request.user.badges.filter(id=badge_id).exists()
+
+                        if not has_badge:
+                            badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
+                            request.user.badges.add(badge)  # Assign the badge to the user
+
+
                         return redirect('my_challenges')
 
                 
@@ -226,6 +244,16 @@ def accept_challenge(request, challenge_id):
             match = Match.objects.filter(
                 Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team)
             ).latest('date')
+
+
+            badge_id = 21
+            has_badge = request.user.badges.filter(id=badge_id).exists()
+
+            if not has_badge:
+                badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
+                request.user.badges.add(badge)  # Assign the badge to the user
+
+
             # Redirect to the match details page for the newly created match
             return redirect('match_details', match_id=match.id)
         else:
@@ -295,6 +323,15 @@ def accept_direct_challenge(request, direct_challenge_id):
             match = Match.objects.filter(
                 Q(team1=challenging_team, team2=challenged_team) | Q(team1=challenged_team, team2=challenging_team)
             ).latest('date')
+
+
+            badge_id = 21
+            has_badge = request.user.badges.filter(id=badge_id).exists()
+
+            if not has_badge:
+                badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
+                request.user.badges.add(badge)  # Assign the badge to the user
+
             # Redirect to the match details page for the newly created match
             return redirect('match_details', match_id=match.id)
         else:
@@ -411,6 +448,16 @@ def submit_results(request, match_id):
             
             # Check if both team owners have submitted the results
             match_results_count = MatchResult.objects.filter(match=match).count()
+
+
+            badge_id = 17
+            has_badge = request.user.badges.filter(id=badge_id).exists()
+
+            if not has_badge:
+                badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
+                request.user.badges.add(badge)  # Assign the badge to the user
+
+
             if match_results_count == 2:
                 # Get both team results
                 team1_result = MatchResult.objects.get(match=match, team_owner=match.team1.owner).team_result
@@ -424,7 +471,7 @@ def submit_results(request, match_id):
                     match.match_completed = True
                     match.match_disputed = False
                     match.save()
-                    process_match_result(match, team1_result, team2_result)
+                    process_match_result(match, team1_result, team2_result, match.team1, match.team2)
 
                     # Update team ratings for both teams
                     match.team1.update_team_rating()
@@ -555,7 +602,7 @@ def dispute_details(request, dispute_id):
         match.save()
 
         # Process match result
-        process_match_result(match, team1_result, team2_result)
+        process_match_result(match, team1_result, team2_result, match.team1, match.team2)
 
         # Update team ratings for both teams
         match.team1.update_team_rating()

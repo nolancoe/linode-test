@@ -1,6 +1,7 @@
 from django.utils import timezone
 from matches.models import Match, DisputeProof, DirectChallenge
 from messaging.models import Message
+from django.shortcuts import redirect
 
 def matches_context(request):
     matches = Match.objects.all()
@@ -21,6 +22,8 @@ def direct_challenge_context(request):
 
 
 def message_context(request):
-    # Get all unread messages associated with the current user
-    unread_messages = Message.objects.filter(receiver=request.user, is_read=False)
-    return {'unread_messages': unread_messages}
+    if request.user.is_authenticated:
+        unread_messages = Message.objects.filter(receiver=request.user, is_read=False)
+        return {'unread_messages': unread_messages}
+    else:
+        return {}

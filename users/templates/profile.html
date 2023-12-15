@@ -212,7 +212,7 @@
                 {% if not match.match_completed %}
                   {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
                     <div class="col-md-7 mx-auto my-4">
-                      <div class="card border-primary rounded-4 shadow-lg">
+                      <div class="card border-primary rounded-4 custom-shadow-small">
                         <div class="card-header border-primary text-center">
                           <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                             <h3><img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"></h3>
@@ -220,7 +220,7 @@
                           <p class="text-center">
                               
                               {% if  match.date > now %}
-                              <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning border border rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
+                              <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning custom-shadow-warning rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
                               {% elif match.match_completed %}
                               <span class="text-success">Completed</span>
                               {% else %}
@@ -280,7 +280,7 @@
                 {% if match.match_completed %}
                   {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
                     <div class="col-md-7 mx-auto my-4">
-                      <div class="card border-primary rounded-4 shadow-lg">
+                      <div class="card border-primary rounded-4 custom-shadow-small">
                         <div class="card-header border-primary text-center">
                           <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                             <h4>

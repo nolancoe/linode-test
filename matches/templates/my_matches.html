@@ -37,12 +37,12 @@
                                   <p class="text-center">
                                       
                                       {% if  match.date > now %}
-                                      <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning border custom-shadow-warning rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
+                                      <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning custom-shadow-warning rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
                                       {% elif match.match_completed %}
                                       <span class="text-success">Completed</span>
                                       {% else %}
                                         {% if match.match_disputed %}
-                                          <button type="button" class="btn border border-warning custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+                                          <button type="button" class="btn border-warning custom-shadow-warning btn-danger" disabled>DISPUTED</button>
                                         {% else %}
                                           <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-light bg-danger border border rounded">Live</span>
                                         {% endif %}
