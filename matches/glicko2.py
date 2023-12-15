@@ -1,5 +1,5 @@
-from users.models import Badge
-
+from users.models import Badge, Profile
+from django.db.models import Max
 
 def calculate_team_strength(team):
     """Calculate the average rating of all players in the team."""
@@ -30,6 +30,16 @@ def update_ratings(team1, team2, result):
         player_rating_diff = K_FACTOR * ((1 - result) - expected_score_team2)
         player.rating += player_rating_diff
         player.save()
+
+    # Check if any player has the highest rating
+    highest_rating = Profile.objects.aggregate(max_rating=Max('rating'))['max_rating']
+
+    if highest_rating:
+        highest_rated_players = Profile.objects.filter(rating=highest_rating)
+        for highest_rated_player in highest_rated_players:
+            # Add Badge 20 to the profile of the highest-rated player
+            highest_rated_player.badges.add(Badge.objects.get(id=20))
+
 
 def process_match_result(match, team1_result, team2_result, team1, team2):
     """Process the match result and update player ratings."""

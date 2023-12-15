@@ -1,7 +1,7 @@
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Challenge, Match, MatchResult, DisputeProof, Dispute, DirectChallenge, Team
-from users.models import Badge
+from users.models import Badge, Profile
 from .forms import ChallengeForm, MatchResultForm, DisputeProofForm, DirectChallengeForm, MatchSupportForm
 from django.utils import timezone
 from .glicko2 import update_ratings, process_match_result
