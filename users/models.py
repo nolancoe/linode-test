@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django_countries.fields import CountryField
 from datetime import date
@@ -15,6 +15,8 @@ class Badge(models.Model):
 
     def __str__(self):
         return self.name
+
+
 
 class Profile(AbstractUser):
     #basic info fields

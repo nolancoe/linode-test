@@ -82,10 +82,12 @@
         </div>
       </div>
     </div>
-    
+
     {% if is_match_over and not match.match_completed %}
       {% if match.team1.owner == request.user or match.team2.owner == request.user %}
-        <a href="{% url 'submit_results' match.id %}" class="btn btn-primary custom-shadow-small rounded-3" style="width:40%">Submit Match Results</a>
+      <div class="col-sm-10 text-center">
+        <a href="{% url 'submit_results' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Submit Match Results</a>
+      </div>
       {% endif %}
     {% endif %}
   </div>

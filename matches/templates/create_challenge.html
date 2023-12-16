@@ -27,7 +27,7 @@
                     
                     <p><label for="team">Your Team: </label> {{ user.current_team.name }} ({{ user.current_team.formatted_rating }})</p>
                   </div>
-                  <hr class="mx-auto" style="width:40%">
+                  <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
                 </br>
                   <div class="form-group">
                     <label for="scheduled_date">Match Date and Time:</label>
@@ -41,15 +41,8 @@
                         <label class="form-check-label" for="search_only"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</label>
                       </div>
                     </div>
-                  
 
-                
-                
-                
-                
-                
-                  </br>
-                  
+                  </br> 
 
                   <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#confirmCreateChallengeModal">Create Challenge</button>
 
@@ -65,8 +58,8 @@
                           Are you sure you want to create this challenge?
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                          <button type="submit" class="btn btn-primary">Create Challenge</button>
+                          <button type="button" class="btn btn-danger custom-shadow-danger rounded-3" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-primary custom-shadow-small rounded-3">Create Challenge</button>
                         </div>
                       </div>
                     </div>

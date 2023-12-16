@@ -37,12 +37,12 @@
     <div class="col-md-5">
       <div class="card border-5 border-primary rounded-4 custom-shadow">
         <div class="card-header border-primary text-center">
-          <h1>{{ other_user.username }}</h1>
+          <h1>{{ other_user.username }} <img src='{{other_user.country.flag}}'></h1>
           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-              <h2>{{ other_user.formatted_rating }}</h2>
-            </span>  
+            <h2>{{ other_user.formatted_rating }}</h2>
+          </span>  
         </div>
-        <div class="card-body card-border border-primary mx-auto col-md-5">
+        <div class="card-body mx-auto">
           <div class="text-center mx-auto">
             {% if other_user.profile_picture %}
               <img src="{{ other_user.profile_picture.url }}" alt="{{ other_user.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
@@ -176,7 +176,7 @@
 {% if other_user.current_team %}
   <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
                 <div class="card-header card-border border-primary text-center" >
                   {% if request.user != other_user.current_team.owner %}
@@ -256,7 +256,7 @@
     </div>
   </div>
 {% endif %}
-</br></br>
+
 
 
 <div class="container mt-5">
@@ -297,19 +297,19 @@
 <!--Show Upcoming/Current Matches-->
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-lg-8">
     </br>
-      <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
+      <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
-          <h2>Upcoming/Current Matches</h2>
+          <h2>Results</h2>
         </div>
-        <div class="scrollable-container-challenges">
+        <div class="scrollable-container">
           <div class="card-body text-center">
-            <div class="row">
+            <div class="row justify-content-center">
               {% for match in matches|dictsort:"date" %}
                 {% if not match.match_completed %}
                   {% if match.team1 == other_user.current_team or match.team2 == other_user.current_team %}
-                    <div class="col-md-7 mx-auto my-4">
+                    <div class="col-md-10 mb-4">
                       <div class="card border-primary rounded shadow-lg">
                         <div class="card-header border-primary text-center">
                           <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
@@ -364,19 +364,19 @@
 <!--Show Past Matches -->
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-lg-8">
     </br>
       <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
           <h2>Results</h2>
         </div>
-        <div class="scrollable-container-challenges">
+        <div class="scrollable-container">
           <div class="card-body text-center">
-            <div class="row">
+            <div class="row justify-content-center">
               {% for match in matches|dictsort:"date" %}
                 {% if match.match_completed %}
                   {% if match.team1 == other_user.current_team or match.team2 == other_user.current_team %}
-                    <div class="col-md-7 mx-auto my-4">
+                    <div class="col-md-10 mb-4">
                       <div class="card border-primary custom-shadow-small rounded-4">
                         <div class="card-header border-primary text-center">
                           <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">

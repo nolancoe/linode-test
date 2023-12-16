@@ -19,7 +19,7 @@
   <div class="row justify-content-center text-center">
     <div class="col-md-4">
       <div class="card border-5 border-primary custom-shadow rounded-4">
-        <div class="card-header border-primary text-center">
+        <div class="card-header border-primary custom-shadow-small text-center">
           <h1>{% trans "Login" %}</h1>
         </div>
 
@@ -29,11 +29,7 @@
         <p>{% blocktrans with site.name as site_name %}Please sign in with your Sweaty Games credentials.
         {% endblocktrans %}</p>
 
-
         {% include "socialaccount/snippets/login_extra.html" %}
-
-
-
 
 
         <form class="login" method="POST" action="{% url 'account_login' %}">
@@ -43,7 +39,7 @@
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
           {% endif %}
           <div class="text-centered">
-            <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+            <button class="primaryAction btn btn-primary custom-shadow-small rounded-3" type="submit">{% trans "Sign In" %}</button>
           </div>
           <a class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           

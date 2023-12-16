@@ -15,23 +15,24 @@
         <div class="col-md-8 text-center">
             {% if user.is_authenticated %}
             <div class="row justify-content-center">
-                <div class="card border-5 border-primary text-center rounded-4 custom-shadow col-md-8">
+                <div class="card border-5 border-primary border-bottom-0 text-center rounded-top-4 custom-shadow col-md-8 col-sm-8 col-8">
                     <h1>Welcome back {{ request.user.username }}!</h1>
                 </div>
             </div>
             {% else %}
-                <div class="row justify-content-center">
-                    <div class="card border-5 border-primary text-center rounded-4 custom-shadow col-md-8">
-                        <a href="/accounts/signup" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>Click here to sign up!</h1></a>
-                    </div>
+            <div class="row justify-content-center">
+                <div class="card border-5 border-primary border-bottom-0 text-center rounded-top-4 custom-shadow col-md-8 col-sm-8 col-8">
+                    <a href="/accounts/signup" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>Click here to sign up!</h1></a>
                 </div>
+            </div>
             {% endif %}
         </div>
     </div>
 </div>
 
+
 <div class="container">
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center">
       <div class="col-md-8">
             <div class="card border-5 border-primary text-center custom-shadow rounded-5">
                 <div class="card-body text-center">
