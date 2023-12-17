@@ -33,17 +33,16 @@
                     Messages 
                     {% if unread_messages %}
                         <i class="fa-solid fa-envelope fa-beat-fade" style="color: #ffff00;"></i>
-                        {# Display the envelope icon only if there are unread messages #}
                     {% endif %}
                   </a>
                 </li>
 
+                <li><hr class="dropdown-divider custom-shadow-small"></li>
+
                 {%if user.current_team %}
                   
+                  <li><a class="dropdown-item" href="{% url 'team_detail' team_id=request.user.current_team.id %}">My Team</a></li>
 
-                 
-
-                  
                 {% endif %}
 
                 
@@ -52,7 +51,7 @@
                 <li><a class="dropdown-item" href="{% url 'pending_team_invites' %}">Team Invites</a></li>
                 <li><a class="dropdown-item" href="{% url 'create_team' %}">Create A Team</a></li>
                 {% endif %}
-                <li><hr class="dropdown-divider custom-shadow-small"></li>
+                
                 <li><a class="dropdown-item" href="{% url 'socialaccount_connections' %}">Connected Accounts</a></li>
                 <li><a class="dropdown-item" href="{% url 'customize_profile' %}">Settings</a></li>
 
@@ -122,7 +121,7 @@
                 </a>
               </li>
 
-                  <li><a class="dropdown-item" href="{% url 'team_detail' team_id=request.user.current_team.id %}">My Team</a></li>
+                  
 
 
                   <li>

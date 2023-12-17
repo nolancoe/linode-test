@@ -15,20 +15,19 @@ def convert_to_user_timezone(value, user):
     return value
 
 @register.filter
-def get_connected_twitch_players(players):
-    connected_players = []
+def get_connected_twitch_accounts(players):
+    twitch_accounts = {}
 
     try:
         if players.exists():
             for player in players:
                 try:
-                    social_accounts = SocialAccount.objects.filter(user=player)
-                    for account in social_accounts:
-                        if account.provider == 'twitch':
-                            connected_players.append(player)
+                    social_accounts = SocialAccount.objects.filter(user=player, provider='twitch')
+                    if social_accounts.exists():
+                        twitch_accounts[player] = social_accounts.first().extra_data.get('login')
                 except Profile.DoesNotExist:
                     pass
     except AttributeError:
         pass
 
-    return connected_players
+    return twitch_accounts

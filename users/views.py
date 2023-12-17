@@ -13,7 +13,7 @@ from django.http import HttpResponse, JsonResponse
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth import get_user_model
 from .models import Report, Profile, BugReport, Suggestion
-from matches.models import MatchSupport
+from matches.models import MatchSupport, Match
 from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from allauth.account.models import EmailAddress
@@ -132,11 +132,33 @@ def profile_view(request):
     except SocialAccount.DoesNotExist:
         pass
 
+    user_team = profile.current_team  # Access the current team of the user's profile
+
+    # Fetch matches where the current user's team was involved (either as team1 or team2)
+    past_matches = Match.objects.filter(
+        match_completed=True,
+        team1=user_team
+    ) | Match.objects.filter(
+        match_completed=True,
+        team2=user_team
+    ).order_by('-date')
+
+    # Fetch current/upcoming matches
+    upcoming_matches = Match.objects.filter(
+        match_completed=False,
+    ).order_by('date')
+
     return render(request, 'profile.html', {
         'profile': profile,
         'steam_avatar': steam_avatar,
         'steam_username': steam_username,
+        'past_matches': past_matches,
+        'upcoming_matches': upcoming_matches,  # Rename the variable to differentiate between past and upcoming matches
     })
+
+
+    
+
 
 User = get_user_model()
 def other_profile_view(request, username):
@@ -157,11 +179,30 @@ def other_profile_view(request, username):
 
     reported_user = other_user
 
+
+    user_team = other_user.current_team  # Access the current team of the user's profile
+
+    # Fetch matches where the current user's team was involved (either as team1 or team2)
+    past_matches = Match.objects.filter(
+        match_completed=True,
+        team1=user_team
+    ) | Match.objects.filter(
+        match_completed=True,
+        team2=user_team
+    ).order_by('-date')
+
+    # Fetch current/upcoming matches
+    upcoming_matches = Match.objects.filter(
+        match_completed=False,
+    ).order_by('date')
+
     return render(request, 'other_profile.html', {
         'other_user': other_user,
         'steam_avatar': steam_avatar,
         'steam_username': steam_username,
         'reported_user': reported_user,
+        'past_matches': past_matches,
+        'upcoming_matches': upcoming_matches,
     })
 
     if other_user == request.user:

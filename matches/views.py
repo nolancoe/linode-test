@@ -649,23 +649,18 @@ def disputes_list(request):
     return render(request, 'disputes_list.html', {'disputes': disputes})
 
 def match_list(request):
-    matches = Match.objects.all()
-    now = timezone.now()
+    matches = Match.objects.filter(
+        match_completed=False,
+    ).order_by('-date')
 
-    # Loop through each match and run the check_match_time function
-    for match in matches:
-        check_match_time(match.id)
-
-    return render(request, 'match_list.html', {'matches': matches, 'now' : now})
+    return render(request, 'match_list.html', {'matches': matches,})
 
 def past_match_list(request):
-    matches = Match.objects.all()
-    now = timezone.now()
-    # Loop through each match and run the check_match_time function
-    for match in matches:
-        check_match_time(match.id)
+    matches = Match.objects.filter(
+        match_completed=True,
+    ).order_by('-date')
 
-    return render(request, 'past_match_list.html', {'matches': matches, 'now' : now})
+    return render(request, 'past_match_list.html', {'matches': matches})
 
 def my_match_list(request):
     matches = Match.objects.all()
@@ -678,15 +673,18 @@ def my_match_list(request):
     return render(request, 'my_matches.html', {'matches': matches, 'now' : now})
 
 def my_past_match_list(request):
+    user_team = request.user.current_team  # Assuming current_team is a ForeignKey in the Profile model
 
-    matches = Match.objects.all()
-    now = timezone.now()
+    # Fetch matches where the current user's team was involved (either as team1 or team2)
+    matches = Match.objects.filter(
+        match_completed=True,
+        team1=user_team  # Filter where the current team is team1
+    ) | Match.objects.filter(
+        match_completed=True,
+        team2=user_team  # Filter where the current team is team2
+    ).order_by('-date')  # Replace this order_by with your sorting preference
 
-    # Loop through each match and run the check_match_time function
-    for match in matches:
-        check_match_time(match.id)
-
-    return render(request, 'my_past_matches.html', {'matches': matches, 'now' : now})
+    return render(request, 'my_past_matches.html', {'matches': matches})
 
 @login_required
 def my_challenges_view(request):

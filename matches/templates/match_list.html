@@ -14,22 +14,22 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
-    </br>
+      </br>
       <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
           <h2>Matches</h2>
         </div>
-        <div class="card-body text-center">
-          <div class="row">
-            
-            {% if matches %}
-              {% for match in matches|dictsort:"date" %}
-                {% if not match.match_completed %}
-                  <div class="col-md-7 mx-auto my-4">
+        <div class="scrollable-container-challenges">
+          <div class="card-body text-center">
+            <div class="row justify-content-center">
+              
+              {% if matches %}
+                {% for match in matches %}
+                  <div class="col-md-10 mb-4">
                     <div class="card border-primary rounded-4 custom-shadow-small">
                       <div class="card-header border-primary text-center">
                         <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
-                          <h3> <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"> </h3>
+                          <p> <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"> </p>
                         </a>
                         <p class="text-center">
                           
@@ -61,11 +61,11 @@
                       </div>
                     </div>
                   </div>
-                {% else %}
-                  <p class="mt-3 text-center">No pending matches.</p>
-                {% endif %}
-              {% endfor %}
-            {% endif %}
+                {% endfor %}
+              {% else %}
+                <p class="mt-3 mb-3 text-center">No pending matches.</p>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>

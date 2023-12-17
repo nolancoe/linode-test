@@ -13,22 +13,23 @@
 
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="text-center mt-3">
-      <a href="{% url 'my_past_match_list' %}" class="btn btn-primary">My Results</a>
-    </div>
-    <div class="col-md-8">
-    </br>
+    
+    <div class="col-lg-8">
+      <div class="text-center mt-3">
+        <a href="{% url 'my_past_match_list' %}" class="btn btn-primary custom-shadow rounded-top-5 rounded-bottom-0">My Results</a>
+      </div>
       <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
           <h2>My Matches</h2>
         </div>
-        <div class="card-body text-center">
-          <div class="scrollable-container-challenges">
-            <div class="row">
+        
+        <div class="scrollable-container-challenges">
+          <div class="card-body text-center">
+            <div class="row justify-content-center">
               {% for match in matches|dictsort:"date" %}
                 {% if not match.match_completed %}
                   {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
-                      <div class="col-md-7 mx-auto my-4">
+                      <div class="col-md-10 mb-4">
                           <div class="card border-primary rounded-4 custom-shadow-small">
                               <div class="card-header border-primary text-center">
                                   <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
