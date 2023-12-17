@@ -61,6 +61,7 @@ class Match(models.Model):
     dispute_time = models.DateTimeField(null=True, blank=True, default=None)
 
     search_only = models.BooleanField(default=False)
+    controller_only = models.BooleanField(default=False)
 
     game1 = models.CharField(max_length=50, blank=True, choices=GAME_MAPS)
     game2 = models.CharField(max_length=50, blank=True, choices=GAME_MAPS)
@@ -115,13 +116,14 @@ class Challenge(models.Model):
     scheduled_date = models.DateTimeField(null=True, blank=True)
     accepted = models.BooleanField(default=False)
     search_only = models.BooleanField(default=False)
+    controller_only = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.team} Challenge"
 
     def accept_challenge(self, team2):
         if not self.accepted:
-            new_match = Match.objects.create(team1=self.team, team2=team2, date=self.scheduled_date, search_only=self.search_only)
+            new_match = Match.objects.create(team1=self.team, team2=team2, date=self.scheduled_date, search_only=self.search_only, controller_only=self.controller_only)
             new_match.save()
 
             self.accepted = True
@@ -135,13 +137,14 @@ class DirectChallenge(models.Model):
     scheduled_date = models.DateTimeField(null=True, blank=True)
     accepted = models.BooleanField(default=False)
     search_only = models.BooleanField(default=False)
+    controller_only = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Direct Challenge: {self.challenging_team} to {self.challenged_team}"
 
     def accept_direct_challenge(self):
         if not self.accepted:
-            Match.objects.create(team1=self.challenging_team, team2=self.challenged_team, date=self.scheduled_date, search_only=self.search_only)
+            Match.objects.create(team1=self.challenging_team, team2=self.challenged_team, date=self.scheduled_date, search_only=self.search_only, controller_only=self.controller_only)
             self.accepted = True
             self.save()
             self.delete()

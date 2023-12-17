@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load tz %}
+{% load custom_filters %}
 
 {% block content %}
 
@@ -98,7 +99,7 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <div class="card border-2 border-primary custom-shadow">
+      <div class="card border-2 border-primary rounded-4 custom-shadow">
         <div class="card-header border-primary text-center">
           <h1>Details</h1>
         </div>
@@ -110,9 +111,15 @@
           {% endif %}
 
           {% if match.search_only %}
-            <p class="p-1 border border rounded col-md-3 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
           {% else %}
-            <p class="p-1 border border rounded col-md-3 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+          {% endif %}
+
+          {% if match.controller_only %}
+            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+          {% else %}
+            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
           {% endif %}
 
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
@@ -159,28 +166,29 @@
         <div class="card-header border-primary text-center">
           <h1>{{ match.team1 }} Streams</h1>
         </div>
-        <div class="card-body text-center ">    
-          <div class="list-group  d-flex align-items-center">
-            {% for player in match.team1.players.all %}
-              {% if player.socialaccount_set.all %}
-                {% for social_account in player.socialaccount_set.all %}
-                    {% if social_account.provider == 'twitch' %}
-                      <a href="https://www.twitch.tv/{{ social_account.extra_data.login }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-3 d-flex align-items-center justify-content-center mb-3" style="width:50%">
-                        <i class="fab fa-twitch me-2"></i> {{ player.username }}
-                      </a>
-                    {% else %}
-                    <p>{{match.team1}} not streaming</p>
-                    {% endif %}
-                    
+        <div class="card-body text-center">
+          {% with twitch_players=match.team1.players.all|get_connected_twitch_players %}
+            {% if twitch_players %}
+              <div class="list-group d-flex align-items-center">
+                {% for player in twitch_players %}
+                  {% with twitch_account=player.socialaccount_set.filter(provider='twitch').first %}
+                    <a href="https://www.twitch.tv/{{ twitch_account.extra_data.login }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-3 d-flex align-items-center justify-content-center mb-3" style="width:50%">
+                      <i class="fab fa-twitch me-2"></i> {{ player.username }}
+                    </a>
+                  {% endwith %}
                 {% endfor %}
-              {% endif %}
-            {% endfor %}
-          </div>
+              </div>
+            {% else %}
+              <p>{{ match.team1 }} not streaming</p>
+            {% endif %}
+          {% endwith %}
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
 </br></br>
 
 
@@ -189,26 +197,28 @@
     <div class="col-md-8">
       <div class="card border-2 border-primary custom-shadow rounded-4">
         <div class="card-header border-primary text-center">
-          <h3>{{ match.team2 }} Streams</h3>
+          <h1>{{ match.team2 }} Streams</h1>
         </div>
-          <div class="list-group d-flex align-items-center mb-3">
-            {% for player in match.team2.players.all %}
-              {% if player.socialaccount_set.all %}
-                {% for social_account in player.socialaccount_set.all %}
-                  {% if social_account.provider == 'twitch' %}
-                    <a href="https://www.twitch.tv/{{ social_account.extra_data.login }}" target="_blank" class="custom-shadow-small rounded-3 list-group-item list-group-item-action d-flex align-items-center justify-content-center mb-3" style="width:50%; {% if forloop.first %}margin-top: 20px;{% endif %}">
+        <div class="card-body text-center">
+          {% with twitch_players=match.team2.players.all|get_connected_twitch_players %}
+            {% if twitch_players %}
+              <div class="list-group d-flex align-items-center">
+                {% for player in twitch_players %}
+                  <a href="#" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-3 d-flex align-items-center justify-content-center mb-3" style="width:50%">
                       <i class="fab fa-twitch me-2"></i> {{ player.username }}
-                    </a>
-                  {% endif %}
+                  </a>
                 {% endfor %}
-              {% endif %}
-            {% endfor %}
-          </div>
+              </div>
+            {% else %}
+              <p>{{ match.team2 }} not streaming</p>
+            {% endif %}
+          {% endwith %}
         </div>
       </div>
     </div>
   </div>
 </div>
+
 </br></br>
 
 <div class="container mt-5">

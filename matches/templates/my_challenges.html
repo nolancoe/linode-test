@@ -32,7 +32,7 @@
                             Are you sure you want to accept this challenge?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Cancel</button>
                             <a href="{% url 'accept_direct_challenge' direct_challenge.pk %}" class="btn btn-primary">Accept</a>
                         </div>
                       </div>
@@ -59,12 +59,22 @@
                           <p>{{ direct_challenge.scheduled_date|timezone:request.user.timezone }}</p>
 
 
-                          {% if challenge.search_only %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% if direct_challenge.search_only %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                           {% else %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                           {% endif %}
                           
+
+                          {% if direct_challenge.controller_only %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                          {% else %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                          {% endif %}
+
+
+                          <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
+
                           {% if request.user.current_team and request.user.current_team.owner == request.user %}
                               {% if direct_challenge.challenging_team != request.user.current_team %}
                                   {% if direct_challenge.accepted %}
@@ -75,7 +85,7 @@
                                   {% endif %}
                               {% endif %}
                           {% endif %}
-
+                            
                         </div>
 
                         {% if request.user == direct_challenge.challenged_team.owner %}
@@ -96,7 +106,7 @@
                                   Are you sure you want to decline this challenge?
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Close</button>
                                   <a href="{% url 'decline_direct_challenge' direct_challenge.pk %}" class="btn btn-danger custom-shadow-danger rounded-3">Decline Challenge</a>
                                 </div>
                               </div>
@@ -147,13 +157,22 @@
                             </div>
                           {% endif %}
                           <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
+
                           {% if challenge.search_only %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                           {% else %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                           {% endif %}
 
-                          
+                          {% if challenge.controller_only %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                          {% else %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                          {% endif %}
+
+
+                          <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
+
                         </div>
 
                         {% if request.user == challenge.team.owner %}
@@ -172,7 +191,7 @@
                                     Are you sure you want to cancel this challenge?
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Close</button>
                                     <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger custom-shadow-danger rounded-3">Cancel Challenge</a>
                                   </div>
                                 </div>
@@ -224,12 +243,19 @@
 
                           <p>{{ direct_challenge.scheduled_date|timezone:request.user.timezone }}</p>
 
-                          {% if challenge.search_only %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% if direct_challenge.search_only %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                           {% else %}
-                            <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                           {% endif %}
 
+                          {% if direct_challenge.controller_only %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                          {% else %}
+                            <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                          {% endif %}
+                          
+                          <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
                           <!-- Additional challenge details here -->
                           <!-- ... -->
                         </div>
@@ -250,7 +276,7 @@
                                 Are you sure you want to cancel this challenge?
                                 </div>
                                 <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Close</button>
                                 <a href="{% url 'cancel_direct_challenge' direct_challenge.id %}" class="btn custom-shadow-danger rounded-3 btn-danger">Cancel Challenge</a>
                                 </div>
                               </div>

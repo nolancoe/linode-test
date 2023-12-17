@@ -5,10 +5,11 @@ from django.utils import timezone
 
 class ChallengeForm(forms.ModelForm):
     search_only = forms.BooleanField(label='Search Only', required=False)
+    controller_only = forms.BooleanField(label='Controller Only', required=False)
 
     class Meta:
         model = Challenge
-        fields = ['scheduled_date', 'search_only']
+        fields = ['scheduled_date', 'search_only', 'controller_only']
 
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')
@@ -21,10 +22,11 @@ class ChallengeForm(forms.ModelForm):
 
 class DirectChallengeForm(forms.ModelForm):
     search_only = forms.BooleanField(label='Search Only', required=False)
+    controller_only = forms.BooleanField(label='Controller Only', required=False)
 
     class Meta:
         model = DirectChallenge
-        fields = ['scheduled_date', 'search_only'] 
+        fields = ['scheduled_date', 'search_only', 'controller_only'] 
 
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')

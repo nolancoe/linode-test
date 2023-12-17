@@ -65,12 +65,24 @@
                                 </div>
                                 {% endif %}
                                 <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
+
                                 {% if challenge.search_only %}
-                                  <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                                  <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                                 {% else %}
-                                <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                                  <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                                 {% endif %}
-                                <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:60%">
+
+
+                                {% if challenge.controller_only %}
+                                  <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                                {% else %}
+                                  <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                                {% endif %}
+
+
+                                <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
+
+
                                 {% if request.user.current_team and request.user.current_team.owner == request.user %}
                                     {% if challenge.team != request.user.current_team %}
                                         {% if challenge.accepted %}
@@ -95,7 +107,7 @@
                                             Are you sure you want to cancel this challenge?
                                           </div>
                                           <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary custom-shadow-small rounded-3" data-bs-dismiss="modal">Close</button>
                                             <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger custom-shadow-danger">Cancel Challenge</a>
                                           </div>
                                       </div>
