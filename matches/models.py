@@ -53,6 +53,11 @@ GAME_MAPS = CONTROL_MAPS + HARDPOINT_MAPS + SEARCH_MAPS
 class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='home_matches')
     team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='away_matches')
+
+
+    team1_players = models.ManyToManyField(Profile, related_name='selected_for_team1', blank=True)
+    team2_players = models.ManyToManyField(Profile, related_name='selected_for_team2', blank=True)
+
     date = models.DateTimeField()
     team1_result = models.CharField(max_length=10, blank=True, choices=[('', 'Not Available'), ('win', 'Win'), ('loss', 'Loss'), ('draw', 'Draw')])
     team2_result = models.CharField(max_length=10, blank=True, choices=[('', 'Not Available'), ('win', 'Win'), ('loss', 'Loss'), ('draw', 'Draw')])
@@ -117,6 +122,7 @@ class Challenge(models.Model):
     accepted = models.BooleanField(default=False)
     search_only = models.BooleanField(default=False)
     controller_only = models.BooleanField(default=False)
+    challenge_players = models.ManyToManyField(Profile, related_name='selected_players', blank=True)
 
     def __str__(self):
         return f"{self.team} Challenge"

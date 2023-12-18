@@ -26,7 +26,7 @@ def create_challenge(request):
     
 
     if request.method == 'POST':
-        form = ChallengeForm(request.POST)
+        form = ChallengeForm(request.POST, team=request.user.current_team)
         form.user = request.user  # Pass the user to the form
         
         if form.is_valid():
@@ -76,6 +76,13 @@ def create_challenge(request):
                         challenge.team = request.user.current_team
                         challenge.scheduled_date = scheduled_date_user_timezone
 
+                        selected_players = form.cleaned_data['challenge_players']
+
+                        # Save the challenge instance to generate an ID
+                        challenge.save()
+
+                        # Set the many-to-many relationship after the challenge has an ID
+                        challenge.challenge_players.set(selected_players)
                         challenge.save()
 
                         badge_id = 15
@@ -87,7 +94,7 @@ def create_challenge(request):
 
                         return redirect('challenges')   
     else:
-        form = ChallengeForm()
+        form = ChallengeForm(team=request.user.current_team)
     return render(request, 'create_challenge.html', {'form': form})
 
 # View for creating a direct challenge

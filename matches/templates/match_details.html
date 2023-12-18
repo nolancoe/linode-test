@@ -129,15 +129,15 @@
 
           <h3>Game 1</h3>
           <p>Map: {{ match.game1 }}</p>
-          <p>Host:<a href="{% url 'other_user_profile' username=match.team1.owner.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.owner }}</a></p>
+          <p>Host:<a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
           <h3>Game 2</h3>
           <p>Map: {{ match.game2 }}</p>
-          <p>Host:<a href="{% url 'other_user_profile' username=match.team2.owner.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team2.owner }}</a></p>
+          <p>Host:<a href="{% url 'team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team2.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
           <h3>Game 3</h3>
           <p>Map: {{ match.game3 }}</p>
-          <p>Host:<a href="{% url 'other_user_profile' username=match.team1.owner.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.owner }}</a></p>
+          <p>Host:<a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
         
         </br>

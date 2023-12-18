@@ -47,7 +47,7 @@
 
                 
                 {% if not user.current_team %}
-                <li><hr class="dropdown-divider custom-shadow-small"></li>
+
                 <li><a class="dropdown-item" href="{% url 'pending_team_invites' %}">Team Invites</a></li>
                 <li><a class="dropdown-item" href="{% url 'create_team' %}">Create A Team</a></li>
                 {% endif %}

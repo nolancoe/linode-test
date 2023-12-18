@@ -6,16 +6,23 @@ from django.utils import timezone
 class ChallengeForm(forms.ModelForm):
     search_only = forms.BooleanField(label='Search Only', required=False)
     controller_only = forms.BooleanField(label='Controller Only', required=False)
+    challenge_players = forms.ModelMultipleChoiceField(queryset=None, required=True, widget=forms.CheckboxSelectMultiple)
 
     class Meta:
         model = Challenge
-        fields = ['scheduled_date', 'search_only', 'controller_only']
+        fields = ['scheduled_date', 'search_only', 'controller_only', 'challenge_players']
+
+    def __init__(self, *args, **kwargs):
+        team = kwargs.pop('team', None)
+        super().__init__(*args, **kwargs)
+        if team:
+            self.fields['challenge_players'].queryset = team.players.all()
 
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')
-        
         if scheduled_date:
-            user_timezone = self.user.timezone
+            # Convert scheduled date to UTC
+            user_timezone = self.user.timezone  # Make sure 'user' is available in the form
             utc_offset = user_timezone.utcoffset(scheduled_date).total_seconds()
             utc_scheduled_date = scheduled_date - timezone.timedelta(seconds=utc_offset)
             return utc_scheduled_date
