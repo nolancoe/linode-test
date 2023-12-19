@@ -14,6 +14,11 @@
                   {% csrf_token %}
 
                   <div class="form-group">
+                    <p><label for="team">Your Team: </label> {{ user.current_team.name }} ({{ user.current_team.formatted_rating }})</p>
+                  </div>
+                  <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
+
+                  <div class="form-group">
                     <label for="challenge_players">Select 4 players from your team:</label>
                     {{ form.challenge_players }}
                   </div>
@@ -30,14 +35,11 @@
                       </ul>
                     </div>
                   {% endif %}
-                  <div class="form-group">
-                    
-                    <p><label for="team">Your Team: </label> {{ user.current_team.name }} ({{ user.current_team.formatted_rating }})</p>
-                  </div>
-                  <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
+                  
+                  
                 </br>
                   <div class="form-group">
-                    <label for="scheduled_date">Match Date and Time:</label>
+                    <label for="scheduled_date">Select date and time for match to start:</label>
                     <input type="datetime-local" class="form-control mx-auto" id="scheduled_date" style="width:50%" name="scheduled_date" required>
                   </div>
 

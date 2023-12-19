@@ -21,6 +21,7 @@ from allauth.account.utils import send_email_confirmation
 from django.contrib import messages
 from functools import wraps
 from django.utils import timezone
+from django.db.models import Q
 
 
 
@@ -136,17 +137,14 @@ def profile_view(request):
 
     # Fetch matches where the current user's team was involved (either as team1 or team2)
     past_matches = Match.objects.filter(
+        Q(team1_players=profile) | Q(team2_players=profile),
         match_completed=True,
-        team1=user_team
-    ) | Match.objects.filter(
-        match_completed=True,
-        team2=user_team
-    ).order_by('-date')
+    ).order_by('-date').distinct()
 
-    # Fetch current/upcoming matches
     upcoming_matches = Match.objects.filter(
+        Q(team1_players=profile) | Q(team2_players=profile),
         match_completed=False,
-    ).order_by('date')
+    ).order_by('-date').distinct()
 
     return render(request, 'profile.html', {
         'profile': profile,
@@ -184,17 +182,15 @@ def other_profile_view(request, username):
 
     # Fetch matches where the current user's team was involved (either as team1 or team2)
     past_matches = Match.objects.filter(
+        Q(team1_players=other_user) | Q(team2_players=other_user),
         match_completed=True,
-        team1=user_team
-    ) | Match.objects.filter(
-        match_completed=True,
-        team2=user_team
-    ).order_by('-date')
+    ).order_by('-date').distinct()
 
-    # Fetch current/upcoming matches
+
     upcoming_matches = Match.objects.filter(
+        Q(team1_players=other_user) | Q(team2_players=other_user),
         match_completed=False,
-    ).order_by('date')
+    ).order_by('-date').distinct()
 
     return render(request, 'other_profile.html', {
         'other_user': other_user,

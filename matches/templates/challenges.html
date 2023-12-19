@@ -37,12 +37,17 @@
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body">
-                                      Are you sure you want to accept this challenge?
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="btn btn-danger custom-shadow-danger rounded-3" data-bs-dismiss="modal">Cancel</button>
-                                      <a href="{% url 'accept_challenge' challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept</a>
-                                  </div>
+                                    <p>To accept the challenge please select 4 players from your team that will be participating in the match.</p>
+                                    <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
+                                    <form method="post" action="{% url 'accept_challenge' challenge.pk %}">
+                                        {% csrf_token %}
+                                        {{ form.as_p }}
+                                        <input type="submit" class="btn btn-primary custom-shadow-small rounded-3" value="Accept">
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary custom-shadow-danger rounded-3" data-bs-dismiss="modal">Cancel</button>
+                                </div>
                               </div>
                           </div>
                       </div>
@@ -58,13 +63,13 @@
                               </div>
                               <div class="card-body text-center">
                                 <p class="p-1 bg-warning text-dark custom-shadow-warning rounded col-md-8 mx-auto"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
+                                <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
 
                                 {% if challenge.team.logo %}
                                 <div class="text-center">
-                                    <img src="{{ challenge.team.logo.url }}" alt="{{ challenge.team.name }} Logo" width="300" height="300" class="img-fluid">
+                                    <img src="{{ challenge.team.logo.url }}" alt="{{ challenge.team.name }} Logo" width="300" height="300" class="img-fluid mb-5">
                                 </div>
                                 {% endif %}
-                                <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
 
                                 {% if challenge.search_only %}
                                   <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
@@ -88,7 +93,7 @@
                                         {% if challenge.accepted %}
                                         <span class="badge badge-success">Challenge Accepted!</span>
                                         {% else %}
-                                        <button type="button" class="btn btn-primary custom-shadow-small rounded-3s" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ challenge.pk }}">Accept Challenge</button>
+                                        <button type="button" class="btn btn-primary custom-shadow-small rounded-3" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ challenge.pk }}">Accept Challenge</button>
 
                                         {% endif %}
                                     {% endif %}

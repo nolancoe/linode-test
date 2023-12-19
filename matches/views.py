@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Challenge, Match, MatchResult, DisputeProof, Dispute, DirectChallenge, Team
 from users.models import Badge, Profile
-from .forms import ChallengeForm, MatchResultForm, DisputeProofForm, DirectChallengeForm, MatchSupportForm
+from .forms import ChallengeForm, MatchResultForm, DisputeProofForm, DirectChallengeForm, MatchSupportForm, PlayerSelectionForm
 from django.utils import timezone
 from .glicko2 import update_ratings, process_match_result
 from django.db.models import Q
@@ -246,23 +246,32 @@ def accept_challenge(request, challenge_id):
             if conflicting_matches.exists() or conflicting_challenges.exists():
                 return redirect('schedule_conflict')
             
-            challenge.accept_challenge(team2)
-            # Get the newly created match for this challenge
-            match = Match.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team)
-            ).latest('date')
 
 
-            badge_id = 21
-            has_badge = request.user.badges.filter(id=badge_id).exists()
+            if request.method == 'POST':
+                form = PlayerSelectionForm(request.POST, team_players=team.players.all())
 
-            if not has_badge:
-                badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
-                request.user.badges.add(badge)  # Assign the badge to the user
+                if form.is_valid():
+                    selected_profiles = form.cleaned_data
 
+                    challenge.accept_challenge(team2, selected_profiles)
+                    # Get the newly created match for this challenge
+                    match = Match.objects.filter(
+                        Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team)
+                    ).latest('date')
 
-            # Redirect to the match details page for the newly created match
-            return redirect('match_details', match_id=match.id)
+                    badge_id = 21
+                    has_badge = request.user.badges.filter(id=badge_id).exists()
+
+                    if not has_badge:
+                        badge = Badge.objects.get(id=badge_id)
+                        request.user.badges.add(badge)
+
+                    return redirect('match_details', match_id=match.id)
+            else:
+                form = PlayerSelectionForm(team_players=team.players.all())
+
+            return render(request, 'challenges.html', {'form': form, 'challenge': challenge})
         else:
             return redirect('challenges')
 
@@ -384,6 +393,10 @@ def challenges(request):
         
         # Retrieve the updated list of challenges after deletion
         updated_challenges = Challenge.objects.filter(accepted=False)
+
+        if request.user.current_team:
+            form = PlayerSelectionForm(team_players=request.user.current_team.players.all())
+            return render(request, 'challenges.html', {'challenges': updated_challenges, 'form': form})
         
         return render(request, 'challenges.html', {'challenges': updated_challenges})
 

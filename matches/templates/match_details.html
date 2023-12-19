@@ -128,15 +128,15 @@
           <h2></h2>
 
           <h3>Game 1</h3>
-          <p>Map: {{ match.game1 }}</p>
+          <p>{{ match.game1 }}</p>
           <p>Host:<a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
           <h3>Game 2</h3>
-          <p>Map: {{ match.game2 }}</p>
+          <p>{{ match.game2 }}</p>
           <p>Host:<a href="{% url 'team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team2.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
           <h3>Game 3</h3>
-          <p>Map: {{ match.game3 }}</p>
+          <p>{{ match.game3 }}</p>
           <p>Host:<a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
         
@@ -168,7 +168,7 @@
           <h1>{{ match.team1 }} Streams</h1>
         </div>
         <div class="card-body text-center">
-          {% with twitch_accounts=match.team1.players.all|get_connected_twitch_accounts %}
+          {% with twitch_accounts=match.team1_players.all|get_connected_twitch_accounts %}
             {% if twitch_accounts %}
               <div class="list-group d-flex align-items-center">
                 {% for player, twitch_username in twitch_accounts.items %}
@@ -198,7 +198,7 @@
           <h1>{{ match.team2 }} Streams</h1>
         </div>
         <div class="card-body text-center">
-          {% with twitch_accounts=match.team2.players.all|get_connected_twitch_accounts %}
+          {% with twitch_accounts=match.team2_players.all|get_connected_twitch_accounts %}
             {% if twitch_accounts %}
               <div class="list-group d-flex align-items-center">
                 {% for player, twitch_username in twitch_accounts.items %}
@@ -228,7 +228,7 @@
         </div>
         <div class="card-body text-center">
           <div class="row row-cols-1 row-cols-sm-2 g-4 justify-content-center">
-            {% for player in match.team1.players.all %}
+            {% for player in match.team1_players.all %}
               <div class="col">
                 <div class="card border custom-shadow-small rounded-3 text-center">
                     <div class="card-header text-center">
@@ -259,7 +259,7 @@
         </div>
         <div class="card-body text-center">
           <div class="row row-cols-1 row-cols-sm-2 g-4 justify-content-center">
-            {% for player in match.team2.players.all %}
+            {% for player in match.team2_players.all %}
               <div class="col">
                 <div class="card border custom-shadow-small rounded-3 text-center">
                   <div class="card-header text-center">

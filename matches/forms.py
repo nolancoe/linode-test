@@ -2,6 +2,7 @@
 from django import forms
 from .models import Challenge, Match, MatchResult, DisputeProof, DirectChallenge, MatchSupport, SupportCategory
 from django.utils import timezone
+from users.models import Profile
 
 class ChallengeForm(forms.ModelForm):
     search_only = forms.BooleanField(label='Search Only', required=False)
@@ -16,7 +17,8 @@ class ChallengeForm(forms.ModelForm):
         team = kwargs.pop('team', None)
         super().__init__(*args, **kwargs)
         if team:
-            self.fields['challenge_players'].queryset = team.players.all()
+            players_queryset = team.players.all()
+            self.fields['challenge_players'].queryset = players_queryset
 
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')
@@ -72,3 +74,25 @@ class MatchSupportForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = SupportCategory.objects.all()
+
+
+class PlayerSelectionForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        team_players = kwargs.pop('team_players')
+        super(PlayerSelectionForm, self).__init__(*args, **kwargs)
+
+        for player in team_players:
+            self.fields['player_{0}'.format(player.id)] = forms.BooleanField(label=player.username)
+
+    def clean(self):
+        selected_profiles = []
+        for field_name, value in self.cleaned_data.items():
+            if value:
+                player_id = int(field_name.split('_')[1])
+                profile = Profile.objects.get(id=player_id)  # Assuming Profile has an ID field
+                selected_profiles.append(profile)
+        
+        if len(selected_profiles) != 4:
+            raise forms.ValidationError("Please select exactly 4 players.")
+        
+        return selected_profiles
