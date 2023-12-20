@@ -27,8 +27,8 @@
               </div>
             {% else %}
               <div class= "text-center">
-                <p>Eligibility <i class="fa-solid fa-square-xmark" style="color: #d9534f;"></i></p>
-                
+                Eligibility <i class="fa-solid fa-square-xmark" style="color: #d9534f;"></i>
+                <p>Team will be eligible in {{ team.eligible_at|timeuntil }}</p>
               </div>
             {% endif %}
 
@@ -115,6 +115,16 @@
                         <img src="\media\sweatygameslogo1.png" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
                       </div>
                     {% endif %}
+
+                    {% if player.eligible %}
+                      <p>Eligibility <i class="fa-solid fa-square-check" style="color: #5cb85c;"></i></p>
+                    {% else %}
+                      <div class="tesct-center">
+                        Eligibility <i class="fa-solid fa-square-xmark" style="color: #d9534f;"></i>
+                        <p>Player will be eligible in {{ player.eligible_at|timeuntil }}</p>
+                      </div>
+                    {% endif %}
+
                   </div>
                 </div>
               {% endfor %}
@@ -183,8 +193,12 @@
                               </div>
                           </div>
                       </div>
+                  {% else %}
+                    <p class="mt-3 text-center">No pending matches.</p>
                   {% endif %}
                 {% endif %}
+              {% empty %}
+                <p class="mt-3 text-center">No pending matches.</p>
               {% endfor %}
             </div>
           </div>
@@ -249,9 +263,12 @@
                           </div>
                       </div>
                       </div>
-                  
+                  {% else %}
+                    <p class="mt-3 text-center">No past matches.</p>
                   {% endif %}
                 {% endif %}
+              {% empty %}
+                <p class="mt-3 text-center">No past matches.</p>
               {% endfor %}
             </div>
           </div>
