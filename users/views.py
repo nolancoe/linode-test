@@ -22,6 +22,7 @@ from django.contrib import messages
 from functools import wraps
 from django.utils import timezone
 from django.db.models import Q
+from core.views import check_players_eligibility, check_user_eligibility
 
 
 
@@ -98,7 +99,9 @@ def customize_profile_view(request):
     except Profile.DoesNotExist:
         profile = None
 
-
+    current_user = request.user
+    check_players_eligibility(current_user)
+    check_user_eligibility(current_user)
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -118,6 +121,11 @@ def customize_profile_view(request):
 
 @login_required
 def profile_view(request):
+
+    current_user = request.user
+    check_players_eligibility(current_user)
+    check_user_eligibility(current_user)
+
     try:
         profile = request.user
     except Profile.DoesNotExist:
@@ -162,6 +170,8 @@ User = get_user_model()
 def other_profile_view(request, username):
     other_user = get_object_or_404(User, username=username)
 
+    current_user = other_user
+    check_players_eligibility(current_user)
 
     if other_user == request.user:
         return redirect('profile')

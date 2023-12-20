@@ -3,6 +3,7 @@ from django import forms
 from .models import Challenge, Match, MatchResult, DisputeProof, DirectChallenge, MatchSupport, SupportCategory
 from django.utils import timezone
 from users.models import Profile
+from django.core.exceptions import ValidationError
 
 
 class ChallengeForm(forms.ModelForm):
@@ -18,8 +19,18 @@ class ChallengeForm(forms.ModelForm):
         team = kwargs.pop('team', None)
         super().__init__(*args, **kwargs)
         if team:
-            players_queryset = team.players.all()
+            players_queryset = team.players.filter(eligible=True)
             self.fields['challenge_players'].queryset = players_queryset
+
+    def clean(self):
+        cleaned_data = super().clean()
+        selected_players = cleaned_data.get('challenge_players')
+        
+        # Check if exactly 4 players are selected
+        if selected_players.count() != 4:
+            raise ValidationError("Please select exactly 4 players.")
+
+        return cleaned_data
 
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')

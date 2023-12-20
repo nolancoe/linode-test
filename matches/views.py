@@ -14,6 +14,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from teams.views import check_team_eligibility, reset_team_eligibility
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from core.views import check_players_eligibility, check_user_eligibility
 
 
 def is_admin(user):
@@ -24,9 +25,14 @@ def create_challenge(request):
 
     team = request.user.current_team
     check_team_eligibility(team)
+
+    current_user = request.user
+    check_players_eligibility(current_user)
+
     
 
     if request.method == 'POST':
+        
         form = ChallengeForm(request.POST, team=request.user.current_team)
         form.user = request.user  # Pass the user to the form
         
@@ -104,6 +110,9 @@ def create_direct_challenge(request, team_id):
 
     team = get_object_or_404(Team, id=team_id)
     check_team_eligibility(team)
+
+    current_user = request.user
+    check_players_eligibility(current_user)
 
 
     if request.method == 'POST':
@@ -391,10 +400,15 @@ def cancel_direct_challenge(request, direct_challenge_id):
 @login_required
 def challenges(request):
 
+    
+
     if request.user.is_authenticated:
         if request.user.current_team:
             team = request.user.current_team
             check_team_eligibility(team)
+
+            current_user = request.user
+            check_players_eligibility(current_user)
     
 
         # Retrieve challenges that are not yet accepted
@@ -731,6 +745,10 @@ def my_challenges_view(request):
         team = request.user.current_team
         # Call team eligibility check
         check_team_eligibility(team)
+
+        current_user = request.user
+        check_players_eligibility(current_user)
+
         # Retrieve challenges associated with the user's team that are not yet accepted
         my_challenges = Challenge.objects.filter(team=team, accepted=False)
         

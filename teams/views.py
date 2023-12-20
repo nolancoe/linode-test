@@ -11,6 +11,7 @@ from pathlib import Path
 from django.core.files import File
 from django.conf import settings
 from users.views import check_email_verification
+from core.views import check_players_eligibility
 
 
 def user_already_a_player(view_func):
@@ -66,6 +67,9 @@ def edit_team(request, team_id):
 
     # Call team eligibility check
     check_team_eligibility(team)
+
+    current_user = request.user
+    check_players_eligibility(current_user)
 
     # Check if the current user is the owner of the team
     if request.user != team.owner:
@@ -229,6 +233,9 @@ def team_detail(request, team_id):
     # Call team eligibility check
     check_team_eligibility(team)
 
+    current_user = request.user
+    check_players_eligibility(current_user)
+
     return render(request, 'team_detail.html', {'team': team})
 
 @login_required
@@ -336,9 +343,3 @@ def reset_player_eligibility(profile):
         profile.eligible = False
         profile.eligible_at = timezone.now() + timezone.timedelta(hours=3)
         profile.save()
-
-def check_player_eligibility(profile):
-    if team:
-        if profile.eligible_at < timezone.now():
-           profile.eligible = True
-           profile.save()

@@ -11,8 +11,10 @@
     <div class="col-md-6">
       <div class="text-center mt-3">
         
-        {% if request.user.current_team %}
+        {% if request.user.current_team and request.user.current_team.owner == request.user %}
           <a href="{% url 'create_challenge' %}" class="btn btn-primary custom-shadow  rounded-top-5 rounded-bottom-0">Post A Challenge</a>
+        {% elif request.user.current_team%}
+          <a href="{% url 'my_challenges' %}" class="btn btn-primary custom-shadow  rounded-top-5 rounded-bottom-0">My Challenges</a>
         {% else %}
           <a href="{% url 'create_team' %}" class="btn btn-primary custom-shadow rounded-top-5 rounded-bottom-0">Create A Team</a>
         {% endif %}
