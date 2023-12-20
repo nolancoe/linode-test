@@ -29,11 +29,16 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to accept this challenge?
+                          <p>To accept the challenge please select 4 players from your team that will be participating in the match.</p>
+                          <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
+                          <form method="post" action="{% url 'accept_direct_challenge' direct_challenge.pk %}">
+                              {% csrf_token %}
+                              {{ form.as_p }}
+                              <input type="submit" class="btn btn-primary custom-shadow-small rounded-3" value="Accept">
+                          </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Cancel</button>
-                            <a href="{% url 'accept_direct_challenge' direct_challenge.pk %}" class="btn btn-primary">Accept</a>
                         </div>
                       </div>
                     </div>

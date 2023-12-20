@@ -13,6 +13,13 @@
             <div class="card-body text-center">
               <form method="post">
                 {% csrf_token %}
+
+
+                <div class="form-group">
+                  <label for="challenge_players">Select 4 players from your team:</label>
+                  {{ form.challenge_players }}
+                </div>
+
                 {% if form.errors %}
                   <div class="alert alert-danger">
                     <ul>

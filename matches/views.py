@@ -15,6 +15,7 @@ from teams.views import check_team_eligibility, reset_team_eligibility
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
+
 def is_admin(user):
     return user.is_superuser
 
@@ -101,12 +102,13 @@ def create_challenge(request):
 @login_required
 def create_direct_challenge(request, team_id):
 
-    team = request.user.current_team
+    team = get_object_or_404(Team, id=team_id)
     check_team_eligibility(team)
 
 
     if request.method == 'POST':
-        form = DirectChallengeForm(request.POST)
+        form = DirectChallengeForm(request.POST, user=request.user)
+        form.request = request
         form.user = request.user  # Pass the user to the form
 
         if form.is_valid():
@@ -165,7 +167,13 @@ def create_direct_challenge(request, team_id):
                         challenge.challenged_team = Team.objects.get(id=team_id)
                         challenge.scheduled_date = scheduled_date_user_timezone
 
-                        challenge.save()
+
+                        with transaction.atomic():
+                            challenge.save()
+                            selected_players = form.cleaned_data['challenge_players']
+                            challenge.challenge_players.set(selected_players)
+
+                            
 
                         badge_id = 16
                         has_badge = request.user.badges.filter(id=badge_id).exists()
@@ -177,9 +185,8 @@ def create_direct_challenge(request, team_id):
 
                         return redirect('my_challenges')
 
-                
     else:
-        form = DirectChallengeForm()
+        form = DirectChallengeForm(user=request.user)
 
     challenged_team = Team.objects.get(id=team_id)
     available_teams = Team.objects.filter(full_team=True, disbanded=False).exclude(id=request.user.current_team.id)
@@ -333,21 +340,31 @@ def accept_direct_challenge(request, direct_challenge_id):
 
             if conflicting_matches.exists() or conflicting_direct_challenges.exists():
                 return redirect('schedule_conflict')
+
+
+            if request.method == 'POST':
+                form = PlayerSelectionForm(request.POST, team_players=team.players.all())
+
+                if form.is_valid():
+                    selected_profiles = form.cleaned_data
+
+                    direct_challenge.accept_direct_challenge(selected_profiles)
+                    # Get the newly created match for this direct challenge
+                    match = Match.objects.filter(
+                        Q(team1=challenging_team, team2=challenged_team) | Q(team1=challenged_team, team2=challenging_team)
+                    ).latest('date')
+
+                    badge_id = 21
+                    has_badge = request.user.badges.filter(id=badge_id).exists()
+
+                    if not has_badge:
+                        badge = Badge.objects.get(id=badge_id)
+                        request.user.badges.add(badge)
+
+                    return redirect('match_details', match_id=match.id)
+            else:
+                form = PlayerSelectionForm(team_players=team.players.all())
             
-            direct_challenge.accept_direct_challenge()
-            # Get the newly created match for this direct challenge
-            match = Match.objects.filter(
-                Q(team1=challenging_team, team2=challenged_team) | Q(team1=challenged_team, team2=challenging_team)
-            ).latest('date')
-
-
-            badge_id = 21
-            has_badge = request.user.badges.filter(id=badge_id).exists()
-
-            if not has_badge:
-                badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
-                request.user.badges.add(badge)  # Assign the badge to the user
-
             # Redirect to the match details page for the newly created match
             return redirect('match_details', match_id=match.id)
         else:
@@ -745,6 +762,13 @@ def my_challenges_view(request):
         
         my_challenging_direct_challenges_to_delete.delete()
         my_challenged_direct_challenges_to_delete.delete()
+
+
+
+        if request.user.current_team:
+            form = PlayerSelectionForm(team_players=request.user.current_team.players.all())
+            return render(request, 'my_challenges.html', {'my_challenges': updated_challenges, 'my_challenging_direct_challenges': my_challenging_direct_challenges, 'my_challenged_direct_challenges': my_challenged_direct_challenges, 'form': form})
+
 
         return render(
             request,

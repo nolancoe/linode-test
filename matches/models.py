@@ -77,14 +77,12 @@ class Match(models.Model):
 
     def generate_random_maps(self):
         if self.search_only:
-            print("Search Only is True")
             # If search_only is True, generate maps only from SEARCH_MAPS
             random.shuffle(SEARCH_MAPS)
             self.game1 = SEARCH_MAPS[0][0]
             self.game2 = SEARCH_MAPS[1][0]
             self.game3 = SEARCH_MAPS[2][0]
         else:
-            print("Search Only is false")
             # Shuffle all maps from GAME_MAPS
             random.shuffle(GAME_MAPS)
 
@@ -146,13 +144,18 @@ class DirectChallenge(models.Model):
     accepted = models.BooleanField(default=False)
     search_only = models.BooleanField(default=False)
     controller_only = models.BooleanField(default=False)
+    challenge_players = models.ManyToManyField(Profile, related_name='selected_direct_players', blank=True)
 
     def __str__(self):
         return f"Direct Challenge: {self.challenging_team} to {self.challenged_team}"
 
-    def accept_direct_challenge(self):
+    def accept_direct_challenge(self, selected_players):
         if not self.accepted:
-            Match.objects.create(team1=self.challenging_team, team2=self.challenged_team, date=self.scheduled_date, search_only=self.search_only, controller_only=self.controller_only)
+            new_match = Match.objects.create(team1=self.challenging_team, team2=self.challenged_team, date=self.scheduled_date, search_only=self.search_only, controller_only=self.controller_only)
+            new_match.team1_players.set(self.challenge_players.all())
+            new_match.team2_players.set(selected_players)
+            new_match.save() 
+            
             self.accepted = True
             self.save()
             self.delete()

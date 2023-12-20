@@ -4,6 +4,7 @@ from .models import Challenge, Match, MatchResult, DisputeProof, DirectChallenge
 from django.utils import timezone
 from users.models import Profile
 
+
 class ChallengeForm(forms.ModelForm):
     search_only = forms.BooleanField(label='Search Only', required=False)
     controller_only = forms.BooleanField(label='Controller Only', required=False)
@@ -32,10 +33,21 @@ class ChallengeForm(forms.ModelForm):
 class DirectChallengeForm(forms.ModelForm):
     search_only = forms.BooleanField(label='Search Only', required=False)
     controller_only = forms.BooleanField(label='Controller Only', required=False)
+    challenge_players = forms.ModelMultipleChoiceField(queryset=None, required=True, widget=forms.CheckboxSelectMultiple)
 
     class Meta:
         model = DirectChallenge
-        fields = ['scheduled_date', 'search_only', 'controller_only'] 
+        fields = ['scheduled_date', 'search_only', 'controller_only', 'challenge_players']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            current_team = user.current_team
+            if current_team:
+                players_queryset = current_team.players.all()
+                self.fields['challenge_players'].queryset = players_queryset
+                
 
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')
