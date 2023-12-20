@@ -96,7 +96,7 @@ def send_invitation(request, team_id):
     if request.user != team.owner:
         return redirect('home')  # Redirect to a home page or an error page if unauthorized
 
-    if team.full_team:
+    if team.at_capacity:
         return redirect('home')
 
     if request.method == 'POST':
@@ -132,13 +132,13 @@ def accept_invitation(request, invitation_id):
     invitation = get_object_or_404(TeamInvitation, id=invitation_id)
 
     # Call team eligibility check
-    reset_team_eligibility(invitation.team)
+    reset_player_eligibility(invitation.invited_user)
 
     # Ensure the user can only accept invitations sent to them
     if request.user != invitation.invited_user:
         return redirect('home')  # Redirect to a home page or an error page if unauthorized
 
-    if invitation.team.full_team:
+    if invitation.team.at_capacity:
         invitation.delete()
         return redirect('home')
 
@@ -290,6 +290,7 @@ def disband_team(request, team_id):
     team.owner = None
     team.disbanded = True
     team.full_team = False
+    team.at_capacity = False
     team.save()
 
     # Remove all players from the disbanded team and update their profiles
@@ -329,3 +330,15 @@ def check_team_eligibility(team):
         if team.eligible_at < timezone.now() and team.full_team:
            team.eligible = True
            team.save()
+
+def reset_player_eligibility(profile):
+    if profile:
+        profile.eligible = False
+        profile.eligible_at = timezone.now() + timezone.timedelta(hours=3)
+        profile.save()
+
+def check_player_eligibility(profile):
+    if team:
+        if profile.eligible_at < timezone.now():
+           profile.eligible = True
+           profile.save()

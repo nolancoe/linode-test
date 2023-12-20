@@ -18,6 +18,7 @@ class Team(models.Model):
     losses = models.PositiveIntegerField(default=0)
 
     full_team = models.BooleanField(default=False)
+    at_capacity = models.BooleanField(default=False)
     disbanded = models.BooleanField(default=False)
 
     #Eligibility
@@ -51,6 +52,7 @@ class Team(models.Model):
 
         if self.id:
             # Update full_team status
+            self.at_capacity = self.players.count() >= 8
             self.full_team = self.players.count() >= 4
             super().save(*args, **kwargs)
         else:

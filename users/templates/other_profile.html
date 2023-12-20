@@ -125,13 +125,13 @@
             <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
 
             <div>
-              {% if user.is_authenticated and user.current_team and user.current_team.full_team != True and user.current_team.owner == user and other_user.current_team == null %}
+              {% if user.is_authenticated and user.current_team and user.current_team.at_capacity != True and user.current_team.owner == user and other_user.current_team == null %}
                 <form method="post" action="{% url 'send_invitation' user.current_team.id %}">
                   {% csrf_token %}
                   
 
 
-                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#inviteToTeamModal">Invite to {{request.user.current_team}}</button>
+                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#inviteToTeamModal">Invite to {{request.user.current_team}}</button>
 
                     <!-- Modal for confirming team invitaion send -->
                     <div class="modal fade" id="inviteToTeamModal" tabindex="-1" aria-labelledby="inviteToTeamModal" aria-hidden="true">
