@@ -79,7 +79,7 @@
                     </div>
                 </div>
             {% endif %}
-            {% if request.user.current_team and request.user.current_team.owner == request.user and request.user.current_team.full_team and team.full_team and team != request.user.current_team %}
+            {% if request.user.current_team and request.user.current_team.owner == request.user and request.user.current_team.full_team and request.user.current_team.eligible and team.full_team and team.eligible and team != request.user.current_team %}
               <div class="text-center">
                 <a href="{% url 'create_direct_challenge' team.id %}" class="btn btn-primary custom-shadow-small rounded-3">Challenge {{ team.name }}</a>
               </div>

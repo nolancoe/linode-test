@@ -9,7 +9,7 @@
           <div class="card-header border-primary text-center">
             <h1>Sending direct challenge to <a href="{% url 'team_detail' team_id=challenged_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenged_team.name }}</h1></a>
           </div>
-          {% if request.user.current_team.full_team %}
+          {% if request.user.current_team.full_team and request.user.current_team.eligible and challenged_team.eligible %}
             <div class="card-body text-center">
               <form method="post">
                 {% csrf_token %}
@@ -84,7 +84,7 @@
             </div>
           {% else %}
             <div class="card-body text-center">
-              <h3>Must be owner or captain of a team with 4 players to create a direct challenge</h3>
+              <p>Must be owner or captain of a team with 4 players to create a direct challenge. Additionaly please be sure that the team you are challenging is eligible</p>
             </div>
           {% endif %}
         </div>

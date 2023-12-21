@@ -60,6 +60,16 @@ class DirectChallengeForm(forms.ModelForm):
                 self.fields['challenge_players'].queryset = players_queryset
                 
 
+    def clean(self):
+        cleaned_data = super().clean()
+        selected_players = cleaned_data.get('challenge_players')
+        
+        # Check if exactly 4 players are selected
+        if selected_players.count() != 4:
+            raise ValidationError("Please select exactly 4 players.")
+
+        return cleaned_data
+
     def clean_scheduled_date(self):
         scheduled_date = self.cleaned_data.get('scheduled_date')
         
@@ -99,23 +109,22 @@ class MatchSupportForm(forms.ModelForm):
         self.fields['category'].queryset = SupportCategory.objects.all()
 
 
+
 class PlayerSelectionForm(forms.Form):
+    challenge_players = forms.ModelMultipleChoiceField(
+        queryset=Profile.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
     def __init__(self, *args, **kwargs):
-        team_players = kwargs.pop('team_players')
-        super(PlayerSelectionForm, self).__init__(*args, **kwargs)
+        team_players = kwargs.pop('team_players', None)
+        super().__init__(*args, **kwargs)
+        if team_players:
+            self.fields['challenge_players'].queryset = team_players.filter(eligible=True)
 
-        for player in team_players:
-            self.fields['player_{0}'.format(player.id)] = forms.BooleanField(label=player.username)
-
-    def clean(self):
-        selected_profiles = []
-        for field_name, value in self.cleaned_data.items():
-            if value:
-                player_id = int(field_name.split('_')[1])
-                profile = Profile.objects.get(id=player_id)  # Assuming Profile has an ID field
-                selected_profiles.append(profile)
-        
-        if len(selected_profiles) != 4:
-            raise forms.ValidationError("Please select exactly 4 players.")
-        
-        return selected_profiles
+    def clean_challenge_players(self):
+        selected_players = self.cleaned_data.get('challenge_players')
+        if len(selected_players) != 4:
+            raise ValidationError("Please select exactly 4 players.")
+        return selected_players

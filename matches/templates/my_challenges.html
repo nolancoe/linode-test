@@ -85,7 +85,7 @@
                                   {% if direct_challenge.accepted %}
                                   <span class="badge badge-success">Challenge Accepted!</span>
                                   {% else %}
-                                  <button type="button" class="btn btn-primary custom-shadow-small" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ direct_challenge.pk }}">Accept Challenge</button>
+                                  <a href="{% url 'accept_direct_challenge' direct_challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept Challenge</a>
 
                                   {% endif %}
                               {% endif %}

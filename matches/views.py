@@ -10,6 +10,7 @@ from django.db import transaction
 from django.contrib.admin.views.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponse, HttpResponseRedirect
+import pprint
 
 from teams.views import check_team_eligibility, reset_team_eligibility
 from django.contrib.auth.decorators import login_required
@@ -268,9 +269,9 @@ def accept_challenge(request, challenge_id):
                 form = PlayerSelectionForm(request.POST, team_players=team.players.all())
 
                 if form.is_valid():
-                    selected_profiles = form.cleaned_data
+                    selected_players = form.cleaned_data['challenge_players']
 
-                    challenge.accept_challenge(team2, selected_profiles)
+                    challenge.accept_challenge(team2, selected_players)
                     # Get the newly created match for this challenge
                     match = Match.objects.filter(
                         Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team)
@@ -284,13 +285,13 @@ def accept_challenge(request, challenge_id):
                         request.user.badges.add(badge)
 
                     return redirect('match_details', match_id=match.id)
+                else:
+                    # Form is invalid, render the dedicated template for accepting challenge
+                    return render(request, 'accept_challenge.html', {'form': form, 'challenge': challenge})
             else:
                 form = PlayerSelectionForm(team_players=team.players.all())
 
-            return render(request, 'challenges.html', {'form': form, 'challenge': challenge})
-        else:
-            return redirect('challenges')
-
+            return render(request, 'accept_challenge.html', {'form': form, 'challenge': challenge})
 
 def accept_direct_challenge(request, direct_challenge_id):
     direct_challenge = get_object_or_404(DirectChallenge, pk=direct_challenge_id)
@@ -355,7 +356,7 @@ def accept_direct_challenge(request, direct_challenge_id):
                 form = PlayerSelectionForm(request.POST, team_players=team.players.all())
 
                 if form.is_valid():
-                    selected_profiles = form.cleaned_data
+                    selected_profiles = form.cleaned_data['challenge_players']
 
                     direct_challenge.accept_direct_challenge(selected_profiles)
                     # Get the newly created match for this direct challenge
@@ -371,13 +372,13 @@ def accept_direct_challenge(request, direct_challenge_id):
                         request.user.badges.add(badge)
 
                     return redirect('match_details', match_id=match.id)
+                else:
+                    # Form is invalid, render the dedicated template for accepting challenge
+                    return render(request, 'accept_direct_challenge.html', {'form': form, 'direct_challenge': direct_challenge})
             else:
                 form = PlayerSelectionForm(team_players=team.players.all())
-            
-            # Redirect to the match details page for the newly created match
-            return redirect('match_details', match_id=match.id)
-        else:
-            return redirect('my_challenges')
+
+            return render(request, 'accept_direct_challenge.html', {'form': form, 'direct_challenge': direct_challenge})
 
 def cancel_challenge(request, challenge_id):
     challenge = get_object_or_404(Challenge, pk=challenge_id)
@@ -399,8 +400,6 @@ def cancel_direct_challenge(request, direct_challenge_id):
 
 @login_required
 def challenges(request):
-
-    
 
     if request.user.is_authenticated:
         if request.user.current_team:

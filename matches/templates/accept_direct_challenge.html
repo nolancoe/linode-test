@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card border-5 border-primary rounded-4 custom-shadow text-center mb-5">
+          
+          <div class="card-header border-primary text-center"><h1>Accept Challenge</h1></div>
+            {% if request.user.current_team %}
+              <div class="card-body text-center">
+                <form method="post">
+                  {% csrf_token %}
+                    <p class="p-1 bg-warning text-dark custom-shadow-warning rounded col-md-8 mx-auto"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
+                    <div class="form-group">
+                        <label for="team">Your Team: </label> {{ user.current_team.name }} ({{ user.current_team.formatted_rating }})
+                    </div>
+                  
+                    <div class="form-group">
+                        <label for="team">Opposing Team: </label> {{ direct_challenge.challenging_team }} ({{ direct_challenge.challenging_team.formatted_rating }})
+                    </div>
+
+
+
+                  <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
+
+                  
+
+                  <div class="form-group">
+                    <label for="challenge_players"><h3>Select 4 players from your team to participate in the match:</h3></label>
+                    <p>{{ form.challenge_players }}</p>
+                  </div>
+
+
+                  {% if form.errors %}
+                    <div class="alert alert-danger">
+                      <ul class="list-unstyled">
+                        {% for field_errors in form.errors.values %}
+                          {% for error in field_errors %}
+                            <li>{{ error }}</li>
+                          {% endfor %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                  
+                  
+                </br>
+                  
+
+                
+
+                  <button type="submit" class="btn btn-primary custom-shadow-small rounded-3 mb-3">Accept Challenge</button>
+
+                </form>
+                <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
+
+                <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
+                
+                
+
+                {% if direct_challenge.search_only %}
+                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                {% else %}
+                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                {% endif %}
+
+
+                {% if direct_challenge.controller_only %}
+                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                {% else %}
+                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                {% endif %}
+
+              </div>
+            {% else %}
+            <div class="card-body text-center">
+              <h3>You need to be a member of a team to accept a challenge.</h3>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

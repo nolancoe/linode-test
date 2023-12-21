@@ -2,6 +2,7 @@ from django.utils import timezone
 from matches.models import Match, DisputeProof, DirectChallenge
 from messaging.models import Message
 from django.shortcuts import redirect
+from teams.models import TeamInvitation
 
 def matches_context(request):
     matches = Match.objects.all()
@@ -16,9 +17,9 @@ def dispute_proofs_context(request):
 
 def direct_challenge_context(request):
     # Get all DisputeProof instances associated with the current user
-    direct_challenge = DirectChallenge.objects.all
+    direct_challenges = DirectChallenge.objects.all
 
-    return {'direct_challenge': direct_challenge}
+    return {'direct_challengs': direct_challenges}
 
 
 def message_context(request):
@@ -27,3 +28,8 @@ def message_context(request):
         return {'unread_messages': unread_messages}
     else:
         return {}
+
+
+def team_invites_context(request):
+    invites = TeamInvitation.objects.all()
+    return {'invites' : invites}

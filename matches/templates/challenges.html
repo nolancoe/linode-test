@@ -10,7 +10,6 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="text-center mt-3">
-        
         {% if request.user.current_team and request.user.current_team.owner == request.user %}
           <a href="{% url 'create_challenge' %}" class="btn btn-primary custom-shadow  rounded-top-5 rounded-bottom-0">Post A Challenge</a>
         {% elif request.user.current_team%}
@@ -42,10 +41,24 @@
                                     <p>To accept the challenge please select 4 players from your team that will be participating in the match.</p>
                                     <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
                                     <form method="post" action="{% url 'accept_challenge' challenge.pk %}">
-                                        {% csrf_token %}
-                                        {{ form.as_p }}
-                                        <input type="submit" class="btn btn-primary custom-shadow-small rounded-3" value="Accept">
-                                    </form>
+                                      {% csrf_token %}
+                                      {{ form.as_p }}
+                          
+                                      {% if form.errors %}
+                                          <ul class="errorlist">
+                                              {% for field_errors in form.errors %}
+                                                  {% for error in field_errors %}
+                                                      <li>{{ error }}</li>
+                                                  {% endfor %}
+                                              {% endfor %}
+                                          </ul>
+                                      {% endif %}
+                          
+                                      <input type="submit" class="btn btn-primary custom-shadow-small rounded-3" value="Accept">
+                                  </form>
+                                  
+                                  
+                                  
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary custom-shadow-danger rounded-3" data-bs-dismiss="modal">Cancel</button>
@@ -95,7 +108,8 @@
                                         {% if challenge.accepted %}
                                         <span class="badge badge-success">Challenge Accepted!</span>
                                         {% else %}
-                                        <button type="button" class="btn btn-primary custom-shadow-small rounded-3" data-bs-toggle="modal" data-bs-target="#confirmAcceptModal{{ challenge.pk }}">Accept Challenge</button>
+                                        <a href="{% url 'accept_challenge' challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept Challenge</a>
+
 
                                         {% endif %}
                                     {% endif %}

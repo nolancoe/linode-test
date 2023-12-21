@@ -26,7 +26,7 @@
 
                   {% if form.errors %}
                     <div class="alert alert-danger">
-                      <ul>
+                      <ul class="list-unstyled">
                         {% for field_errors in form.errors.values %}
                           {% for error in field_errors %}
                             <li>{{ error }}</li>
@@ -86,7 +86,7 @@
               </div>
             {% else %}
             <div class="card-body text-center">
-              <h3>Must be Owner or captain of a team with at least 4 players to create a challenge</h3>
+              <h3>Must be Owner or captain of an eligible team with at least 4 players to create a challenge</h3>
             </div>
             {% endif %}
           </div>

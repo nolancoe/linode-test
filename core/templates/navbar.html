@@ -45,12 +45,7 @@
 
                 {% endif %}
 
-                
-                {% if not user.current_team %}
 
-                <li><a class="dropdown-item" href="{% url 'pending_team_invites' %}">Team Invites</a></li>
-                <li><a class="dropdown-item" href="{% url 'create_team' %}">Create A Team</a></li>
-                {% endif %}
                 
                 <li><a class="dropdown-item" href="{% url 'socialaccount_connections' %}">Connected Accounts</a></li>
                 <li><a class="dropdown-item" href="{% url 'customize_profile' %}">Settings</a></li>
@@ -84,8 +79,8 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-gamepad
-                  {% for direct_challenge in direct_challenge %}
-                    {% if direct_challenge.challenged_team == request.user.current_team %}
+                  {% for direct_challenges in direct_challenges %}
+                    {% if direct_challenges.challenged_team == request.user.current_team %}
                       fa-bounce
                     {% endif %}
                   {% endfor %}
@@ -97,6 +92,12 @@
                           fa-bounce
                         {% endif %}
                       {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% for invites in invites %}
+                    {% if invites.invited_user == request.user %}
+                          fa-bounce
                     {% endif %}
                   {% endfor %}">
                 </i> Play
@@ -113,8 +114,8 @@
 
                 <a class="dropdown-item" href="{% url 'my_challenges' %}">
                   My Challenges
-                  {% for direct_challenge in direct_challenge %}
-                    {% if direct_challenge.challenged_team == request.user.current_team %}
+                  {% for direct_challenges in direct_challenges %}
+                    {% if direct_challenges.challenged_team == request.user.current_team %}
                       <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
                     {% endif %}
                   {% endfor %}
@@ -155,7 +156,19 @@
                     </a>
                   </li>
 
-                
+                {% else %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'pending_team_invites' %}">
+                    Team Invites
+                  {% for invites in invites %}
+                    {% if invites.invited_user == request.user %}
+                      <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                    {% endif %}
+                  {% endfor %}
+
+                </a>
+              </li>
+                <li><a class="dropdown-item" href="{% url 'create_team' %}">Create A Team</a></li>
                 {% endif %}
                 
             </ul>

@@ -41,6 +41,7 @@ def create_team(request):
                 reset_team_eligibility(team)
                 # Update the current_team field of the user's Profile instance
                 profile = request.user
+                reset_player_eligibility(profile)
                 profile.current_team = team
                 profile.save()
 

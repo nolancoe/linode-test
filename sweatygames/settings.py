@@ -96,6 +96,7 @@ TEMPLATES = [
                 'core.context_processors.dispute_proofs_context',
                 'core.context_processors.direct_challenge_context',
                 'core.context_processors.message_context',
+                'core.context_processors.team_invites_context',
 
             ],
         },
