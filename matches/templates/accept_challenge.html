@@ -15,16 +15,16 @@
                   {% csrf_token %}
                     <p class="p-1 bg-warning text-dark custom-shadow-warning rounded col-md-8 mx-auto"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ challenge.scheduled_date|timeuntil }}</p>
                     <div class="form-group">
-                        <label for="team">Your Team: </label> {{ user.current_team.name }} ({{ user.current_team.formatted_rating }})
+                        <label for="team">Your Team: </label> <a href="{% url 'team_detail' team_id=user.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ user.current_team.name }} ({{ user.current_team.formatted_rating }})</a>
                     </div>
                   
                     <div class="form-group">
-                        <label for="team">Opposing Team: </label> {{ challenge.team }} ({{ challenge.team.formatted_rating }})
+                        <label for="team">Opposing Team: </label> <a href="{% url 'team_detail' team_id=challenge.team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenge.team }} ({{ challenge.team.formatted_rating }})</a>
                     </div>
 
 
 
-                  <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
+                  <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:40%">
 
                   
 
@@ -55,7 +55,7 @@
                   <button type="submit" class="btn btn-primary custom-shadow-small rounded-3 mb-3">Accept Challenge</button>
 
                 </form>
-                <hr class="mx-auto custom-shadow-small border-4 rounded-3" style="width:40%">
+                <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:40%">
 
                 <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
                 

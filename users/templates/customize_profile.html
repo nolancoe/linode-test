@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row justify-content-center mx-auto">
     <div class="col-md-6 mx-auto">
-      <div class="card border-5 border-primary mt-5">
+      <div class="card border-5 border-primary mt-5 rounded-4 custom-shadow">
         <div class="card-header border-primary">
           <h1 class="card-title text-center">Edit Profile</h1>
         </div>
@@ -39,6 +39,12 @@
           <div class="mb-3">
             {{ form.activision_id }}
           </div>
+          <div class="mb-3">
+            {{ form.gamertag }}
+          </div>
+          <div class="mb-3">
+            {{ form.psnid }}
+          </div>
 
           <div class="mb-3">
             {{ form.birthday.label_tag }}
@@ -53,7 +59,7 @@
             {{ form.country }}
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+          <button type="submit" class="btn btn-primary btn-block custom-shadow-small rounded-3">Save Changes</button>
         </form>
       </div>
     </div>

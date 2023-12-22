@@ -58,7 +58,7 @@
                             <i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
                           {% if direct_challenge.challenging_team.logo %}
                             <div class="text-center">
-                              <img src="{{ direct_challenge.challenging_team.logo.url }}" alt="{{ direct_challenge.challenging_team.name }} Logo" width="300" height="300" class="img-fluid">
+                              <img src="{{ direct_challenge.challenging_team.logo.url }}" alt="{{ direct_challenge.challenging_team.name }} Logo" width="300" height="300" class="fixed-logo img-fluid">
                             </div>
                           {% endif %}
                           <p>{{ direct_challenge.scheduled_date|timezone:request.user.timezone }}</p>
@@ -158,7 +158,7 @@
                           {% if challenge.team.logo %}
                             <div class="text-center">
                               <img src="{{ challenge.team.logo.url }}" alt="{{ challenge.team.name }} Logo" 
-                                  width="300" height="300" class="img-fluid">
+                                  width="300" height="300" class="img-fluid fixed-logo">
                             </div>
                           {% endif %}
                           <p>{{ challenge.scheduled_date|timezone:request.user.timezone }}</p>
@@ -242,7 +242,7 @@
                           {% if direct_challenge.challenged_team.logo %}
                             <div class="text-center">
                               <img src="{{ direct_challenge.challenged_team.logo.url }}" alt="{{ direct_challenge.challenged_team.name }} Logo" 
-                                  width="300" height="300" class="img-fluid">
+                                  width="300" height="300" class="img-fluid fixed-logo">
                             </div>
                           {% endif %}
 

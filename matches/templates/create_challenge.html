@@ -40,7 +40,7 @@
                 </br>
                   <div class="form-group">
                     <label for="scheduled_date">Select date and time for match to start:</label>
-                    <input type="datetime-local" class="form-control mx-auto" id="scheduled_date" style="width:50%" name="scheduled_date" required>
+                    <input type="datetime-local" class="form-control mx-auto custom-shadow-small rounded-3" id="scheduled_date" style="width:50%" name="scheduled_date" required>
                   </div>
 
                     <div>
@@ -94,5 +94,33 @@
       </div>
     </div>
   </div>
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get current date and time
+      const now = new Date();
+  
+      // Calculate 30 minutes from now
+      const thirtyMinutesLater = new Date(now.getTime() + 30 * 60000); // 30 minutes in milliseconds
+  
+      // Format today's date
+      const year = now.getFullYear();
+      let month = (now.getMonth() + 1).toString().padStart(2, '0');
+      let day = now.getDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+  
+      // Format 30 minutes later time
+      let hours = thirtyMinutesLater.getHours().toString().padStart(2, '0');
+      let minutes = thirtyMinutesLater.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}`;
+  
+      // Set the value of the scheduled_date input to today's date and time 30 minutes from now
+      document.getElementById('scheduled_date').value = `${formattedDate}T${formattedTime}`;
+    });
+  </script>
+  
+  
 
 {% endblock %}

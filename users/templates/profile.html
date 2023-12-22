@@ -30,6 +30,26 @@
     alert('Activision ID copied to clipboard: ' + text);
   }
 
+  function copyGamertagToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Gamertag copied to clipboard: ' + text);
+  }
+
+  function copyPSNIDToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('PSN ID copied to clipboard: ' + text);
+  }
+
 </script>
 
 <div class="container mt-5">
@@ -61,7 +81,7 @@
             <div>
               
               <div class="text-center">
-                <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
+                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:80%">
                 {% if profile.socialaccount_set.all %}
                     {% for social_account in profile.socialaccount_set.all %}
                         {% if social_account.provider == 'twitch' %}
@@ -115,7 +135,15 @@
                   <button onclick="copyActivisionToClipboard('{{ profile.activision_id }}')" class="btn btn-dark mx-1"><i class="fa-solid fa-person-rifle fa-flip-horizontal"></i> Activision ID</button>
                 {% endif %}
 
-                <hr class="mx-auto border-5 custom-shadow-small rounded-3" style="width:80%">
+                {% if profile.gamertag %}
+                  <button onclick="copyGamertagToClipboard('{{ profile.gamertag }}')" class="btn btn-dark mx-1"><i class="fa-brands fa-xbox"></i> Gamertag</button>
+                {% endif %}
+
+                {% if profile.psnid %}
+                  <button onclick="copyPSNIDToClipboard('{{ profile.psnid }}')" class="btn btn-dark mx-1"><i class="fa-brands fa-playstation"></i> PSN ID</button>
+                {% endif %}
+
+                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-5" style="width:80%">
                 
               </div>
             </div>
@@ -140,7 +168,7 @@
                 <div class="card-body">
                     {% if profile.current_team.logo %}
                         <div class="text-center">
-                            <img src="{{ profile.current_team.logo.url }}" alt="{{ profile.current_team.name }} Logo" width="300" height="300" class="img-fluid">
+                            <img src="{{ profile.current_team.logo.url }}" alt="{{ profile.current_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
                         </div>
                     {% endif %}
                     <div class="text-center">
@@ -214,7 +242,7 @@
                       <div class="card border-primary rounded-4 custom-shadow-small">
                         <div class="card-header border-primary text-center">
                           <a href="{% url 'match_details' match_id=upcoming_match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
-                            <p><img src="{{ upcoming_match.team1.logo.url }}" alt="{{ upcoming_match.team1.name }} Logo" width="30" height="30" class="img-fluid"> {{ upcoming_match.team1 }} vs. {{ upcoming_match.team2 }} <img src="{{ upcoming_match.team2.logo.url }}" alt="{{ upcoming_match.team2.name }} Logo" width="30" height="30" class="img-fluid"></p>
+                            <p><img src="{{ upcoming_match.team1.logo.url }}" alt="{{ upcoming_match.team1.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"> {{ upcoming_match.team1 }} vs. {{ upcoming_match.team2 }} <img src="{{ upcoming_match.team2.logo.url }}" alt="{{ upcoming_match.team2.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"></p>
                           </a>
                           <p class="text-center">
                               
@@ -287,7 +315,7 @@
                                 <span class="mt-3 text-center text-danger">L</span>
                               {% endif %}
                               
-                              - <img src="{{ past_match.team1.logo.url }}" alt="{{ past_match.team1.name }} Logo" width="25" height="25" class="img-fluid"> {{ past_match.team1 }} vs. {{ past_match.team2 }} <img src="{{ past_match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="25" height="25" class="img-fluid"> -
+                              - <img src="{{ past_match.team1.logo.url }}" alt="{{ past_match.team1.name }} Logo" width="25" height="25" class="img-fluid fixed-logo-small"> {{ past_match.team1 }} vs. {{ past_match.team2 }} <img src="{{ past_match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="25" height="25" class="img-fluid fixed-logo-small"> -
                               
                               {% if past_match.team2_result == "win" %}
                                 <span class="mt-3 text-center text-success">W</span>

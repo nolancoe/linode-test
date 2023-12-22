@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 import requests
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
+from PIL import Image, ImageFilter
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -56,6 +57,8 @@ class Team(models.Model):
             self.full_team = self.players.count() >= 4
             super().save(*args, **kwargs)
         else:
+            super().save(*args, **kwargs)
+
             super().save(*args, **kwargs)
 
 

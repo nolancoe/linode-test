@@ -31,6 +31,8 @@ class Profile(AbstractUser):
     twitter_link = models.URLField(max_length=255, blank=True, null=True)
     youtube_link = models.URLField(max_length=255, blank=True, null=True)
     activision_id = models.CharField(max_length=50, blank=True, null=True)
+    gamertag = models.CharField(max_length=15, blank=True, null=True)
+    psnid = models.CharField(max_length=16, blank=True, null=True)
     
     #Eligibility
     eligible = models.BooleanField(default=True)

@@ -10,7 +10,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['username', 'first_name', 'last_name', 'birthday', 'country', 'timezone', 'profile_picture', 'twitch_link', 'twitter_link', 'youtube_link', 'activision_id']
+        fields = ['username', 'first_name', 'last_name', 'birthday', 'country', 'timezone', 'profile_picture', 'gamertag', 'psnid', 'twitter_link', 'youtube_link', 'activision_id']
         widgets = {
             'birthday': forms.DateInput(attrs={'type': 'date', 'placeholder': 'Birthday'}),
             'country': CountrySelectWidget(attrs={'class': 'form-control custom-select', 'placeholder': 'Country'}),
@@ -21,6 +21,8 @@ class ProfileForm(forms.ModelForm):
             'twitter_link': forms.TextInput(attrs={'placeholder': 'Twitter Link'}),
             'youtube_link': forms.TextInput(attrs={'placeholder': 'Youtube Link'}),
             'activision_id': forms.TextInput(attrs={'placeholder': 'Activision ID'}),
+            'gamertag': forms.TextInput(attrs={'placeholder': 'Xbox Gamertag'}),
+            'psnid': forms.TextInput(attrs={'placeholder': 'Playstation Network ID'}),
             'profile_picture': forms.FileInput(attrs={'accept': 'image/*'}),
 
         }

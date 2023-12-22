@@ -15,3 +15,14 @@ class BanCheckMiddleware:
 
         response = self.get_response(request)
         return response
+
+
+class RestrictAdminMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.path.startswith('/yougottatryharderthanthathackercmonnow/'):  # Replace with your admin URL
+            if not request.user.is_authenticated or not request.user.is_superuser:
+                return redirect('/')  # Redirect unauthorized users to another page
+        return self.get_response(request)

@@ -31,7 +31,7 @@
                                             
                                             {% if invitation.team.logo %}   
                                                 <div class="text-center">
-                                                    <img src="{{ invitation.team.logo.url }}" alt="{{ invitation.team.name }} Logo" class="img-fluid" width="300" height="300">
+                                                    <img src="{{ invitation.team.logo.url }}" alt="{{ invitation.team.name }} Logo" class="img-fluid fixed-logo" width="300" height="300">
                                                 </div>
                                             {% endif %}
                                             <form method="post" action="{% url 'accept_invitation' invitation.id %}" class="mt-2">

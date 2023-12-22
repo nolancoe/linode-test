@@ -24,8 +24,9 @@ from matches.views import support_request_success, rules, request_match_support,
 from messaging.views import messages, message_details, send_message
 
 
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('yougottatryharderthanthathackercmonnow/', admin.site.urls),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
@@ -119,4 +120,7 @@ urlpatterns = [
 
 
     path('', include('core.urls')),
+
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
