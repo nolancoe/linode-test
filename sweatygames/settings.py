@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'teams',
     'matches',
     'messaging',
+    'duos_teams',
+    'duos_matches',
 
     #3rd Party Apps
     'django_countries',

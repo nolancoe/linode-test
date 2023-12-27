@@ -40,6 +40,7 @@ class Profile(AbstractUser):
 
     #team fields
     current_team = models.ForeignKey('teams.Team', on_delete=models.SET_NULL, blank=True, null=True, related_name='members')
+    current_duos_team = models.ForeignKey('duos_teams.DuosTeam', on_delete=models.SET_NULL, blank=True, null=True, related_name='duos_members')
 
     #Rating System Fields
     rating = models.FloatField(default=1000)
