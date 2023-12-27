@@ -20,34 +20,35 @@
                         {% if all_messages %}
                             {% for message in all_messages %}
                                     <div class="card mb-3 rounded-5">
-                                        <div class="card-body custom-shadow-small border border-primary rounded-5">
-
-                                                <div class="card-header rounded-5 ">
-                                                    {% if message.sender == request.user %}
-                                                        <a href="{% url 'other_user_profile' username=request.user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">
-                                                            {% if request.user.profile_picture %}
-                                                                <img src="{{ request.user.profile_picture.url }}" alt="{{ request.user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
-                                                            {% else %}
-                                                            <img src="\media\sweatygameslogo1.png" alt="{{ request.user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
-                                                            {% endif %}
-                                                        </a>
-                                                        <p class="mb-0">
-                                                            <a href="{% url 'other_user_profile' username=request.user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ request.user.username }}</a>
-                                                        </p>
-
+                                        <div class="card-header rounded-top-5 custom-shadow-small">
+                                            {% if message.sender == request.user %}
+                                                <a href="{% url 'other_user_profile' username=request.user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">
+                                                    {% if request.user.profile_picture %}
+                                                        <img src="{{ request.user.profile_picture.url }}" alt="{{ request.user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
                                                     {% else %}
-                                                        <a href="{% url 'other_user_profile' username=other_user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">
-                                                            {% if other_user.profile_picture %}
-                                                                <img src="{{ other_user.profile_picture.url }}" alt="{{ other_user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
-                                                            {% else %}
-                                                                <img src="\media\sweatygameslogo1.png" alt="{{ other_user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
-                                                            {% endif %}
-                                                        </a>
-                                                        <p class="mb-0">
-                                                            <a href="{% url 'other_user_profile' username=other_user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ other_user.username }}</a>
-                                                        </p>
+                                                    <img src="\media\sweatygameslogo1.png" alt="{{ request.user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
                                                     {% endif %}
-                                                </div>
+                                                </a>
+                                                <p class="mb-0">
+                                                    <a href="{% url 'other_user_profile' username=request.user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ request.user.username }}</a>
+                                                </p>
+
+                                            {% else %}
+                                                <a href="{% url 'other_user_profile' username=other_user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">
+                                                    {% if other_user.profile_picture %}
+                                                        <img src="{{ other_user.profile_picture.url }}" alt="{{ other_user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
+                                                    {% else %}
+                                                        <img src="\media\sweatygameslogo1.png" alt="{{ other_user.username }}" style="width: 30px; height: 30px; border-radius: 50%;">
+                                                    {% endif %}
+                                                </a>
+                                                <p class="mb-0">
+                                                    <a href="{% url 'other_user_profile' username=other_user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ other_user.username }}</a>
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-body custom-shadow-small border border-primary rounded-bottom-5">
+
+                                                
                                                 
                                                 <div>
                                                     </br>

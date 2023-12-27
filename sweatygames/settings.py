@@ -164,6 +164,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online'},
         'INIT_PARAMS': {'redirect_uri': 'http://localhost:8000/accounts/twitch/login/callback/'},
     },
+
 }
 
 

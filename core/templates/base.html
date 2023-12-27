@@ -22,7 +22,7 @@
       .card .card-body .custom-form {
         max-width: 100%; /* Adjust this value as needed */
         margin: 0 auto; /* Center the form horizontally */
-    }
+      }
 
       .card-img {
         max-width: 100%;
@@ -44,7 +44,6 @@
           color: #FFC107 !important; /* Yellow color */
       }
   
-
       .scrollable-container {
         max-height: 400px; /* Set the desired maximum height */
         overflow-y: auto;
@@ -77,15 +76,27 @@
       }
 
       .fixed-logo {
+        width: 300px; 
+        height: 300px; 
+
+      }
+
+      .logo-container {
         width: 300px; /* Set your desired width */
         height: 300px; /* Set your desired height */
-        /* Add any additional styling if needed, such as border-radius or object-fit */
+        position: relative;
+        overflow: hidden;
+      }
+
+      .fixed-logo-ladder {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
       }
 
       .fixed-logo-small {
-        width: 30px; /* Set your desired width */
-        height: 30px; /* Set your desired height */
-        /* Add any additional styling if needed, such as border-radius or object-fit */
+        width: 30px;
+        height: 30px;
       }
 
   </style>
