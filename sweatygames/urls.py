@@ -22,6 +22,7 @@ from users.views import support_list, change_support_status, support_detail, cre
 from teams.views import create_team, already_a_player, team_ladder, invitation_sent, invitation_already_sent, transfer_ownership, edit_team, user_is_teammate, send_invitation, pending_team_invites, accept_invitation, team_detail, remove_player_from_team, leave_team, deny_invitation, disband_team
 from matches.views import support_request_success, rules, request_match_support, submit_results_success, dispute_conflict, team_not_eligible, decline_direct_challenge, match_farming, schedule_conflict, accept_challenge, accept_direct_challenge, create_challenge, challenges, match_details, submit_results, dispute_proofs_list, update_dispute_proof, dispute_proof_details, dispute_details, disputes_list, match_list, past_match_list, my_match_list, my_past_match_list, cancel_challenge, cancel_direct_challenge, my_challenges_view, dispute_expired, create_direct_challenge
 from messaging.views import messages, message_details, send_message
+from duos_teams.views import create_duos_team, duos_team_ladder, edit_duos_team, send_duos_invitation, duos_invitation_sent, pending_duos_team_invites, duos_invitation_already_sent, user_is_duos_teammate, deny_duos_invitation, accept_duos_invitation, duos_team_detail, remove_player_from_duos_team, transfer_duos_ownership, leave_duos_team, disband_duos_team
 
 
 
@@ -55,6 +56,7 @@ urlpatterns = [
     path('suggestion_detail/<int:suggestion_id>/change_status/', change_suggestion_status, name='change_suggestion_status'),
     path('suggestion_list/', suggestion_list, name='suggestion_list'),
 
+    #Team Links
     path('create_team/', create_team, name='create_team'),
     path('already_a_player/', already_a_player, name='already_a_player'),
     path('invitation_sent/', invitation_sent, name='invitation_sent'),
@@ -73,6 +75,24 @@ urlpatterns = [
     path('team_ladder/', team_ladder, name='team_ladder'),
     path('player_ladder/', player_ladder_view, name='player_ladder'),
     path('transfer_ownership/<int:team_id>/<int:new_owner_id>/', transfer_ownership, name='transfer_ownership'),
+
+    #Duos Team Links
+    path('create_duos_team/', create_duos_team, name='create_duos_team'),
+    path('duos_team_ladder/', duos_team_ladder, name='duos_team_ladder'),
+    path('duos_team/edit/<int:team_id>/', edit_duos_team, name='edit_duos_team'),
+    path('duos_invite/<int:team_id>/', send_duos_invitation, name='send_duos_invitation'),
+    path('duos_invitation_sent/', duos_invitation_sent, name='duos_invitation_sent'),
+    path('duos_invitation_already_sent/', duos_invitation_already_sent, name='duos_invitation_already_sent'),
+    path('user_is_duos_teammate/', user_is_duos_teammate, name='user_is_duos_teammate'),
+    path('accept_duos_invitation/<int:invitation_id>/', accept_duos_invitation, name='accept_duos_invitation'),
+    path('deny_duos_invitation/<int:invitation_id>/', deny_duos_invitation, name='deny_duos_invitation'),
+    path('pending_duos_team_invites/', pending_duos_team_invites, name='pending_duos_team_invites'),
+    path('duos_team/<int:team_id>/', duos_team_detail, name='duos_team_detail'),
+    path('duos_team/<int:team_id>/remove_player/<int:player_id>/', remove_player_from_duos_team, name='remove_player_from_duos_team'),
+    path('transfer_duos_ownership/<int:team_id>/<int:new_owner_id>/', transfer_duos_ownership, name='transfer_duos_ownership'),
+    path('duos_team/<int:team_id>/leave/', leave_duos_team, name='leave_duos_team'),
+    path('disband_duos_team/<int:team_id>/', disband_duos_team, name='disband_duos_team'),
+
 
     path('challenges/', email_verified_required(challenges), name='challenges'),
     path('create_challenge/', email_verified_required(create_challenge), name='create_challenge'),

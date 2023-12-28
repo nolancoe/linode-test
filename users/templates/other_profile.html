@@ -169,7 +169,40 @@
                 </form>
               {% endif %}
 
-              
+              {% if user.is_authenticated and user.current_duos_team and user.current_duos_team.at_capacity != True and user.current_duos_team.owner == user and other_user.current_duos_team == null %}
+                <form method="post" action="{% url 'send_duos_invitation' user.current_duos_team.id %}">
+                  {% csrf_token %}
+                  
+
+
+                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#inviteToDuosTeamModal">Invite to {{request.user.current_duos_team}}</button>
+
+                    <!-- Modal for confirming team invitaion send -->
+                    <div class="modal fade" id="inviteToDuosTeamModal" tabindex="-1" aria-labelledby="inviteToDuosTeamModal" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="inviteToDuosTeamModal">Confirm Team Invite {{ team.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            Are you sure you want to invite {{other_user.username}} to join your team?
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary custom-shadow-danger rounded-4" data-bs-dismiss="modal">Cancel</button>
+                            <input type="hidden" name="invited_user" value="{{ other_user.id }}">
+                            <button type="submit" class="btn btn-primary custom-shadow-small rounded-4">Invite to {{request.user.current_duos_team}}</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+
+
+                </form>
+              {% endif %}
+
+
               <div>
                 <a href="{% url 'message_details' username=other_user.username %}" class="btn btn-primary custom-shadow-small rounded-3 mb-3">Message</a>
               </div>
@@ -184,6 +217,8 @@
     </div>
   </div>
 </div>
+
+
 {% if other_user.current_team %}
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -268,6 +303,89 @@
   </div>
 {% endif %}
 
+{% if other_user.current_duos_team %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
+                <div class="card-header card-border border-primary text-center" >
+                  {% if request.user != other_user.current_duos_team.owner %}
+                    <a href="{% url 'duos_team_detail' team_id=other_user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ other_user.current_team.name }}</h1></a>
+                  {% else %}
+                    <h1>{{ other_user.current_duos_team.name }}</h1>
+                  {% endif %}
+                      <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                          <h2>{{ other_user.current_duos_team.formatted_rating }}</h2>
+                        </span>
+                  
+                </div>
+                <div class="card-body card-border border-primary">
+                    {% if other_user.current_team.logo %}
+                        <div class="text-center">
+                            <img src="{{ other_user.current_duos_team.logo.url }}" alt="{{ other_user.current_duos_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                        <h3>
+                          <span class="text-success">{{ other_user.current_duos_team.wins }}</span>-<span class="text-danger">{{ other_user.current_duos_team.losses }}</span>
+                        </h3>
+                    </div>
+                    {% if user.is_authenticated and other_user.current_duos_team == user.current_duos_team and user.current_duos_team.owner == user %}
+                      <div class="mt-auto text-center">
+
+                        <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#kickFromDuosTeamModal">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</button>
+
+                        <!-- Modal for confirming Kicking Player -->
+                        <div class="modal fade" id="kickFromDuosTeamModal" tabindex="-1" aria-labelledby="kickFromDuosTeamModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title ms-auto" id="kickFromDuosTeamModal">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                Are you sure you want to Kick {{ other_user.username }} From {{request.user.current_duos_team}}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <input type="hidden" name="invited_user" value="{{ other_user.id }}">
+                                <a href="{% url 'remove_player_from_duos_team' team_id=other_user.current_duos_team.id player_id=other_user.id %}" class="btn btn-danger">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-success custom-shadow-success rounded-3" data-bs-toggle="modal" data-bs-target="#transferDuosOwnershipModal">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</button>
+
+                        <!-- Modal for confirming Ownership Transfer -->
+                        <div class="modal fade" id="transferDuosOwnershipModal" tabindex="-1" aria-labelledby="transferDuosOwnershipModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title ms-auto" id="transferDuosOwnershipModal">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                Are you sure you want to Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <input type="hidden" name="invited_user" value="{{ other_user.id }}">
+                                <a href="{% url 'transfer_duos_ownership' team_id=user.current_duos_team.id new_owner_id=other_user.id %}" class="btn btn-success">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+
+                      </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+{% endif %}
 
 
 <div class="container mt-5">

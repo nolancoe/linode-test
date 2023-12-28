@@ -7,7 +7,7 @@
       <div class="col-md-8 mx-auto">
         <div class="card border-5 rounded-4 border-primary mt-5 custom-shadow">
           <div class="card-header border-primary">
-            <h1 class="card-title text-center">Call of Duty: MWIII Team Standings</h1>
+            <h1 class="card-title text-center">Call of Duty: MWIII Duos Standings</h1>
           </div>
           <div class="card-body text-center">
             <div class="scrollable-container-team-ladder">
@@ -30,9 +30,7 @@
                         <td>
                           <div>
                             <p><a href="{% url 'team_detail' team_id=team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover mx-3"><h1>{{ team.name }}</h1></a><p>
-
                             <img src="{{ team.logo.url }}" alt="{{ team.name }} Logo" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 100px; height: 100px;">
-
                           </div>
                         </td>
                         <td>

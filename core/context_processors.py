@@ -3,6 +3,7 @@ from matches.models import Match, DisputeProof, DirectChallenge
 from messaging.models import Message
 from django.shortcuts import redirect
 from teams.models import TeamInvitation
+from duos_teams.models import DuosTeamInvitation
 
 def matches_context(request):
     matches = Match.objects.all()
@@ -33,3 +34,7 @@ def message_context(request):
 def team_invites_context(request):
     invites = TeamInvitation.objects.all()
     return {'invites' : invites}
+
+def duos_team_invites_context(request):
+    duos_invites = DuosTeamInvitation.objects.all()
+    return {'duos_invites' : duos_invites}
