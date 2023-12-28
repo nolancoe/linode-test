@@ -16,10 +16,72 @@ from teams.views import check_team_eligibility, reset_team_eligibility
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from core.views import check_players_eligibility, check_user_eligibility
+from duos_matches.models import DuosMatch, DuosChallenge, DuosDirectChallenge
 
 
 def is_admin(user):
     return user.is_superuser
+
+
+#check for scheduling conflicts with any matches or challenges
+def check_conflicts(selected_players, scheduled_date_user_timezone):
+    # Check if the scheduled date conflicts with the user's own scheduled matches
+    conflicting_matches = Match.objects.filter(
+        Q(team1_players__in=selected_players) | Q(team2_players__in=selected_players),
+        date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
+        date__lte=scheduled_date_user_timezone
+    )
+
+    # Check if the scheduled date conflicts with the user's own scheduled duos matches
+    conflicting_duos_matches = DuosMatch.objects.filter(
+        Q(team1_players__in=selected_players) | Q(team2_players__in=selected_players),
+        date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
+        date__lte=scheduled_date_user_timezone
+    )
+    
+    # Check if the scheduled date conflicts with the user's own open challenges
+    conflicting_challenges = Challenge.objects.filter(
+        challenge_players__in=selected_players,
+        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
+        scheduled_date__lte=scheduled_date_user_timezone
+    )
+
+    # Check if the scheduled date conflicts with the user's own open challenges
+    conflicting_duos_challenges = DuosChallenge.objects.filter(
+        challenge_players__in=selected_players,
+        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
+        scheduled_date__lte=scheduled_date_user_timezone
+    )
+
+    # Check if the scheduled date conflicts with the user's own Direct challenges
+    conflicting_direct_challenges = DirectChallenge.objects.filter(
+        challenge_players__in=selected_players,
+        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
+        scheduled_date__lte=scheduled_date_user_timezone
+    )
+
+    # Check if the scheduled date conflicts with the user's own Direct challenges
+    conflicting_duos_direct_challenges = DuosDirectChallenge.objects.filter(
+        challenge_players__in=selected_players,
+        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
+        scheduled_date__lte=scheduled_date_user_timezone
+    )
+
+    return conflicting_matches.exists() or conflicting_duos_matches.exists() or conflicting_challenges.exists() or conflicting_duos_challenges.exists()
+
+#check for active disputes for any of the users teams
+def check_disputes(request, team):
+    disputed_match = Match.objects.filter(
+        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
+        match_disputed = True
+    )
+
+    disputed_duos_match = DuosMatch.objects.filter(
+        Q(team1=request.user.current_duos_team) | Q(team2=request.user.current_duos_team),
+        match_disputed = True
+    )
+
+    return disputed_match.exists() or disputed_duos_match.exists()
 
 @login_required
 def create_challenge(request):
@@ -56,28 +118,16 @@ def create_challenge(request):
                 if time_difference < 1200:  # 1200 seconds = 20 minutes
                     form.add_error('scheduled_date', "Scheduled date must be at least 20 minutes in the future.")
                 else:
-                    # Check if the scheduled date conflicts with the user's own scheduled matches
-                    conflicting_matches = Match.objects.filter(
-                        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                        date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
-                        date__lte=scheduled_date_user_timezone
-                    )
+
+                    selected_players = form.cleaned_data['challenge_players']
+
+                    has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
+                    has_disputes = check_disputes(request, team)
                     
-                    # Check if the scheduled date conflicts with the user's own open challenges
-                    conflicting_challenges = Challenge.objects.filter(
-                        team=request.user.current_team,
-                        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
-                        scheduled_date__lte=scheduled_date_user_timezone
-                    )
-                    
-                    disputed_match = Match.objects.filter(
-                        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                        match_disputed = True
-                    )
-                    
-                    if disputed_match.exists():
+
+                    if has_disputes:
                         form.add_error(None, "Cannot create a challenge while previous matches are still disputed.")
-                    elif conflicting_matches.exists() or conflicting_challenges.exists():
+                    elif has_conflicts:
                         form.add_error('scheduled_date', "Cannot create a challenge that falls within an hour of your already scheduled matches or challenges.")
                     else:
                         challenge = form.save(commit=False)
@@ -141,35 +191,14 @@ def create_direct_challenge(request, team_id):
                 if time_difference < 1200:  # 1200 seconds = 20 minutes
                     form.add_error('scheduled_date', "Scheduled date must be at least 20 minutes in the future.")
                 else:
-                    # Check if the scheduled date conflicts with the user's own scheduled matches
-                    conflicting_matches = Match.objects.filter(
-                        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                        date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
-                        date__lte=scheduled_date_user_timezone
-                    )
+                    selected_players = form.cleaned_data['challenge_players']
 
-                    # Check if the scheduled date conflicts with the user's own Direct challenges
-                    conflicting_challenges = DirectChallenge.objects.filter(
-                        challenging_team=request.user.current_team,
-                        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
-                        scheduled_date__lte=scheduled_date_user_timezone
-                    )
-
-                    # Check if there are conflicting challenges for the challenging team
-                    conflicting_open_challenges = Challenge.objects.filter(
-                        team=request.user.current_team,
-                        scheduled_date__gte=scheduled_date_user_timezone - timezone.timedelta(hours=1),
-                        scheduled_date__lte=scheduled_date_user_timezone
-                    )
-
-                    disputed_match = Match.objects.filter(
-                        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                        match_disputed = True
-                    )
+                    has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
+                    has_disputes = check_disputes(request, team)
                     
-                    if disputed_match.exists():
+                    if has_disputes:
                         form.add_error(None, "Cannot create a challenge while previous matches are still disputed.")
-                    elif conflicting_matches.exists() or conflicting_challenges.exists() or conflicting_open_challenges.exists():
+                    elif has_conflicts:
                         form.add_error('scheduled_date', "Cannot create a challenge that falls within an hour of your already scheduled matches or challenges.")
                     else:
                         challenge = form.save(commit=False)
@@ -229,7 +258,13 @@ def accept_challenge(request, challenge_id):
 
             # Check if there is a match between the teams in the past 12 hours
             past_12_hours = timezone.now() - timezone.timedelta(hours=12)
+           
             previous_match = Match.objects.filter(
+                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
+                date__gte=past_12_hours
+            ).exists()
+            
+            previous_duos_match = DuosMatch.objects.filter(
                 Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
                 date__gte=past_12_hours
             ).exists()
@@ -237,30 +272,19 @@ def accept_challenge(request, challenge_id):
             if previous_match:
                 return redirect('match_farming')
 
+            if previous_duos_match:
+                return redirect('match_farming')
 
-            # Check if the proposed scheduled date conflicts with the user's own scheduled matches
-            conflicting_matches = Match.objects.filter(
-                Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                date__gte=proposed_scheduled_date - timezone.timedelta(hours=1),
-                date__lte=proposed_scheduled_date + timezone.timedelta(hours=1)
-            )
-            
-            # Check if the proposed scheduled date conflicts with the user's own open challenges
-            conflicting_challenges = Challenge.objects.filter(
-                team=request.user.current_team,
-                scheduled_date__gte=proposed_scheduled_date - timezone.timedelta(hours=1),
-                scheduled_date__lte=proposed_scheduled_date + timezone.timedelta(hours=1)
-            )
-            
-            disputed_match = Match.objects.filter(
-                        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                        match_disputed = True
-                    )
+            selected_players = form.cleaned_data['challenge_players']
+
+            has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
+            has_disputes = check_disputes(request, team)
+
                     
-            if disputed_match.exists():
+            if has_disputes:
                 return redirect('dispute_conflict')
 
-            if conflicting_matches.exists() or conflicting_challenges.exists():
+            if has_conflicts:
                 return redirect('schedule_conflict')
             
 
@@ -316,39 +340,30 @@ def accept_direct_challenge(request, direct_challenge_id):
             # Check if there is a match between the teams in the past 12 hours
             past_12_hours = timezone.now() - timezone.timedelta(hours=12)
             previous_match = Match.objects.filter(
-                Q(team1=challenging_team, team2=challenged_team) | Q(team1=challenged_team, team2=challenging_team),
+                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
+                date__gte=past_12_hours
+            ).exists()
+            
+            previous_duos_match = DuosMatch.objects.filter(
+                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
                 date__gte=past_12_hours
             ).exists()
 
             if previous_match:
-                direct_challenge.delete()
                 return redirect('match_farming')
 
-            # Check if the proposed scheduled date conflicts with the user's own scheduled matches
-            conflicting_matches = Match.objects.filter(
-                Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                date__gte=proposed_scheduled_date - timezone.timedelta(hours=1),
-                date__lte=proposed_scheduled_date + timezone.timedelta(hours=1)
-            )
-            
-            # Check if the proposed scheduled date conflicts with the user's own direct challenges
-            conflicting_direct_challenges = DirectChallenge.objects.filter(
-                (Q(challenging_team=request.user.current_team) | Q(challenged_team=request.user.current_team)) &
-                ~Q(id=direct_challenge.id),  # Exclude the current direct challenge
-                scheduled_date__gte=proposed_scheduled_date - timezone.timedelta(hours=1),
-                scheduled_date__lte=proposed_scheduled_date + timezone.timedelta(hours=1)
-            )
-            
+            if previous_duos_match:
+                return redirect('match_farming')
 
-            disputed_match = Match.objects.filter(
-                        Q(team1=request.user.current_team) | Q(team2=request.user.current_team),
-                        match_disputed = True
-                    )
+            selected_profiles = form.cleaned_data['challenge_players']
+
+            has_conflicts = check_conflicts(selected_profiles, scheduled_date_user_timezone)
+            has_disputes = check_disputes(request, team)
                     
-            if disputed_match.exists():
+            if has_disputes:
                 return redirect('dispute_conflict')
 
-            if conflicting_matches.exists() or conflicting_direct_challenges.exists():
+            if has_conflicts:
                 return redirect('schedule_conflict')
 
 
@@ -749,18 +764,27 @@ def my_challenges_view(request):
         check_players_eligibility(current_user)
 
         # Retrieve challenges associated with the user's team that are not yet accepted
-        my_challenges = Challenge.objects.filter(team=team, accepted=False)
+        challenges = Challenge.objects.filter(team=team, accepted=False)
+        duos_challenges = DuosChallenge.objects.filter(team=request.user.current_duos_team, accepted=False)
         
-        # Filter challenges that are within 15 minutes of their start time
-        challenges_to_delete = my_challenges.filter(
-            scheduled_date__lte=timezone.now() + timezone.timedelta(minutes=15)
+        # Merge both querysets in memory using Python list concatenation
+        combined_challenges = list(challenges) + list(duos_challenges)
+
+        sorted_challenges = sorted(
+            combined_challenges,
+            key=lambda challenge: getattr(challenge, 'scheduled_date')
         )
+
+        # Filter challenges that are within 15 minutes of their start time
+        # Note: Since it's a list, you'll need to filter manually
+        challenges_to_delete = [challenge for challenge in combined_challenges if challenge.scheduled_date <= timezone.now() + timezone.timedelta(minutes=15)]
         
         # Delete the challenges that meet the condition
-        challenges_to_delete.delete()
+        for challenge in challenges_to_delete:
+            challenge.delete()
         
         # Retrieve the updated list of challenges after deletion
-        updated_challenges = Challenge.objects.filter(team=team, accepted=False)
+        updated_challenges = combined_challenges
         
         # Retrieve direct challenges where the user's team is the challenging team
         my_challenging_direct_challenges = DirectChallenge.objects.filter(challenging_team=team)
@@ -784,14 +808,16 @@ def my_challenges_view(request):
 
         if request.user.current_team:
             form = PlayerSelectionForm(team_players=request.user.current_team.players.all())
-            return render(request, 'my_challenges.html', {'my_challenges': updated_challenges, 'my_challenging_direct_challenges': my_challenging_direct_challenges, 'my_challenged_direct_challenges': my_challenged_direct_challenges, 'form': form})
+            return render(request, 'my_challenges.html', {'combined_challenges': sorted_challenges, 'my_challenging_direct_challenges': my_challenging_direct_challenges, 'my_challenged_direct_challenges': my_challenged_direct_challenges, 'form': form})
 
 
         return render(
             request,
             'my_challenges.html',
             {
-                'my_challenges': updated_challenges,
+                'challenges': updated_challenges,
+                'duos_challenges': updated_challenges,
+                'combined_challenges': sorted_challenges,
                 'my_challenging_direct_challenges': my_challenging_direct_challenges,
                 'my_challenged_direct_challenges': my_challenged_direct_challenges,
             }

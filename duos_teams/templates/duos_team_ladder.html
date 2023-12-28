@@ -29,7 +29,7 @@
                         <td><h1 class="px-2">{{ forloop.counter }}</h1></td>
                         <td>
                           <div>
-                            <p><a href="{% url 'team_detail' team_id=team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover mx-3"><h1>{{ team.name }}</h1></a><p>
+                            <p><a href="{% url 'duos_team_detail' team_id=team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover mx-3"><h1>{{ team.name }}</h1></a><p>
                             <img src="{{ team.logo.url }}" alt="{{ team.name }} Logo" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 100px; height: 100px;">
                           </div>
                         </td>

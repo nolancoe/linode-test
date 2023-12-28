@@ -125,7 +125,7 @@ class DuosChallenge(models.Model):
     def __str__(self):
         return f"{self.team} Challenge"
 
-    def accept_challenge(self, team2, selected_players):
+    def accept_duos_challenge(self, team2, selected_players):
         if not self.accepted:
             new_match = DuosMatch.objects.create(team1=self.team, team2=team2, date=self.scheduled_date, search_only=self.search_only, controller_only=self.controller_only)
             new_match.team1_players.set(self.challenge_players.all())

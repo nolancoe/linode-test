@@ -26,6 +26,15 @@ def check_players_eligibility(current_user):
             if player.eligible_at < timezone.now():
                 player.eligible = True
                 player.save()
+    
+    if current_user and current_user.current_duos_team:
+        team = current_user.current_duos_team
+        players = team.players.all()
+        
+        for player in players:
+            if player.eligible_at < timezone.now():
+                player.eligible = True
+                player.save()
 
 def check_user_eligibility(current_user):
     if current_user:
