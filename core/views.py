@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from matches.models import Match, DirectChallenge
 from django.utils import timezone
+from teams.models import Team
 
 
 
@@ -31,3 +32,6 @@ def check_user_eligibility(current_user):
         if current_user.eligible_at < timezone.now():
             current_user.eligible = True
             current_user.save()
+
+def ladders(request):
+    return render(request, 'ladders.html')

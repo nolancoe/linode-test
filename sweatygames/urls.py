@@ -25,7 +25,6 @@ from messaging.views import messages, message_details, send_message
 from duos_teams.views import create_duos_team, duos_team_ladder, edit_duos_team, send_duos_invitation, duos_invitation_sent, pending_duos_team_invites, duos_invitation_already_sent, user_is_duos_teammate, deny_duos_invitation, accept_duos_invitation, duos_team_detail, remove_player_from_duos_team, transfer_duos_ownership, leave_duos_team, disband_duos_team
 
 
-
 urlpatterns = [
     path('yougottatryharderthanthathackercmonnow/', admin.site.urls),
     path('login/', login_view, name='login'),
@@ -40,6 +39,9 @@ urlpatterns = [
 
     path('request_verification/', request_verification, name='request_verification'),
     path('resend-verification/', resend_verification, name='resend_verification'),
+
+
+    
 
     path('customize_profile/', customize_profile_view, name='customize_profile'),
     path('redirect_after_steam_login/', redirect_after_steam_login, name='redirect_after_steam_login'),
