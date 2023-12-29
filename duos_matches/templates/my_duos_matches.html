@@ -20,7 +20,7 @@
       </div>
       <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
-          <h2>My Matches</h2>
+          <h2>My Call Of Duty: MWIII Duos Matches</h2>
         </div>
         
         <div class="scrollable-container-challenges">
@@ -53,7 +53,15 @@
                                   </div>
                                   <div class="card-body">
                                   {% if match.search_only %}
-                                    <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
+                                    <p class="p-1 border border rounded-5 custom-shadow-small col-md-6 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
+                                  {% else %}
+                                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-6 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                                  {% endif %}
+
+                                  {% if match.controller_only %}
+                                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-6 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                                  {% else %}
+                                    <p class="p-1 border border rounded-4 custom-shadow-small col-md-6 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
                                   {% endif %}
                                   <p class="text-center">
                                       1: {{ match.game1 }}

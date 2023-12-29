@@ -1,6 +1,6 @@
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import DuosChallenge, DuosMatch, DuosMatchResult, DuosDisputeProof, DuosDispute, DuosDirectChallenge, DuosTeam
+from .models import DuosChallenge, DuosMatch, DuosMatchResult, DuosDisputeProof, DuosDispute, DuosDirectChallenge, DuosTeam, DuosMatchSupport
 from matches.models import Match, Challenge, Team, DirectChallenge
 from users.models import Badge, Profile
 from .forms import DuosChallengeForm, DuosMatchResultForm, DuosDisputeProofForm, DuosDirectChallengeForm, DuosMatchSupportForm, DuosPlayerSelectionForm
@@ -228,7 +228,7 @@ def create_direct_duos_challenge(request, team_id):
                         return redirect('my_challenges')
 
     else:
-        form = DirectChallengeForm(user=request.user)
+        form = DuosDirectChallengeForm(user=request.user)
 
     challenged_team = DuosTeam.objects.get(id=team_id)
     available_teams = DuosTeam.objects.filter(full_team=True, disbanded=False).exclude(id=request.user.current_team.id)
@@ -317,6 +317,8 @@ def accept_duos_challenge(request, challenge_id):
 
 def accept_direct_duos_challenge(request, direct_challenge_id):
     direct_challenge = get_object_or_404(DuosDirectChallenge, pk=direct_challenge_id)
+    user_timezone = request.user.timezone
+    scheduled_date_user_timezone = direct_challenge.scheduled_date.astimezone(user_timezone)
 
     team = request.user.current_duos_team
     if not team.eligible:
@@ -340,7 +342,7 @@ def accept_direct_duos_challenge(request, direct_challenge_id):
             
             
             previous_duos_match = DuosMatch.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
+                Q(team1=team, team2=challenging_team) | Q(team1=challenging_team, team2=team),
                 date__gte=past_12_hours
             ).exists()
 
@@ -348,16 +350,9 @@ def accept_direct_duos_challenge(request, direct_challenge_id):
             if previous_duos_match:
                 return redirect('match_farming')
 
-            selected_profiles = form.cleaned_data['challenge_players']
+            
 
-            has_conflicts = check_conflicts(selected_profiles, scheduled_date_user_timezone)
-            has_disputes = check_disputes(request, team)
-                    
-            if has_disputes:
-                return redirect('dispute_conflict')
-
-            if has_conflicts:
-                return redirect('schedule_conflict')
+            
 
 
             if request.method == 'POST':
@@ -366,7 +361,17 @@ def accept_direct_duos_challenge(request, direct_challenge_id):
                 if form.is_valid():
                     selected_profiles = form.cleaned_data['challenge_players']
 
-                    direct_challenge.accept_direct_duos_challenge(selected_profiles)
+
+                    has_conflicts = check_conflicts(selected_profiles, scheduled_date_user_timezone)
+                    has_disputes = check_disputes(request, team)
+                            
+                    if has_disputes:
+                        return redirect('dispute_conflict')
+
+                    if has_conflicts:
+                        return redirect('schedule_conflict')
+
+                    direct_challenge.accept_direct_challenge(selected_profiles)
                     # Get the newly created match for this direct challenge
                     match = DuosMatch.objects.filter(
                         Q(team1=challenging_team, team2=challenged_team) | Q(team1=challenged_team, team2=challenging_team)
@@ -754,7 +759,84 @@ def my_past_duos_match_list(request):
     return render(request, 'my_past_duos_matches.html', {'matches': matches})
 
 
+@login_required
+def my_duos_challenges(request):
 
+    # Assuming the logged-in user is associated with a team
+    if request.user.is_authenticated and hasattr(request.user, 'current_duos_team'):
+        team = request.user.current_duos_team
+        # Call team eligibility check
+        check_team_eligibility(team)
+
+        current_user = request.user
+        check_players_eligibility(current_user)
+
+         # Retrieve challenges associated with the user's team that are not yet accepted
+        my_challenges = DuosChallenge.objects.filter(team=team, accepted=False)
+
+        # Filter challenges that are within 15 minutes of their start time
+        challenges_to_delete = my_challenges.filter(
+            scheduled_date__lte=timezone.now() + timezone.timedelta(minutes=15)
+        )
+        
+        # Delete the challenges that meet the condition
+        challenges_to_delete.delete()
+        
+        # Retrieve the updated list of challenges after deletion
+        updated_challenges = DuosChallenge.objects.filter(team=team, accepted=False)
+        
+        # Retrieve direct challenges where the user's team is the challenging team
+        my_challenging_direct_challenges = DuosDirectChallenge.objects.filter(challenging_team=team)
+        
+        # Retrieve direct challenges where the user's team is the challenged team
+        my_challenged_direct_challenges = DuosDirectChallenge.objects.filter(challenged_team=team)
+
+        # Delete old direct challenges
+        my_challenging_direct_challenges_to_delete = my_challenging_direct_challenges.filter(
+            scheduled_date__lte=timezone.now() + timezone.timedelta(minutes=15)
+        )
+
+        my_challenged_direct_challenges_to_delete = my_challenged_direct_challenges.filter(
+            scheduled_date__lte=timezone.now() + timezone.timedelta(minutes=15)
+        )
+        
+        my_challenging_direct_challenges_to_delete.delete()
+        my_challenged_direct_challenges_to_delete.delete()
+
+
+
+        if request.user.current_duos_team:
+            form = DuosPlayerSelectionForm(team_players=request.user.current_duos_team.players.all())
+            return render(request, 'my_duos_challenges.html', {'my_challenges': updated_challenges, 'my_challenging_direct_challenges': my_challenging_direct_challenges, 'my_challenged_direct_challenges': my_challenged_direct_challenges, 'form': form})
+
+
+        return render(
+            request,
+            'my_challenges.html',
+            {
+                'my_challenges': updated_challenges,
+                'duos_challenges': updated_challenges,
+                'challenges': sorted_challenges,
+                'my_challenging_direct_challenges': my_challenging_direct_challenges,
+                'my_challenged_direct_challenges': my_challenged_direct_challenges,
+            }
+        )
+    else:
+        return render(request, 'home.html')
+
+
+
+def decline_direct_duos_challenge(request, challenge_id):
+    # Retrieve the direct challenge instance
+    direct_challenge = get_object_or_404(DuosDirectChallenge, pk=challenge_id)
+    
+    # Check if the logged-in user is the owner of the challenged team
+    if request.user == direct_challenge.challenged_team.owner:
+        # Delete the direct challenge
+        direct_challenge.delete()
+    
+    # Redirect to a specific page after declining and deleting the challenge
+    return redirect('my_duos_challenges')  # Adjust 'my_challenges' to your desired URL name
 
 def check_match_time(match_id):
     match = get_object_or_404(DuosMatch, pk=match_id)
@@ -819,7 +901,7 @@ def request_duos_match_support(request, match_id):
                 support_request.save()
                 return redirect('support_request_success')
         else:
-            form = MatchSupportForm()
+            form = DuosMatchSupportForm()
 
         context = {
             'form': form,
@@ -828,3 +910,30 @@ def request_duos_match_support(request, match_id):
         return render(request, 'duos_support_request_form.html', context)
     else: 
         return redirect('home')
+
+
+@user_passes_test(is_admin)
+def duos_support_list(request):
+    open_support = DuosMatchSupport.objects.filter(status='open')
+    closed_support = DuosMatchSupport.objects.filter(status='closed')
+
+    context = {
+        'open_support': open_support,
+        'closed_support': closed_support,
+    }
+
+    return render(request, 'duos_support_list.html', context)
+
+@user_passes_test(is_admin)
+def duos_support_detail(request, support_id):
+    support = get_object_or_404(DuosMatchSupport, id=support_id)
+    return render(request, 'duos_support_detail.html', {'support': support})
+
+
+@user_passes_test(is_admin)
+def change_duos_support_status(request, support_id):
+    support = DuosMatchSupport.objects.get(pk=support_id)
+    # Update the status to 'Closed'
+    support.status = 'closed'
+    support.save()
+    return redirect('duos_support_detail', support_id=support_id)

@@ -763,28 +763,19 @@ def my_challenges_view(request):
         current_user = request.user
         check_players_eligibility(current_user)
 
-        # Retrieve challenges associated with the user's team that are not yet accepted
-        challenges = Challenge.objects.filter(team=team, accepted=False)
-        duos_challenges = DuosChallenge.objects.filter(team=request.user.current_duos_team, accepted=False)
+         # Retrieve challenges associated with the user's team that are not yet accepted
+        my_challenges = Challenge.objects.filter(team=team, accepted=False)
         
-        # Merge both querysets in memory using Python list concatenation
-        combined_challenges = list(challenges) + list(duos_challenges)
-
-        sorted_challenges = sorted(
-            combined_challenges,
-            key=lambda challenge: getattr(challenge, 'scheduled_date')
-        )
-
         # Filter challenges that are within 15 minutes of their start time
-        # Note: Since it's a list, you'll need to filter manually
-        challenges_to_delete = [challenge for challenge in combined_challenges if challenge.scheduled_date <= timezone.now() + timezone.timedelta(minutes=15)]
+        challenges_to_delete = my_challenges.filter(
+            scheduled_date__lte=timezone.now() + timezone.timedelta(minutes=15)
+        )
         
         # Delete the challenges that meet the condition
-        for challenge in challenges_to_delete:
-            challenge.delete()
+        challenges_to_delete.delete()
         
         # Retrieve the updated list of challenges after deletion
-        updated_challenges = combined_challenges
+        updated_challenges = Challenge.objects.filter(team=team, accepted=False)
         
         # Retrieve direct challenges where the user's team is the challenging team
         my_challenging_direct_challenges = DirectChallenge.objects.filter(challenging_team=team)
@@ -808,16 +799,16 @@ def my_challenges_view(request):
 
         if request.user.current_team:
             form = PlayerSelectionForm(team_players=request.user.current_team.players.all())
-            return render(request, 'my_challenges.html', {'combined_challenges': sorted_challenges, 'my_challenging_direct_challenges': my_challenging_direct_challenges, 'my_challenged_direct_challenges': my_challenged_direct_challenges, 'form': form})
+            return render(request, 'my_challenges.html', {'my_challenges': updated_challenges, 'my_challenging_direct_challenges': my_challenging_direct_challenges, 'my_challenged_direct_challenges': my_challenged_direct_challenges, 'form': form})
 
 
         return render(
             request,
             'my_challenges.html',
             {
-                'challenges': updated_challenges,
+                'my_challenges': updated_challenges,
                 'duos_challenges': updated_challenges,
-                'combined_challenges': sorted_challenges,
+                'challenges': sorted_challenges,
                 'my_challenging_direct_challenges': my_challenging_direct_challenges,
                 'my_challenged_direct_challenges': my_challenged_direct_challenges,
             }

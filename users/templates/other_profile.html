@@ -310,7 +310,7 @@
             <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
                 <div class="card-header card-border border-primary text-center" >
                   {% if request.user != other_user.current_duos_team.owner %}
-                    <a href="{% url 'duos_team_detail' team_id=other_user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ other_user.current_team.name }}</h1></a>
+                    <a href="{% url 'duos_team_detail' team_id=other_user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ other_user.current_duos_team.name }}</h1></a>
                   {% else %}
                     <h1>{{ other_user.current_duos_team.name }}</h1>
                   {% endif %}

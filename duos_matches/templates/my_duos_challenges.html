@@ -48,7 +48,7 @@
                     <li class="col-md-8 rounded my-2">
                       <div class="card border-4 rounded-4 custom-shadow-small">
                         <div class="card-header text-center">
-                          <h4><a href="{% url 'team_detail' team_id=direct_challenge.challenging_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenging_team.name }}</a></h4>
+                          <h4><a href="{% url 'duos_team_detail' team_id=direct_challenge.challenging_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenging_team.name }}</a></h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ direct_challenge.challenging_team.formatted_rating }}</h2>
                           </span>
@@ -80,12 +80,12 @@
 
                           <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
 
-                          {% if request.user.current_team and request.user.current_team.owner == request.user %}
-                              {% if direct_challenge.challenging_team != request.user.current_team %}
+                          {% if request.user.current_duos_team and request.user.current_duos_team.owner == request.user %}
+                              {% if direct_challenge.challenging_team != request.user.current_duos_team %}
                                   {% if direct_challenge.accepted %}
                                   <span class="badge badge-success">Challenge Accepted!</span>
                                   {% else %}
-                                  <a href="{% url 'accept_direct_challenge' direct_challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept Challenge</a>
+                                  <a href="{% url 'accept_direct_duos_challenge' direct_challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept Challenge</a>
 
                                   {% endif %}
                               {% endif %}
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Close</button>
-                                  <a href="{% url 'decline_direct_challenge' direct_challenge.pk %}" class="btn btn-danger custom-shadow-danger rounded-3">Decline Challenge</a>
+                                  <a href="{% url 'decline_direct_duos_challenge' direct_challenge.pk %}" class="btn btn-danger custom-shadow-danger rounded-3">Decline Challenge</a>
                                 </div>
                               </div>
                             </div>
@@ -147,7 +147,7 @@
                     <li class="col-md-8 rounded">
                       <div class="card border-4 rounded-4 custom-shadow-small">
                         <div class="card-header text-center">
-                          <h4><a href="{% url 'team_detail' team_id=challenge.team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenge.team.name }}</a></h4>
+                          <h4><a href="{% url 'duos_team_detail' team_id=challenge.team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenge.team.name }}</a></h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ challenge.team.formatted_rating }}</h2>
                           </span>
@@ -197,7 +197,7 @@
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Close</button>
-                                    <a href="{% url 'cancel_challenge' challenge.id %}" class="btn btn-danger custom-shadow-danger rounded-3">Cancel Challenge</a>
+                                    <a href="{% url 'cancel_duos_challenge' challenge.id %}" class="btn btn-danger custom-shadow-danger rounded-3">Cancel Challenge</a>
                                   </div>
                                 </div>
                               </div>
@@ -231,7 +231,7 @@
                     <li class="col-md-8 rounded my-2">
                       <div class="card border-4 rounded-4 custom-shadow-small">
                         <div class="card-header text-center">
-                          <h4><a href="{% url 'team_detail' team_id=direct_challenge.challenged_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenged_team.name }}</a></h4>
+                          <h4><a href="{% url 'duos_team_detail' team_id=direct_challenge.challenged_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenged_team.name }}</a></h4>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                             <h2>{{ direct_challenge.challenged_team.formatted_rating }}</h2>
                           </span>
@@ -282,7 +282,7 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary custom-shadow-small" data-bs-dismiss="modal">Close</button>
-                                <a href="{% url 'cancel_direct_challenge' direct_challenge.id %}" class="btn custom-shadow-danger rounded-3 btn-danger">Cancel Challenge</a>
+                                <a href="{% url 'cancel_direct_duos_challenge' direct_challenge.id %}" class="btn custom-shadow-danger rounded-3 btn-danger">Cancel Challenge</a>
                                 </div>
                               </div>
                             </div>

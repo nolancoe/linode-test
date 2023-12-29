@@ -23,7 +23,7 @@ from teams.views import create_team, already_a_player, team_ladder, invitation_s
 from matches.views import support_request_success, rules, request_match_support, submit_results_success, dispute_conflict, team_not_eligible, decline_direct_challenge, match_farming, schedule_conflict, accept_challenge, accept_direct_challenge, create_challenge, challenges, match_details, submit_results, dispute_proofs_list, update_dispute_proof, dispute_proof_details, dispute_details, disputes_list, match_list, past_match_list, my_match_list, my_past_match_list, cancel_challenge, cancel_direct_challenge, my_challenges_view, dispute_expired, create_direct_challenge
 from messaging.views import messages, message_details, send_message
 from duos_teams.views import create_duos_team, duos_team_ladder, edit_duos_team, send_duos_invitation, duos_invitation_sent, pending_duos_team_invites, duos_invitation_already_sent, user_is_duos_teammate, deny_duos_invitation, accept_duos_invitation, duos_team_detail, remove_player_from_duos_team, transfer_duos_ownership, leave_duos_team, disband_duos_team
-from duos_matches.views import create_duos_challenge, create_direct_duos_challenge, accept_duos_challenge, duos_challenges, cancel_duos_challenge, duos_match_details, update_duos_dispute_proof, submit_duos_results, duos_dispute_proofs_list, duos_dispute_details, duos_disputes_list, duos_match_list, past_duos_match_list, my_duos_match_list, request_duos_match_support, my_past_duos_match_list
+from duos_matches.views import create_duos_challenge, cancel_direct_duos_challenge, accept_direct_duos_challenge, decline_direct_duos_challenge, my_duos_challenges,  duos_support_list, duos_support_detail, change_duos_support_status, create_direct_duos_challenge, accept_duos_challenge, duos_challenges, cancel_duos_challenge, duos_match_details, update_duos_dispute_proof, submit_duos_results, duos_dispute_proofs_list, duos_dispute_details, duos_disputes_list, duos_match_list, past_duos_match_list, my_duos_match_list, request_duos_match_support, my_past_duos_match_list
 
 urlpatterns = [
     path('yougottatryharderthanthathackercmonnow/', admin.site.urls),
@@ -133,6 +133,9 @@ urlpatterns = [
     path('create_direct_duos_challenge/<int:team_id>/', email_verified_required(create_direct_duos_challenge), name='create_direct_duos_challenge'),
     path('accept_duos_challenge/<int:challenge_id>/', accept_duos_challenge, name='accept_duos_challenge'),
     path('cancel_duos_challenge/<int:challenge_id>/', cancel_duos_challenge, name='cancel_duos_challenge'),
+    path('cancel_direct_duos_challenge/<int:direct_challenge_id>/', cancel_direct_duos_challenge, name='cancel_direct_duos_challenge'),
+    path('decline_direct_duos_challenge/<int:challenge_id>/', decline_direct_duos_challenge, name='decline_direct_duos_challenge'),
+    path('accept_direct_duos_challenge/<int:direct_challenge_id>/', accept_direct_duos_challenge, name='accept_direct_duos_challenge'),
     path('duos_match/<int:match_id>/', duos_match_details, name='duos_match_details'),
     path('update_duos_dispute_proof/<int:proof_id>/', update_duos_dispute_proof, name='update_duos_dispute_proof'),
     path('duos_match/<int:match_id>/submit_results/', submit_duos_results, name='submit_duos_results'),
@@ -144,6 +147,9 @@ urlpatterns = [
     path('my_duos_matches/', my_duos_match_list, name='my_duos_match_list'),
     path('my_past_duos_matches/', my_past_duos_match_list, name='my_past_duos_match_list'),
     path('request_duos_match_support/<int:match_id>/', request_duos_match_support, name='request_duos_match_support'),
+    path('duos_support_detail/<int:support_id>/change_status/', change_duos_support_status, name='change_support_status'),
+    path('duos_support_detail/<int:support_id>/', duos_support_detail, name='duos_support_detail'),
+    path('my_duos_challenges/', my_duos_challenges, name='my_duos_challenges'),
 
 
 
@@ -156,6 +162,7 @@ urlpatterns = [
     path('support_detail/<int:support_id>/', support_detail, name='support_detail'),
     path('support_detail/<int:support_id>/change_status/', change_support_status, name='change_support_status'),
     path('support_list/', support_list, name='support_list'),
+    path('duos_support_list/', duos_support_list, name='duos_support_list'),
 
 
 
