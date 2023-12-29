@@ -4,11 +4,17 @@ from messaging.models import Message
 from django.shortcuts import redirect
 from teams.models import TeamInvitation
 from duos_teams.models import DuosTeamInvitation
+from duos_matches.models import DuosMatch
 
 def matches_context(request):
     matches = Match.objects.all()
     now = timezone.now()
     return {'matches': matches, 'now': now}
+
+def duos_matches_context(request):
+    duos_matches = DuosMatch.objects.all()
+    now = timezone.now()
+    return {'duos_matches': duos_matches, 'now': now}
 
 def dispute_proofs_context(request):
     # Get all DisputeProof instances associated with the current user

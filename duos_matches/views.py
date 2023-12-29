@@ -242,8 +242,11 @@ def create_direct_duos_challenge(request, team_id):
 
 def accept_duos_challenge(request, challenge_id):
     challenge = get_object_or_404(DuosChallenge, pk=challenge_id)
-
     team = request.user.current_duos_team
+    user_timezone = request.user.timezone
+    scheduled_date_user_timezone = challenge.scheduled_date.astimezone(user_timezone)
+    
+
     if not team.eligible:
         return redirect('team_not_eligible')
     else:
@@ -262,41 +265,32 @@ def accept_duos_challenge(request, challenge_id):
 
             # Check if there is a match between the teams in the past 12 hours
             past_12_hours = timezone.now() - timezone.timedelta(hours=12)
-            previous_match = Match.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
-                date__gte=past_12_hours
-            ).exists()
-            
+                
+
             previous_duos_match = DuosMatch.objects.filter(
                 Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
                 date__gte=past_12_hours
             ).exists()
 
-            if previous_match:
-                return redirect('match_farming')
-
             if previous_duos_match:
                 return redirect('match_farming')
-
-            selected_players = form.cleaned_data['challenge_players']
-
-            has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
-            has_disputes = check_disputes(request, team)
-
-                    
-            if has_disputes:
-                return redirect('dispute_conflict')
-
-            if has_conflicts:
-                return redirect('schedule_conflict')
-            
 
 
             if request.method == 'POST':
                 form = DuosPlayerSelectionForm(request.POST, team_players=team.players.all())
 
                 if form.is_valid():
+                    scheduled_date_user_timezone = challenge.scheduled_date.astimezone(user_timezone)
                     selected_players = form.cleaned_data['challenge_players']
+
+                    has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
+                    has_disputes = check_disputes(request, team)
+         
+                    if has_disputes:
+                        return redirect('dispute_conflict')
+
+                    if has_conflicts:
+                        return redirect('schedule_conflict')
 
                     challenge.accept_duos_challenge(team2, selected_players)
                     # Get the newly created match for this challenge
@@ -344,18 +338,12 @@ def accept_direct_duos_challenge(request, direct_challenge_id):
             # Check if there is a match between the teams in the past 12 hours
             past_12_hours = timezone.now() - timezone.timedelta(hours=12)
             
-            previous_match = Match.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
-                date__gte=past_12_hours
-            ).exists()
             
             previous_duos_match = DuosMatch.objects.filter(
                 Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
                 date__gte=past_12_hours
             ).exists()
 
-            if previous_match:
-                return redirect('match_farming')
 
             if previous_duos_match:
                 return redirect('match_farming')
@@ -410,7 +398,7 @@ def cancel_duos_challenge(request, challenge_id):
 
     return redirect('duos_challenges')
 
-def cancel_direct_challenge(request, direct_challenge_id):
+def cancel_direct_duos_challenge(request, direct_challenge_id):
     direct_challenge = get_object_or_404(DuosDirectChallenge, pk=direct_challenge_id)
 
     # Check if the user is the owner of the challenging team
@@ -476,8 +464,294 @@ def duos_match_details(request, match_id):
         return render(request, 'duos_match_details.html', {'match': match, 'is_match_over': is_match_over})
 
 
+def update_duos_wins_and_losses (request, match_id):
+    match = get_object_or_404(DuosMatch, pk=match_id)
+
+    if match.team1_result == "win":
+        match.team1.wins += 1
+        for player in match.team1_players.all():
+            player.wins += 1
+            player.save()
+    elif match.team1_result == "loss":
+        match.team1.losses += 1
+        for player in match.team1_players.all():
+            player.losses += 1
+            player.save()
+    match.team1.save()
+
+    if match.team2_result == "win":
+        match.team2.wins += 1
+        for player in match.team2_players.all():
+            player.wins += 1
+            player.save()
+    elif match.team2_result == "loss":
+        match.team2.losses += 1
+        for player in match.team2_players.all():
+            player.losses += 1
+            player.save()
+    match.team2.save()
 
 
+def submit_duos_results(request, match_id):
+    match = get_object_or_404(DuosMatch, pk=match_id)
+
+    # Check if the match is already completed (both team owners submitted results)
+    if match.match_completed:
+        return redirect('duos_match_details', match_id=match_id)
+
+    if request.method == 'POST':
+        form = DuosMatchResultForm(request.POST)
+        if form.is_valid():
+            # Save the submitted result to the MatchResult model for the logged-in user
+            user_team_result = form.cleaned_data['team_result']
+            DuosMatchResult.objects.update_or_create(
+                match=match,
+                team_owner=request.user,
+                defaults={'team_result': user_team_result}
+            )
+            
+            # Check if both team owners have submitted the results
+            match_results_count = DuosMatchResult.objects.filter(match=match).count()
+
+
+            badge_id = 17
+            has_badge = request.user.badges.filter(id=badge_id).exists()
+
+            if not has_badge:
+                badge = Badge.objects.get(id=badge_id)  # Get the badge you want to assign
+                request.user.badges.add(badge)  # Assign the badge to the user
+
+
+            if match_results_count == 2:
+                # Get both team results
+                team1_result = DuosMatchResult.objects.get(match=match, team_owner=match.team1.owner).team_result
+                team2_result = DuosMatchResult.objects.get(match=match, team_owner=match.team2.owner).team_result
+            
+                # Check if both team results are different (one reported a win and the other reported a loss)
+                if team1_result != team2_result:
+                # Update the Match model with the final results
+                    match.team1_result = team1_result
+                    match.team2_result = team2_result
+                    match.match_completed = True
+                    match.match_disputed = False
+                    match.save()
+                    process_match_result(match, team1_result, team2_result, match.team1, match.team2)
+
+                    # Update team ratings for both teams
+                    match.team1.update_team_rating()
+                    match.team2.update_team_rating()
+
+                    #update wins and losses
+                    update_duos_wins_and_losses(request, match_id)
+
+                    # Return a success message or redirect to the match details page
+                    return redirect('duos_match_details', match_id=match_id)
+                else:
+                    team1_owner = match.team1.owner
+                    team2_owner = match.team2.owner
+
+                    # Create instances of DisputeProof for both team owners
+                    DuosDisputeProof.objects.create(match=match, owner=team1_owner)
+                    DuosDisputeProof.objects.create(match=match, owner=team2_owner)
+                    match.match_disputed = True
+                    match.dispute_time = timezone.now()
+                    match.save()
+
+                    # Redirect team owners to the match details page
+                    return redirect('duos_dispute_proofs_list')
+
+                    
+        return redirect('submit_results_success')
+    else:
+        form = DuosMatchResultForm()
+
+    return render(request, 'submit_duos_results.html', {'form': form})
+
+
+
+def update_duos_dispute_proof(request, proof_id):
+    dispute_proof = get_object_or_404(DuosDisputeProof, pk=proof_id)
+    match = dispute_proof.match
+    dispute_proof1 = DuosDisputeProof.objects.get(owner=match.team1.owner, match=match)
+    dispute_proof2 = DuosDisputeProof.objects.get(owner=match.team2.owner, match=match)
+
+    # Calculate the time difference between now and the created_at time
+    time_since_dispute = timezone.now() - dispute_proof.created_at
+
+    if time_since_dispute < timezone.timedelta(hours=1):
+        if request.method == 'POST':
+            form = DuosDisputeProofForm(request.POST, request.FILES, instance=dispute_proof)
+            if form.is_valid():
+                form.save()
+
+                # Set the "updated" field to True
+                dispute_proof.updated = True
+                dispute_proof.save()
+
+                # Check if there is another DisputeProof instance for the match
+                other_proof = DuosDisputeProof.objects.filter(match=dispute_proof.match).exclude(owner=dispute_proof.owner).first()
+
+                if other_proof:
+                    # Create an instance of the Dispute model only if it doesn't exist
+                    dispute, created = DuosDispute.objects.get_or_create(match=dispute_proof.match)
+
+                    # Set team1_owner_proof and team2_owner_proof fields
+                    if dispute_proof.owner == match.team1.owner:
+                        dispute.team1_owner_proof = dispute_proof
+                    else:
+                        dispute.team2_owner_proof = dispute_proof
+
+                    # Save the Dispute model
+                    dispute.save()
+
+                    # Redirect to the match details page or display a success message
+                    return redirect('duos_match_details', match_id=dispute_proof.match.id)
+                else:
+                    # If there's no other DisputeProof instance, stay on the form page
+                    return redirect('update_duos_dispute_proof', proof_id=proof_id)
+
+        else:
+            form = DuosDisputeProofForm(instance=dispute_proof)
+
+        return render(request, 'update_duos_dispute_proof.html', {'form': form, 'match': dispute_proof.match})
+    else:
+        # If it has been an hour or more since created_at time
+        other_proof = DuosDisputeProof.objects.filter(match=dispute_proof.match).exclude(owner=dispute_proof.owner).first()
+
+        if other_proof and other_proof.updated:
+            # Create a new Dispute instance with other_proof
+            dispute, created = DuosDispute.objects.get_or_create(match=dispute_proof.match)
+
+            if dispute_proof.owner == match.team1.owner:
+                dispute.team2_owner_proof = other_proof
+            else:
+                dispute.team1_owner_proof = other_proof
+
+            # Save the Dispute model
+            dispute.save()
+
+            # Redirect to the match details page or display a success message
+            return redirect('duos_match_details', match_id=dispute_proof.match.id)
+        else:
+            # If there's no other_proof, delete the match and related objects
+            match.delete()
+
+            # Redirect or display appropriate message
+            return redirect('dispute_expired')  # You might want to redirect to a different view
+
+
+def duos_dispute_proofs_list(request):
+    # Get all DisputeProof instances associated with the current user
+    dispute_proofs = DuosDisputeProof.objects.filter(owner=request.user)
+
+    return render(request, 'duos_dispute_proofs_list.html', {'dispute_proofs': dispute_proofs})
+
+@user_passes_test(is_admin)
+def duos_dispute_proof_details(request, proof_id):
+    dispute_proof = get_object_or_404(DuosDisputeProof, pk=proof_id)
+    return render(request, 'duos_dispute_proof_details.html', {'dispute_proof': dispute_proof})
+
+@user_passes_test(is_admin)
+def duos_dispute_details(request, dispute_id):
+    dispute = get_object_or_404(DuosDispute, pk=dispute_id)
+    match = dispute.match
+
+    if request.method == 'POST':
+        # Check if the form is submitted with match results for resolution
+        team1_result = request.POST.get('team1_result')
+        team2_result = request.POST.get('team2_result')
+
+        # Update the match instance with the resolved results
+        match.team1_result = team1_result
+        match.team2_result = team2_result
+        match.match_completed = True
+        match.save()
+
+        # Process match result
+        process_match_result(match, team1_result, team2_result, match.team1, match.team2)
+
+        # Update team ratings for both teams
+        match.team1.update_team_rating()
+        match.team2.update_team_rating()
+
+        # Mark the dispute as resolved
+        dispute.resolved = True
+        dispute.save()
+        
+        #update wins and losses
+        update_duos_wins_and_losses(request, match.id)
+        
+        # Get the MatchResult instances for the match
+        team1_match_result = DuosMatchResult.objects.get(match=match, team_owner=match.team1.owner)
+        team2_match_result = DuosMatchResult.objects.get(match=match, team_owner=match.team2.owner)
+
+        # Determine which team owner to penalize
+        if team1_match_result.team_result != team1_result:
+            team_owner_to_penalize = match.team1.owner
+        elif team2_match_result.team_result != team2_result:
+            team_owner_to_penalize = match.team2.owner
+        else:
+            team_owner_to_penalize = None
+
+        # Increment the strikes field of the corresponding team owner's user profile
+        if team_owner_to_penalize:
+            with transaction.atomic():
+                team_owner_to_penalize.strikes += 1
+                team_owner_to_penalize.save()
+            if team_owner_to_penalize.strikes == 3:
+                    team_owner_to_penalize.is_banned = True
+                    team_owner_to_penalize.save()
+
+            reset_team_eligibility(team_owner_to_penalize.current_team)
+
+        # Redirect to the dispute details page with the updated data
+        return redirect('duos_dispute_details', dispute_id=dispute_id)
+
+    return render(request, 'duos_dispute_details.html', {'dispute': dispute, 'match': match})
+
+@user_passes_test(is_admin)
+def duos_disputes_list(request):
+    disputes = DuosDispute.objects.all()
+    return render(request, 'duos_disputes_list.html', {'disputes': disputes})
+
+
+def duos_match_list(request):
+    matches = DuosMatch.objects.filter(
+        match_completed=False,
+    ).order_by('-date')
+
+    return render(request, 'duos_match_list.html', {'matches': matches,})
+
+def past_duos_match_list(request):
+    matches = DuosMatch.objects.filter(
+        match_completed=True,
+    ).order_by('-date')
+
+    return render(request, 'past_duos_match_list.html', {'matches': matches})
+
+def my_duos_match_list(request):
+    matches = DuosMatch.objects.all()
+    now = timezone.now()
+
+    # Loop through each match and run the check_match_time function
+    for match in matches:
+        check_match_time(match.id)
+
+    return render(request, 'my_duos_matches.html', {'matches': matches, 'now' : now})
+
+def my_past_duos_match_list(request):
+    user_team = request.user.current_duos_team  # Assuming current_team is a ForeignKey in the Profile model
+
+    # Fetch matches where the current user's team was involved (either as team1 or team2)
+    matches = DuosMatch.objects.filter(
+        match_completed=True,
+        team1=user_team  # Filter where the current team is team1
+    ) | DuosMatch.objects.filter(
+        match_completed=True,
+        team2=user_team  # Filter where the current team is team2
+    ).order_by('-date')  # Replace this order_by with your sorting preference
+
+    return render(request, 'my_past_duos_matches.html', {'matches': matches})
 
 
 
@@ -530,3 +804,27 @@ def check_match_time(match_id):
             # No match results submitted, delete the match
             match.delete()
             return HttpResponseRedirect(reverse('home'))
+
+
+def request_duos_match_support(request, match_id):
+    match = DuosMatch.objects.get(id=match_id)
+
+    if request.user == match.team1.owner or request.user == match.team2.owner:
+        if request.method == 'POST':
+            form = DuosMatchSupportForm(request.POST)
+            if form.is_valid():
+                support_request = form.save(commit=False)
+                support_request.match = match
+                support_request.player = request.user
+                support_request.save()
+                return redirect('support_request_success')
+        else:
+            form = MatchSupportForm()
+
+        context = {
+            'form': form,
+            'match': match,
+        }
+        return render(request, 'duos_support_request_form.html', context)
+    else: 
+        return redirect('home')

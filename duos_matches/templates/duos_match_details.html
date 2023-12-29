@@ -34,7 +34,7 @@
     <div class="col-md-4 my-4">
       <div class="card border custom-shadow-small">
         <div class="card-header  text-center">
-          <a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team1 }}</h1></a>
+          <a href="{% url 'duos_team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team1 }}</h1></a>
           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
             <h2>{{ match.team1.formatted_rating }}</h2>
           </span>
@@ -63,7 +63,7 @@
     <div class="col-md-4 my-4">
       <div class="card border custom-shadow-small">
         <div class="card-header text-center">
-          <a href="{% url 'team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team2 }}</h1></a>
+          <a href="{% url 'duos_team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team2 }}</h1></a>
           <span class="position-absolute top-0 start-100 translate-middle p-1 border bg-success rounded">
             <h2>{{ match.team2.formatted_rating }}</h2>
           </span>
@@ -87,7 +87,7 @@
     {% if is_match_over and not match.match_completed %}
       {% if match.team1.owner == request.user or match.team2.owner == request.user %}
       <div class="col-sm-10 text-center">
-        <a href="{% url 'submit_results' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Submit Match Results</a>
+        <a href="{% url 'submit_duos_results' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Submit Match Results</a>
       </div>
       {% endif %}
     {% endif %}
@@ -129,15 +129,15 @@
 
           <h3>Game 1</h3>
           <p>{{ match.game1 }}</p>
-          <p>Host:<a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
+          <p>Host:<a href="{% url 'duos_team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
           <h3>Game 2</h3>
           <p>{{ match.game2 }}</p>
-          <p>Host:<a href="{% url 'team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team2.name }}</a></p>
+          <p>Host:<a href="{% url 'duos_team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team2.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
           <h3>Game 3</h3>
           <p>{{ match.game3 }}</p>
-          <p>Host:<a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
+          <p>Host:<a href="{% url 'duos_team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
         
         </br>
@@ -147,7 +147,7 @@
         {% if not match.match_completed %}
           {% if match.team1.owner == request.user or match.team2.owner == request.user %}
             <div class="text-center mt-4">
-              <a href="{% url 'request_match_support' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Request Match Support</a>
+              <a href="{% url 'request_duos_match_support' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Request Match Support</a>
             </div>
           {% endif %}
         {% endif %}

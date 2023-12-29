@@ -471,24 +471,24 @@ def update_wins_and_losses (request, match_id):
 
     if match.team1_result == "win":
         match.team1.wins += 1
-        for player in match.team1.players.all():
+        for player in match.team1_players.all():
             player.wins += 1
             player.save()
     elif match.team1_result == "loss":
         match.team1.losses += 1
-        for player in match.team1.players.all():
+        for player in match.team1_players.all():
             player.losses += 1
             player.save()
     match.team1.save()
 
     if match.team2_result == "win":
         match.team2.wins += 1
-        for player in match.team2.players.all():
+        for player in match.team2_players.all():
             player.wins += 1
             player.save()
     elif match.team2_result == "loss":
         match.team2.losses += 1
-        for player in match.team2.players.all():
+        for player in match.team2_players.all():
             player.losses += 1
             player.save()
     match.team2.save()

@@ -101,6 +101,7 @@ TEMPLATES = [
                 'core.context_processors.message_context',
                 'core.context_processors.team_invites_context',
                 'core.context_processors.duos_team_invites_context',
+                'core.context_processors.duos_matches_context',
 
             ],
         },

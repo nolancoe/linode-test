@@ -103,12 +103,12 @@
                                 <hr class="mx-auto custom-shadow-small border-primary border-4 rounded-3" style="width:60%">
 
 
-                                {% if request.user.current_team and request.user.current_team.owner == request.user %}
-                                    {% if challenge.team != request.user.current_team %}
+                                {% if request.user.current_duos_team and request.user.current_duos_team.owner == request.user %}
+                                    {% if challenge.team != request.user.current_duos_team %}
                                         {% if challenge.accepted %}
                                         <span class="badge badge-success">Challenge Accepted!</span>
                                         {% else %}
-                                        <a href="{% url 'accept_challenge' challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept Challenge</a>
+                                        <a href="{% url 'accept_duos_challenge' challenge.pk %}" class="btn btn-primary custom-shadow-small rounded-3">Accept Challenge</a>
 
 
                                         {% endif %}
