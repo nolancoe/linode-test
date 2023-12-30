@@ -39,9 +39,9 @@
 
                 <li><hr class="dropdown-divider custom-shadow-small"></li>
 
-                {%if user.current_team %}
+                {%if user.current_team or user.current_duos_team %}
                   
-                  <li><a class="dropdown-item" href="{% url 'team_detail' team_id=request.user.current_team.id %}">My Team</a></li>
+                  <li><a class="dropdown-item" href="{% url 'my_teams' %}">My Teams</a></li>
 
                 {% endif %}
 

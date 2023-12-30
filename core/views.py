@@ -44,3 +44,11 @@ def check_user_eligibility(current_user):
 
 def ladders(request):
     return render(request, 'ladders.html')
+
+
+def my_teams(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'my_teams.html')
