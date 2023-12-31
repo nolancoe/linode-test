@@ -11,7 +11,7 @@
     <div class="col-md-6">
       <div class="card border-5 border-primary rounded-4 custom-shadow">
         <div class="card-header border-primary text-center">
-          <h1>My Teams</h1>
+          <h1>{{ user.username }} Teams</h1>
         </div>
         <div class="card-body custom-shadow-small">
           <div class="scrollable-container-challenges">
@@ -22,7 +22,7 @@
 
                 <div class="container mt-5">
                     <div class="row justify-content-center">
-                        <div class="col-md-7">
+                        <div class="col-md-8">
                             <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
                                 <div class="card-header card-border border-primary text-center" >
                                   <a href="{% url 'team_detail' team_id=user.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ user.current_team.name }}</h1></a>
@@ -41,7 +41,9 @@
                                           <span class="text-success">{{ user.current_team.wins }}</span>-<span class="text-danger">{{ user.current_team.losses }}</span>
                                         </h3>
                                     </div>
-                                      
+                                    
+                                    <p class="text-center">MWIII Squads</p>
+                                    <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                                     <p class="text-center">Est. {{ user.current_team.established|date:"F d, Y" }}</p>
                 
                                 </div>
@@ -57,7 +59,7 @@
                   
             <div class="container mt-5">
                 <div class="row justify-content-center">
-                    <div class="col-md-7">
+                    <div class="col-md-8">
                         <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
                             <div class="card-header card-border border-primary text-center" >
                               <a href="{% url 'duos_team_detail' team_id=user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ user.current_duos_team.name }}</h1></a>
@@ -76,7 +78,9 @@
                                       <span class="text-success">{{ user.current_duos_team.wins }}</span>-<span class="text-danger">{{ user.current_duos_team.losses }}</span>
                                     </h3>
                                 </div>
-                                  
+                                
+                                <p class="text-center">MWIII Duos</p>
+                                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                                 <p class="text-center">Est. {{ user.current_duos_team.established|date:"F d, Y" }}</p>
             
                             </div>
@@ -85,6 +89,7 @@
                 </div>
               </div>
             {% endif %}
+                 </br></br></br>
           </div>
         </div>
       </div>

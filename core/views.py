@@ -52,3 +52,31 @@ def my_teams(request):
         check_user_eligibility(current_user)
 
     return render(request, 'my_teams.html')
+
+def my_challenges_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'my_challenges_picker.html')
+
+def disputes_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'disputes_picker.html')
+
+def my_matches_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'my_matches_picker.html')
+
+def team_invites_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'team_invites_picker.html')

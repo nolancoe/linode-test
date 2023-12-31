@@ -102,6 +102,8 @@ TEMPLATES = [
                 'core.context_processors.team_invites_context',
                 'core.context_processors.duos_team_invites_context',
                 'core.context_processors.duos_matches_context',
+                'core.context_processors.direct_duos_challenge_context',
+                'core.context_processors.duos_dispute_proofs_context',
 
             ],
         },

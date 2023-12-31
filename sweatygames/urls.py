@@ -20,10 +20,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 from users.views import support_list, change_support_status, support_detail, create_suggestion, suggestion_list, change_suggestion_status, suggestion_detail, terms, email_verified_required, privacy_policy, request_verification, resend_verification, login_view, logout_view, player_ladder_view, banned_page, report_user, report_detail, admin_center, unban_user, banned_users_list, report_list, customize_profile_view, profile_view, redirect_after_steam_login, other_profile_view, report_bug, bug_report_list, bug_report_detail, change_bug_status
 from teams.views import create_team, already_a_player, team_ladder, invitation_sent, invitation_already_sent, transfer_ownership, edit_team, user_is_teammate, send_invitation, pending_team_invites, accept_invitation, team_detail, remove_player_from_team, leave_team, deny_invitation, disband_team
-from matches.views import support_request_success, rules, request_match_support, submit_results_success, dispute_conflict, team_not_eligible, decline_direct_challenge, match_farming, schedule_conflict, accept_challenge, accept_direct_challenge, create_challenge, challenges, match_details, submit_results, dispute_proofs_list, update_dispute_proof, dispute_proof_details, dispute_details, disputes_list, match_list, past_match_list, my_match_list, my_past_match_list, cancel_challenge, cancel_direct_challenge, my_challenges_view, dispute_expired, create_direct_challenge
+from matches.views import dispute_under_review, support_request_success, rules, request_match_support, submit_results_success, dispute_conflict, team_not_eligible, decline_direct_challenge, match_farming, schedule_conflict, accept_challenge, accept_direct_challenge, create_challenge, challenges, match_details, submit_results, dispute_proofs_list, update_dispute_proof, dispute_proof_details, dispute_details, disputes_list, match_list, past_match_list, my_match_list, my_past_match_list, cancel_challenge, cancel_direct_challenge, my_challenges_view, dispute_expired, create_direct_challenge
 from messaging.views import messages, message_details, send_message
 from duos_teams.views import create_duos_team, duos_team_ladder, edit_duos_team, send_duos_invitation, duos_invitation_sent, pending_duos_team_invites, duos_invitation_already_sent, user_is_duos_teammate, deny_duos_invitation, accept_duos_invitation, duos_team_detail, remove_player_from_duos_team, transfer_duos_ownership, leave_duos_team, disband_duos_team
-from duos_matches.views import create_duos_challenge, cancel_direct_duos_challenge, accept_direct_duos_challenge, decline_direct_duos_challenge, my_duos_challenges,  duos_support_list, duos_support_detail, change_duos_support_status, create_direct_duos_challenge, accept_duos_challenge, duos_challenges, cancel_duos_challenge, duos_match_details, update_duos_dispute_proof, submit_duos_results, duos_dispute_proofs_list, duos_dispute_details, duos_disputes_list, duos_match_list, past_duos_match_list, my_duos_match_list, request_duos_match_support, my_past_duos_match_list
+from duos_matches.views import create_duos_challenge, duos_dispute_proof_details, cancel_direct_duos_challenge, accept_direct_duos_challenge, decline_direct_duos_challenge, my_duos_challenges,  duos_support_list, duos_support_detail, change_duos_support_status, create_direct_duos_challenge, accept_duos_challenge, duos_challenges, cancel_duos_challenge, duos_match_details, update_duos_dispute_proof, submit_duos_results, duos_dispute_proofs_list, duos_dispute_details, duos_disputes_list, duos_match_list, past_duos_match_list, my_duos_match_list, request_duos_match_support, my_past_duos_match_list
 
 urlpatterns = [
     path('yougottatryharderthanthathackercmonnow/', admin.site.urls),
@@ -122,6 +122,7 @@ urlpatterns = [
     path('match_farming/', match_farming, name='match_farming'),
     path('submit_results_success/', submit_results_success, name='submit_results_success'),
     path('dispute_expired/', dispute_expired, name='dispute_expired'),
+    path('dispute_under_review/', dispute_under_review, name='dispute_under_review'),
     path('dispute_conflict/', dispute_conflict, name='dispute_conflict'),
     path('team_not_eligible/', team_not_eligible, name='team_not_eligible'),
     
@@ -150,6 +151,7 @@ urlpatterns = [
     path('duos_support_detail/<int:support_id>/change_status/', change_duos_support_status, name='change_support_status'),
     path('duos_support_detail/<int:support_id>/', duos_support_detail, name='duos_support_detail'),
     path('my_duos_challenges/', my_duos_challenges, name='my_duos_challenges'),
+    path('duos_dispute_proof/<int:proof_id>/', duos_dispute_proof_details, name='duos_dispute_proof_details'),
 
 
 

@@ -6,7 +6,11 @@ from django.urls import re_path
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('ladders/', views.ladders, name='ladders'),
-    path('my_teams/', views.my_teams, name='my_teams')
+    path('my_teams/', views.my_teams, name='my_teams'),
+    path('my_challenges_picker/', views.my_challenges_picker, name='my_challenges_picker'),
+    path('my_matches_picker/', views.my_matches_picker, name='my_matches_picker'),
+    path('disputes_picker/', views.disputes_picker, name='disputes_picker'),
+    path('team_invites_picker/', views.team_invites_picker, name='team_invites_picker'),
 
 
 ]

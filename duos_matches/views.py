@@ -225,13 +225,13 @@ def create_direct_duos_challenge(request, team_id):
                             request.user.badges.add(badge)  # Assign the badge to the user
 
 
-                        return redirect('my_challenges')
+                        return redirect('my_duos_challenges')
 
     else:
         form = DuosDirectChallengeForm(user=request.user)
 
     challenged_team = DuosTeam.objects.get(id=team_id)
-    available_teams = DuosTeam.objects.filter(full_team=True, disbanded=False).exclude(id=request.user.current_team.id)
+    available_teams = DuosTeam.objects.filter(full_team=True, disbanded=False).exclude(id=request.user.current_duos_team.id)
     context = {
         'form': form,
         'challenged_team': challenged_team,
@@ -636,7 +636,11 @@ def update_duos_dispute_proof(request, proof_id):
             dispute.save()
 
             # Redirect to the match details page or display a success message
-            return redirect('duos_match_details', match_id=dispute_proof.match.id)
+            return redirect('dispute_under_review')
+
+        elif dispute_proof.updated and not other_proof.updated:
+            return redirect('dispute_under_review')
+
         else:
             # If there's no other_proof, delete the match and related objects
             match.delete()
@@ -647,9 +651,9 @@ def update_duos_dispute_proof(request, proof_id):
 
 def duos_dispute_proofs_list(request):
     # Get all DisputeProof instances associated with the current user
-    dispute_proofs = DuosDisputeProof.objects.filter(owner=request.user)
 
-    return render(request, 'duos_dispute_proofs_list.html', {'dispute_proofs': dispute_proofs})
+
+    return render(request, 'duos_dispute_proofs_list.html')
 
 @user_passes_test(is_admin)
 def duos_dispute_proof_details(request, proof_id):
@@ -707,7 +711,7 @@ def duos_dispute_details(request, dispute_id):
                     team_owner_to_penalize.is_banned = True
                     team_owner_to_penalize.save()
 
-            reset_team_eligibility(team_owner_to_penalize.current_team)
+            reset_team_eligibility(team_owner_to_penalize.current_duos_team)
 
         # Redirect to the dispute details page with the updated data
         return redirect('duos_dispute_details', dispute_id=dispute_id)
@@ -716,6 +720,7 @@ def duos_dispute_details(request, dispute_id):
 
 @user_passes_test(is_admin)
 def duos_disputes_list(request):
+    now = timezone.now()
     disputes = DuosDispute.objects.all()
     return render(request, 'duos_disputes_list.html', {'disputes': disputes})
 

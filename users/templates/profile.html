@@ -154,72 +154,91 @@
   </div>
 </div>
 
-{% if profile.current_team %}
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
-                <div class="card-header card-border border-primary text-center" >
-                  <a href="{% url 'team_detail' team_id=profile.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ profile.current_team.name }}</h1></a>
-                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-                        <h2>{{ profile.current_team.formatted_rating }}</h2>
-                      </span>
-                </div>
-                <div class="card-body">
-                    {% if profile.current_team.logo %}
-                        <div class="text-center">
-                            <img src="{{ profile.current_team.logo.url }}" alt="{{ profile.current_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
-                        </div>
-                    {% endif %}
-                    <div class="text-center">
-                        <h3>
-                          <span class="text-success">{{ profile.current_team.wins }}</span>-<span class="text-danger">{{ profile.current_team.losses }}</span>
-                        </h3>
-                    </div>
-                      
-                    <p class="text-center">Est. {{ profile.current_team.established|date:"F d, Y" }}</p>
 
-                </div>
-            </div>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-5 border-primary rounded-4 custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h1>{{ profile.username }} Teams</h1>
         </div>
+        <div class="card-body custom-shadow-small">
+          <div class="scrollable-container-challenges">
+            {% if profile.current_team %}
+              <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card card-border border-5 rounded-4 border-primary custom-shadow-small">
+                            <div class="card-header card-border border-primary text-center" >
+                              <a href="{% url 'team_detail' team_id=profile.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ profile.current_team.name }}</h1></a>
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                                    <h2>{{ profile.current_team.formatted_rating }}</h2>
+                                  </span>
+                            </div>
+                            <div class="card-body">
+                                {% if profile.current_team.logo %}
+                                    <div class="text-center">
+                                        <img src="{{ profile.current_team.logo.url }}" alt="{{ profile.current_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                                    </div>
+                                {% endif %}
+                                <div class="text-center">
+                                    <h3>
+                                      <span class="text-success">{{ profile.current_team.wins }}</span>-<span class="text-danger">{{ profile.current_team.losses }}</span>
+                                    </h3>
+                                </div>
+                                <p class="text-center">MWIII Squads</p>
+                                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+                                <p class="text-center">Est. {{ profile.current_team.established|date:"F d, Y" }}</p>
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            {% endif %}
+
+
+            {% if profile.current_duos_team %}
+              <div class="container mt-5">
+                <div class="row justify-content-center">
+                  <div class="col-md-8">
+                    <div class="card card-border border-5 rounded-4 border-primary custom-shadow-small">
+                      <div class="card-header card-border border-primary text-center" >
+                        <a href="{% url 'duos_team_detail' team_id=profile.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ profile.current_duos_team.name }}</h1></a>
+                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                              <h2>{{ profile.current_duos_team.formatted_rating }}</h2>
+                            </span>
+                      </div>
+                      <div class="card-body">
+                          {% if profile.current_duos_team.logo %}
+                              <div class="text-center">
+                                  <img src="{{ profile.current_duos_team.logo.url }}" alt="{{ profile.current_duos_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                              </div>
+                          {% endif %}
+                          <div class="text-center">
+                              <h3>
+                                <span class="text-success">{{ profile.current_duos_team.wins }}</span>-<span class="text-danger">{{ profile.current_duos_team.losses }}</span>
+                              </h3>
+                          </div>
+                          <p class="text-center">MWIII Duos</p>
+                          <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+                          <p class="text-center">Est. {{ profile.current_duos_team.established|date:"F d, Y" }}</p>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            </br></br></br>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-{% endif %}
-
-
-{% if profile.current_duos_team %}
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
-                <div class="card-header card-border border-primary text-center" >
-                  <a href="{% url 'duos_team_detail' team_id=profile.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ profile.current_duos_team.name }}</h1></a>
-                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-                        <h2>{{ profile.current_duos_team.formatted_rating }}</h2>
-                      </span>
-                </div>
-                <div class="card-body">
-                    {% if profile.current_duos_team.logo %}
-                        <div class="text-center">
-                            <img src="{{ profile.current_duos_team.logo.url }}" alt="{{ profile.current_duos_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
-                        </div>
-                    {% endif %}
-                    <div class="text-center">
-                        <h3>
-                          <span class="text-success">{{ profile.current_duos_team.wins }}</span>-<span class="text-danger">{{ profile.current_duos_team.losses }}</span>
-                        </h3>
-                    </div>
-                      
-                    <p class="text-center">Est. {{ profile.current_duos_team.established|date:"F d, Y" }}</p>
-
-                </div>
-            </div>
-        </div>
-    </div>
-  </div>
-{% endif %}
-
-
+</div>
 
 <div class="container mt-5">
   <div class="row justify-content-center">

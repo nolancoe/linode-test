@@ -630,7 +630,11 @@ def update_dispute_proof(request, proof_id):
             dispute.save()
 
             # Redirect to the match details page or display a success message
-            return redirect('match_details', match_id=dispute_proof.match.id)
+            return redirect('dispute_under_review')
+
+        elif dispute_proof.updated and not other_proof.updated:
+            return redirect('dispute_under_review')
+            
         else:
             # If there's no other_proof, delete the match and related objects
             match.delete()
@@ -807,8 +811,6 @@ def my_challenges_view(request):
             'my_challenges.html',
             {
                 'my_challenges': updated_challenges,
-                'duos_challenges': updated_challenges,
-                'challenges': sorted_challenges,
                 'my_challenging_direct_challenges': my_challenging_direct_challenges,
                 'my_challenged_direct_challenges': my_challenged_direct_challenges,
             }
@@ -842,6 +844,9 @@ def support_request_success(request):
 
 def dispute_expired(request):
     return render(request, 'dispute_expired.html')
+    
+def dispute_under_review(request):
+    return render(request, 'dispute_under_review.html')
 
 def dispute_conflict(request):
     return render(request, 'dispute_conflict.html')

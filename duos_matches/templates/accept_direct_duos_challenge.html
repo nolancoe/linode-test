@@ -15,11 +15,11 @@
                   {% csrf_token %}
                     <p class="p-1 bg-warning text-dark custom-shadow-warning rounded col-md-8 mx-auto"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ direct_challenge.scheduled_date|timeuntil }}</p>
                     <div class="form-group">
-                        <label for="team">Your Team: </label> {{ user.current_duos_team.name }} ({{ user.current_duos_team.formatted_rating }})
+                        <label for="team">Your Team: </label> <a href="{% url 'duos_team_detail' team_id=user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ user.current_duos_team.name }} ({{ user.current_duos_team.formatted_rating }})
                     </div>
                   
                     <div class="form-group">
-                        <label for="team">Opposing Team: </label> {{ direct_challenge.challenging_team }} ({{ direct_challenge.challenging_team.formatted_rating }})
+                        <label for="team">Opposing Team: </label> <a href="{% url 'duos_team_detail' team_id=direct_challenge.challenging_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ direct_challenge.challenging_team }} ({{ direct_challenge.challenging_team.formatted_rating }})</a>
                     </div>
 
 
@@ -29,7 +29,7 @@
                   
 
                   <div class="form-group">
-                    <label for="challenge_players"><h3>Select 4 players from your team to participate in the match:</h3></label>
+                    <label for="challenge_players"><h4>Select 2 players from your team who will participate in the match:</h4></label>
                     <p>{{ form.challenge_players }}</p>
                   </div>
 

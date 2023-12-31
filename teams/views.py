@@ -198,6 +198,8 @@ def pending_team_invites(request):
         
     # Get all the pending invitations for the currently logged-in user
     pending_team_invites = TeamInvitation.objects.filter(invited_user=request.user, is_accepted=False)
+    
+
 
 
     is_verified = check_email_verification(request.user)

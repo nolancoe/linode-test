@@ -4,7 +4,7 @@ from messaging.models import Message
 from django.shortcuts import redirect
 from teams.models import TeamInvitation
 from duos_teams.models import DuosTeamInvitation
-from duos_matches.models import DuosMatch
+from duos_matches.models import DuosMatch, DuosDirectChallenge, DuosDisputeProof
 
 def matches_context(request):
     matches = Match.objects.all()
@@ -22,11 +22,23 @@ def dispute_proofs_context(request):
 
     return {'dispute_proofs': dispute_proofs}
 
+def duos_dispute_proofs_context(request):
+    # Get all DisputeProof instances associated with the current user
+    duos_dispute_proofs = DuosDisputeProof.objects.filter(owner=request.user.id)
+
+    return {'duos_dispute_proofs': duos_dispute_proofs}
+
 def direct_challenge_context(request):
     # Get all DisputeProof instances associated with the current user
     direct_challenges = DirectChallenge.objects.all
 
-    return {'direct_challengs': direct_challenges}
+    return {'direct_challenges': direct_challenges}
+
+def direct_duos_challenge_context(request):
+    # Get all DisputeProof instances associated with the current user
+    direct_duos_challenges = DuosDirectChallenge.objects.all()
+
+    return {'direct_duos_challenges': direct_duos_challenges}
 
 
 def message_context(request):

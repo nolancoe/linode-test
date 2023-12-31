@@ -12,7 +12,7 @@ from django.core.files import File
 from django.conf import settings
 from users.views import check_email_verification
 from core.views import check_players_eligibility
-
+from duos_matches.models import DuosMatch
 
 def user_already_a_player(view_func):
     def _wrapped_view(request, *args, **kwargs):
@@ -86,7 +86,7 @@ def edit_duos_team(request, team_id):
                 with open(default_logo_path, 'rb') as file:
                     updated_team.logo.save('sweatygameslogo1.png', File(file))
             updated_team.save()
-            return redirect('team_detail', team_id=updated_team.id)
+            return redirect('duos_team_detail', team_id=updated_team.id)
     else:
         form = DuosTeamCreationForm(instance=team)
 
@@ -222,13 +222,29 @@ def pending_duos_team_invites(request):
 def duos_team_detail(request, team_id):
     team = get_object_or_404(DuosTeam, id=team_id)
 
+    past_matches = DuosMatch.objects.filter(
+        match_completed=True,
+        team1=team  # Filter where the current team is team1
+    ) | DuosMatch.objects.filter(
+        match_completed=True,
+        team2=team  # Filter where the current team is team2
+    ).order_by('-date')  # Replace this order_by with your sorting preference
+
+    matches = DuosMatch.objects.filter(
+        match_completed=False,
+        team1=team  # Filter where the current team is team1
+    ) | DuosMatch.objects.filter(
+        match_completed=False,
+        team2=team  # Filter where the current team is team2
+    ).order_by('-date')  # Replace this order_by with your sorting preference
+
     # Call team eligibility check
     check_team_eligibility(team)
 
     current_user = request.user
     check_players_eligibility(current_user)
 
-    return render(request, 'duos_team_detail.html', {'team': team})
+    return render(request, 'duos_team_detail.html', {'team': team, 'past_matches' : past_matches, 'matches' : matches})
 
 
 @login_required
