@@ -23,6 +23,8 @@ from functools import wraps
 from django.utils import timezone
 from django.db.models import Q
 from core.views import check_players_eligibility, check_user_eligibility
+from duos_matches.models import DuosMatch
+from itertools import chain
 
 
 
@@ -143,16 +145,43 @@ def profile_view(request):
 
     user_team = profile.current_team  # Access the current team of the user's profile
 
-    # Fetch matches where the current user's team was involved (either as team1 or team2)
-    past_matches = Match.objects.filter(
+    # Filter for Match objects
+    past_squad_matches = Match.objects.filter(
+        Q(team1_players=profile) | Q(team2_players=profile),
+        match_completed=True,
+    ).order_by('-date').distinct()
+    
+    # Filter for DuosMatch objects
+    past_duos_matches = DuosMatch.objects.filter(
         Q(team1_players=profile) | Q(team2_players=profile),
         match_completed=True,
     ).order_by('-date').distinct()
 
-    upcoming_matches = Match.objects.filter(
+    # Combine the querysets
+    past_matches = sorted(
+        chain(past_squad_matches, past_duos_matches),
+        key=lambda instance: instance.date if hasattr(instance, 'date') else instance.date,
+        reverse=False
+    )
+
+    # Filter for Match objects
+    matches = Match.objects.filter(
         Q(team1_players=profile) | Q(team2_players=profile),
         match_completed=False,
-    ).order_by('-date').distinct()
+    ).order_by('date').distinct()
+
+    # Filter for DuosMatch objects
+    duos_matches = DuosMatch.objects.filter(
+        Q(team1_players=profile) | Q(team2_players=profile),
+        match_completed=False,
+    ).order_by('date').distinct()
+
+    # Combine the querysets
+    upcoming_matches = sorted(
+        chain(matches, duos_matches),
+        key=lambda instance: instance.date if hasattr(instance, 'date') else instance.date,
+        reverse=False
+    )
 
     return render(request, 'profile.html', {
         'profile': profile,
@@ -190,17 +219,45 @@ def other_profile_view(request, username):
 
     user_team = other_user.current_team  # Access the current team of the user's profile
 
-    # Fetch matches where the current user's team was involved (either as team1 or team2)
-    past_matches = Match.objects.filter(
+
+    # Filter for Match objects
+    past_squad_matches = Match.objects.filter(
+        Q(team1_players=other_user) | Q(team2_players=other_user),
+        match_completed=True,
+    ).order_by('-date').distinct()
+    
+    # Filter for DuosMatch objects
+    past_duos_matches = DuosMatch.objects.filter(
         Q(team1_players=other_user) | Q(team2_players=other_user),
         match_completed=True,
     ).order_by('-date').distinct()
 
+    # Combine the querysets
+    past_matches = sorted(
+        chain(past_squad_matches, past_duos_matches),
+        key=lambda instance: instance.date if hasattr(instance, 'date') else instance.date,
+        reverse=False
+    )
 
-    upcoming_matches = Match.objects.filter(
+
+    # Filter for Match objects
+    matches = Match.objects.filter(
         Q(team1_players=other_user) | Q(team2_players=other_user),
         match_completed=False,
-    ).order_by('-date').distinct()
+    ).order_by('date').distinct()
+
+    # Filter for DuosMatch objects with similar criteria
+    duos_matches = DuosMatch.objects.filter(
+        Q(team1_players=other_user) | Q(team2_players=other_user),
+        match_completed=False,
+    ).order_by('date').distinct()
+
+    # Combine the querysets
+    upcoming_matches = sorted(
+        chain(matches, duos_matches),
+        key=lambda instance: instance.date if hasattr(instance, 'date') else instance.date,
+        reverse=False
+    )
 
     return render(request, 'other_profile.html', {
         'other_user': other_user,

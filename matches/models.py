@@ -68,6 +68,11 @@ class Match(models.Model):
     search_only = models.BooleanField(default=False)
     controller_only = models.BooleanField(default=False)
 
+    MATCH_TYPES = (
+        ('squads', 'Squads'),
+    )
+    match_type = models.CharField(max_length=10, choices=MATCH_TYPES, default='squads')
+
     game1 = models.CharField(max_length=50, blank=True, choices=GAME_MAPS)
     game2 = models.CharField(max_length=50, blank=True, choices=GAME_MAPS)
     game3 = models.CharField(max_length=50, blank=True, choices=GAME_MAPS)

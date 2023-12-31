@@ -50,9 +50,15 @@ def message_context(request):
 
 
 def team_invites_context(request):
-    invites = TeamInvitation.objects.all()
-    return {'invites' : invites}
+    if request.user.is_authenticated:
+        invites = TeamInvitation.objects.filter(invited_user=request.user)
+        return {'invites' : invites}
+    else:
+        return {}
 
 def duos_team_invites_context(request):
-    duos_invites = DuosTeamInvitation.objects.all()
-    return {'duos_invites' : duos_invites}
+    if request.user.is_authenticated:
+        duos_invites = DuosTeamInvitation.objects.filter(invited_user=request.user)
+        return {'duos_invites' : duos_invites}
+    else:
+        return {}

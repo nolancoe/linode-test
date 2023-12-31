@@ -4,6 +4,8 @@ from django.utils import timezone
 from pytz import timezone as pytz_timezone
 from allauth.socialaccount.models import SocialAccount
 from users.models import Profile
+from django.apps import apps
+
 
 register = template.Library()
 

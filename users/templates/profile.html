@@ -3,6 +3,7 @@
 {% load static %}
 {% load countries %}
 
+
 {% block content %}
 
 
@@ -293,7 +294,7 @@
                     <div class="col-md-10 mb-4">
                       <div class="card border-primary rounded-4 custom-shadow-small">
                         <div class="card-header border-primary text-center">
-                          <a href="{% url 'match_details' match_id=upcoming_match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                          <a href="{% if upcoming_match.match_type == 'duos' %}{% url 'duos_match_details' match_id=upcoming_match.id %}{% else %}{% url 'match_details' match_id=upcoming_match.id %}{% endif %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                             <p><img src="{{ upcoming_match.team1.logo.url }}" alt="{{ upcoming_match.team1.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"> {{ upcoming_match.team1 }} vs. {{ upcoming_match.team2 }} <img src="{{ upcoming_match.team2.logo.url }}" alt="{{ upcoming_match.team2.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"></p>
                           </a>
                           <p class="text-center">
@@ -314,11 +315,19 @@
                           </div>
                           <div class="card-body">
                             {% if upcoming_match.search_only %}
-                              <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                             {% else %}
-                              <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                             {% endif %}
+
+                            {% if upcoming_match.controller_only %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                            {% else %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                            {% endif %}
+
                           <p class="text-center">
+                            
                             1: {{ upcoming_match.game1 }}
                             <br>
                             2: {{ upcoming_match.game2 }}
@@ -359,7 +368,7 @@
                     <div class="col-md-10 mb-4">
                       <div class="card border-primary rounded-4 custom-shadow-small">
                         <div class="card-header border-primary text-center">
-                          <a href="{% url 'match_details' match_id=past_match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                          <a href="{% if past_match.match_type == 'duos' %}{% url 'duos_match_details' match_id=past_match.id %}{% else %}{% url 'match_details' match_id=past_match.id %}{% endif %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
                             <p>
                               {% if past_match.team1_result == "win" %}
                                 <span class="mt-3 text-center text-success">W</span>
@@ -375,24 +384,29 @@
                                 <span class="mt-3 text-center text-danger">L</span>
                               {% endif %}
                             </p>
-                            </a>
+                          </a>
                             {{ past_match.date}}
-                          </div>
-                          <div class="card-body">
-                            {% if past_match.search_only %}
-                              <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
-                            {% else %}
-                              <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
-                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                          {% if past_match.search_only %}
+                            <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% else %}
+                            <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                          {% endif %}
 
-                            <p class="text-center">
-                              1. {{ past_match.game1 }}
-                              <br>
-                              2. {{ past_match.game2 }}
-                              <br>
-                              3. {{ past_match.game3 }}
-                            </p>
-                          </div>
+                          {% if past_match.controller_only %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                          {% else %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                          {% endif %}
+
+                          <p class="text-center">
+                            1. {{ past_match.game1 }}
+                            <br>
+                            2. {{ past_match.game2 }}
+                            <br>
+                            3. {{ past_match.game3 }}
+                          </p>
                         </div>
                       </div>
                     </div>

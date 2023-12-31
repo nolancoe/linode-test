@@ -66,6 +66,12 @@ class DuosMatch(models.Model):
     match_disputed = models.BooleanField(default=False)
     dispute_time = models.DateTimeField(null=True, blank=True, default=None)
 
+
+    MATCH_TYPES = (
+        ('duos', 'Duos'),
+    )
+    match_type = models.CharField(max_length=10, choices=MATCH_TYPES, default='duos')
+
     search_only = models.BooleanField(default=False)
     controller_only = models.BooleanField(default=False)
 

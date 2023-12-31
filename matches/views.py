@@ -239,8 +239,10 @@ def create_direct_challenge(request, team_id):
     
 def accept_challenge(request, challenge_id):
     challenge = get_object_or_404(Challenge, pk=challenge_id)
-
     team = request.user.current_team
+    user_timezone = request.user.timezone
+    scheduled_date_user_timezone = challenge.scheduled_date.astimezone(user_timezone)
+
     if not team.eligible:
         return redirect('team_not_eligible')
     else:
@@ -264,29 +266,10 @@ def accept_challenge(request, challenge_id):
                 date__gte=past_12_hours
             ).exists()
             
-            previous_duos_match = DuosMatch.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
-                date__gte=past_12_hours
-            ).exists()
 
             if previous_match:
                 return redirect('match_farming')
 
-            if previous_duos_match:
-                return redirect('match_farming')
-
-            selected_players = form.cleaned_data['challenge_players']
-
-            has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
-            has_disputes = check_disputes(request, team)
-
-                    
-            if has_disputes:
-                return redirect('dispute_conflict')
-
-            if has_conflicts:
-                return redirect('schedule_conflict')
-            
 
 
             if request.method == 'POST':
@@ -294,6 +277,16 @@ def accept_challenge(request, challenge_id):
 
                 if form.is_valid():
                     selected_players = form.cleaned_data['challenge_players']
+
+                    has_conflicts = check_conflicts(selected_players, scheduled_date_user_timezone)
+                    has_disputes = check_disputes(request, team)
+
+                            
+                    if has_disputes:
+                        return redirect('dispute_conflict')
+
+                    if has_conflicts:
+                        return redirect('schedule_conflict')
 
                     challenge.accept_challenge(team2, selected_players)
                     # Get the newly created match for this challenge
@@ -319,8 +312,10 @@ def accept_challenge(request, challenge_id):
 
 def accept_direct_challenge(request, direct_challenge_id):
     direct_challenge = get_object_or_404(DirectChallenge, pk=direct_challenge_id)
-
     team = request.user.current_team
+    user_timezone = request.user.timezone
+    scheduled_date_user_timezone = direct_challenge.scheduled_date.astimezone(user_timezone)
+
     if not team.eligible:
         return redirect('team_not_eligible')
     else:
@@ -340,31 +335,13 @@ def accept_direct_challenge(request, direct_challenge_id):
             # Check if there is a match between the teams in the past 12 hours
             past_12_hours = timezone.now() - timezone.timedelta(hours=12)
             previous_match = Match.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
+                Q(team1=team, team2=challenging_team) | Q(team1=challenging_team, team2=team),
                 date__gte=past_12_hours
             ).exists()
             
-            previous_duos_match = DuosMatch.objects.filter(
-                Q(team1=challenge.team, team2=team2) | Q(team1=team2, team2=challenge.team),
-                date__gte=past_12_hours
-            ).exists()
 
             if previous_match:
                 return redirect('match_farming')
-
-            if previous_duos_match:
-                return redirect('match_farming')
-
-            selected_profiles = form.cleaned_data['challenge_players']
-
-            has_conflicts = check_conflicts(selected_profiles, scheduled_date_user_timezone)
-            has_disputes = check_disputes(request, team)
-                    
-            if has_disputes:
-                return redirect('dispute_conflict')
-
-            if has_conflicts:
-                return redirect('schedule_conflict')
 
 
             if request.method == 'POST':
@@ -372,6 +349,16 @@ def accept_direct_challenge(request, direct_challenge_id):
 
                 if form.is_valid():
                     selected_profiles = form.cleaned_data['challenge_players']
+
+
+                    has_conflicts = check_conflicts(selected_profiles, scheduled_date_user_timezone)
+                    has_disputes = check_disputes(request, team)
+                            
+                    if has_disputes:
+                        return redirect('dispute_conflict')
+
+                    if has_conflicts:
+                        return redirect('schedule_conflict')
 
                     direct_challenge.accept_direct_challenge(selected_profiles)
                     # Get the newly created match for this direct challenge
