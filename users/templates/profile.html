@@ -162,7 +162,7 @@
     <div class="col-md-6">
       <div class="card border-5 border-primary rounded-4 custom-shadow">
         <div class="card-header border-primary text-center">
-          <h1>{{ profile.username }} Teams</h1>
+          <h1>{{ profile.username }}'s Teams</h1>
         </div>
         <div class="card-body custom-shadow-small">
           <div class="scrollable-container-challenges">
@@ -188,7 +188,7 @@
                                       <span class="text-success">{{ profile.current_team.wins }}</span>-<span class="text-danger">{{ profile.current_team.losses }}</span>
                                     </h3>
                                 </div>
-                                <p class="text-center"><a href="{% url 'team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">MWIII Squads</a></p>
+                                <p class="text-center"><a href="{% url 'team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-users"></i>MWIII Squads</a></p>
                                 <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                                 <p class="text-center">Est. {{ profile.current_team.established|date:"F d, Y" }}</p>
                                 
@@ -223,7 +223,7 @@
                                 <span class="text-success">{{ profile.current_duos_team.wins }}</span>-<span class="text-danger">{{ profile.current_duos_team.losses }}</span>
                               </h3>
                           </div>
-                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">MWIII Duos</a></p>
+                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-user-group"></i>MWIII Duos</a></p>
                           <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                           <p class="text-center">Est. {{ profile.current_duos_team.established|date:"F d, Y" }}</p>
 
@@ -314,10 +314,17 @@
                           </p>
                           </div>
                           <div class="card-body">
-                            {% if upcoming_match.search_only %}
-                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+
+                            {% if upcoming_match.match_type == 'duos' %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
                             {% else %}
-                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                            {% endif %}
+
+                            {% if upcoming_match.search_only %}
+                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+                            {% else %}
+                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
                             {% endif %}
 
                             {% if upcoming_match.controller_only %}
@@ -385,20 +392,30 @@
                               {% endif %}
                             </p>
                           </a>
-                            {{ past_match.date}}
+                            
+                          
+                          {{ past_match.date}}
                         </div>
                         <div class="card-body">
+
+                          {% if past_match.match_type == 'duos' %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                          {% else %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                          {% endif %}
+
                           {% if past_match.search_only %}
                             <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                           {% else %}
-                            <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+                            <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
                           {% endif %}
 
                           {% if past_match.controller_only %}
-                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
                           {% else %}
-                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
                           {% endif %}
+
 
                           <p class="text-center">
                             1. {{ past_match.game1 }}

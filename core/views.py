@@ -80,3 +80,24 @@ def team_invites_picker(request):
         check_user_eligibility(current_user)
 
     return render(request, 'team_invites_picker.html')
+
+def challenges_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'challenges_picker.html')
+
+def matches_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'matches_picker.html')
+
+def results_picker(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        check_user_eligibility(current_user)
+
+    return render(request, 'results_picker.html')

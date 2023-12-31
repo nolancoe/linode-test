@@ -19,7 +19,7 @@
     <div class="col-md-8">
       <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
-          <h2>Matches</h2>
+          <h2>MWIII Squads Matches</h2>
         </div>
         <div class="scrollable-container-challenges">
           <div class="card-body text-center">
@@ -50,8 +50,22 @@
                         </p>
                       </div>
                       <div class="card-body">
+                        {% if match.match_type == 'duos' %}
+                          <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                        {% else %}
+                          <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                        {% endif %}
+
                         {% if match.search_only %}
-                          <p class="p-1 border border rounded col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</p>
+                          <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+                        {% else %}
+                          <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+                        {% endif %}
+
+                        {% if match.controller_only %}
+                          <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+                        {% else %}
+                          <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
                         {% endif %}
                         <p class="text-center">
                           1: {{ match.game1 }}

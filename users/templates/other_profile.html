@@ -254,7 +254,7 @@
                         </div>
 
 
-                        <p class="text-center"><a href="{% url 'team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">MWIII Squads</a></p>
+                        <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-users"></i>MWIII Squads</a></p>
                         <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                         <p class="text-center">Est. {{ other_user.current_team.established|date:"F d, Y" }}</p>
 
@@ -339,7 +339,7 @@
                               </h3>
                           </div>
 
-                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">MWIII Duos</a></p>
+                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-user-group"></i>MWIII Duos</a></p>
                           <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                           <p class="text-center">Est. {{ other_user.current_duos_team.established|date:"F d, Y" }}</p>
 
@@ -446,7 +446,7 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-    </br>
+      </br>
       <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
         <div class="card-header border-primary text-center">
           <h2>Upcoming/Current Matches</h2>
@@ -479,6 +479,13 @@
                           </p>
                           </div>
                           <div class="card-body">
+
+                            {% if upcoming_match.match_type == 'duos' %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                            {% else %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                            {% endif %}
+
                             {% if upcoming_match.search_only %}
                               <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                             {% else %}
@@ -552,13 +559,19 @@
                         </div>
                         <div class="card-body">
 
-                          {% if upcoming_match.search_only %}
+                          {% if past_match.match_type == 'duos' %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                          {% else %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                          {% endif %}
+
+                          {% if past_match.search_only %}
                             <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
                           {% else %}
                             <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
                           {% endif %}
 
-                          {% if upcoming_match.controller_only %}
+                          {% if past_match.controller_only %}
                             <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
                           {% else %}
                             <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>

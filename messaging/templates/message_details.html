@@ -19,8 +19,8 @@
                     <div class="card-body">
                         {% if all_messages %}
                             {% for message in all_messages %}
-                                    <div class="card mb-3 rounded-5">
-                                        <div class="card-header rounded-top-5 custom-shadow-small">
+                                    <div class="card custom-shadow-small border-2 border-primary mb-3 rounded-5">
+                                        <div class="card-header rounded-5 border-primary custom-shadow-small">
                                             {% if message.sender == request.user %}
                                                 <a href="{% url 'other_user_profile' username=request.user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">
                                                     {% if request.user.profile_picture %}
@@ -46,7 +46,7 @@
                                                 </p>
                                             {% endif %}
                                         </div>
-                                        <div class="card-body custom-shadow-small border border-primary rounded-bottom-5">
+                                        <div class="card-body border-primary rounded-bottom-5">
 
                                                 
                                                 

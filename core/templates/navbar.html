@@ -126,10 +126,7 @@
                 </i> Play
             </a>
             <ul class="dropdown-menu custom-shadow-small">
-                <li><a class="dropdown-item" href="{% url 'challenges' %}">Open Challenges</a></li>
-                {% if user.current_team.owner == request.user%}
-                <li><a class="dropdown-item" href="{% url 'create_challenge' %}">Create A Challenge</a></li>
-                {% endif %}
+                <li><a class="dropdown-item" href="{% url 'challenges_picker' %}">Open Challenges</a></li>
                 {% if user.current_team or user.current_duos_team %}
 
                   <li><hr class="dropdown-divider custom-shadow-small"></li>
@@ -181,7 +178,7 @@
                     </a>
                   </li>
 
-                  <li><hr class="dropdown-divider custom-shadow-small"></li>
+
                   <li>
                     <a class="dropdown-item" href="{% url 'disputes_picker' %}">
                       My Disputes
@@ -200,6 +197,7 @@
                     </a>
                   </li>
 
+                  <li><hr class="dropdown-divider custom-shadow-small"></li>
 
                   <li>
                     <a class="dropdown-item" href="{% url 'team_invites_picker' %}">
@@ -250,8 +248,8 @@
                   <i class="fa-solid fa-video"></i> Watch
               </a>
               <ul class="dropdown-menu custom-shadow-small">
-                  <li><a class="dropdown-item" href="{% url 'match_list' %}">Matches</a></li>
-                  <li><a class="dropdown-item" href="{% url 'past_match_list' %}">Results</a></li>
+                  <li><a class="dropdown-item" href="{% url 'matches_picker' %}">Matches</a></li>
+                  <li><a class="dropdown-item" href="{% url 'results_picker' %}">Results</a></li>
               </ul>
           </li>
 

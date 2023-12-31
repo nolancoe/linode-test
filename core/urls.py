@@ -11,6 +11,9 @@ urlpatterns = [
     path('my_matches_picker/', views.my_matches_picker, name='my_matches_picker'),
     path('disputes_picker/', views.disputes_picker, name='disputes_picker'),
     path('team_invites_picker/', views.team_invites_picker, name='team_invites_picker'),
+    path('challenges_picker/', views.challenges_picker, name='challenges_picker'),
+    path('matches_picker/', views.matches_picker, name='matches_picker'),
+    path('results_picker/', views.results_picker, name='results_picker'),
 
 
 ]
