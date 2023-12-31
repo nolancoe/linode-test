@@ -171,7 +171,7 @@
                     <div class="col-md-8">
                         <div class="card card-border border-5 rounded-4 border-primary custom-shadow-small">
                             <div class="card-header card-border border-primary text-center" >
-                              <a href="{% url 'team_detail' team_id=profile.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ profile.current_team.name }}</h1></a>
+                              <a href="{% url 'team_detail' team_id=profile.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ profile.current_team.name }}</h1></a>
                                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                                     <h2>{{ profile.current_team.formatted_rating }}</h2>
                                   </span>
@@ -187,7 +187,7 @@
                                       <span class="text-success">{{ profile.current_team.wins }}</span>-<span class="text-danger">{{ profile.current_team.losses }}</span>
                                     </h3>
                                 </div>
-                                <p class="text-center">MWIII Squads</p>
+                                <p class="text-center"><a href="{% url 'team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">MWIII Squads</a></p>
                                 <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                                 <p class="text-center">Est. {{ profile.current_team.established|date:"F d, Y" }}</p>
                                 
@@ -206,7 +206,7 @@
                   <div class="col-md-8">
                     <div class="card card-border border-5 rounded-4 border-primary custom-shadow-small">
                       <div class="card-header card-border border-primary text-center" >
-                        <a href="{% url 'duos_team_detail' team_id=profile.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ profile.current_duos_team.name }}</h1></a>
+                        <a href="{% url 'duos_team_detail' team_id=profile.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ profile.current_duos_team.name }}</h1></a>
                           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
                               <h2>{{ profile.current_duos_team.formatted_rating }}</h2>
                             </span>
@@ -222,7 +222,7 @@
                                 <span class="text-success">{{ profile.current_duos_team.wins }}</span>-<span class="text-danger">{{ profile.current_duos_team.losses }}</span>
                               </h3>
                           </div>
-                          <p class="text-center">MWIII Duos</p>
+                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">MWIII Duos</a></p>
                           <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
                           <p class="text-center">Est. {{ profile.current_duos_team.established|date:"F d, Y" }}</p>
 
@@ -332,7 +332,7 @@
               {% else %}
                 <p class="mt-3 text-center">No pending matches.</p>
               {% endif %}
-              
+
             </div>
           </div>
         </div>
