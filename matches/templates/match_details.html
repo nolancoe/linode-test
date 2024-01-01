@@ -18,21 +18,21 @@
 <div class="card card-border border-5 border-primary rounded-4 custom-shadow mt-5">
   <div class="card-header border-primary text-center">
     {% if match.date > now %}
-      <button type="button" class="btn btn-lg btn-warning custom-shadow-warning" disabled><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</button>
+      <button type="button" class="btn btn-lg btn-warning custom-shadow-warning rounded-5" disabled><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</button>
     {% elif match.match_completed %}
-      <button type="button" class="btn btn-lg border-primary custom-shadow-small btn-success" disabled>FINAL</button>
+      <button type="button" class="btn btn-lg border-primary custom-shadow-small rounded-5 btn-success" disabled>FINAL</button>
     {% else %}
       {% if match.match_disputed %}
-        <button type="button" class="btn btn-lg border-warning custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+        <button type="button" class="btn btn-lg border-warning custom-shadow-warning rounded-5 btn-danger" disabled>DISPUTED</button>
       {% else %}
-        <button type="button" class="btn btn-lg border-warning custom-shadow-warning btn-danger" disabled>LIVE</button>
+        <button type="button" class="btn btn-lg border-warning rounded-5 custom-shadow-warning btn-danger" disabled>LIVE</button>
       {% endif %}
     {% endif %}
   </div>
 
   <div class="row justify-content-center my-4">
     <div class="col-md-4 my-4">
-      <div class="card border custom-shadow-small">
+      <div class="card border rounded-4 custom-shadow-small">
         <div class="card-header  text-center">
           <a href="{% url 'team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team1 }}</h1></a>
           <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="col-md-4 my-4">
-      <div class="card border custom-shadow-small">
+      <div class="card border rounded-4 custom-shadow-small">
         <div class="card-header text-center">
           <a href="{% url 'team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team2 }}</h1></a>
           <span class="position-absolute top-0 start-100 translate-middle p-1 border bg-success rounded">
@@ -103,24 +103,32 @@
           <h1>Details</h1>
         </div>
         <div class="card-body text-center ">
-          {% if request.user.timezone %}
-          <h3>{{ match.date|timezone:request.user.timezone }}</h3>
+          
+          <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mt-3 mx-auto"><i class="fa-solid fa-clock fa-fade"></i>
+            {% if request.user.timezone %}
+              {{ match.date|timezone:request.user.timezone }}
+            {% else %}
+              {{ match.date|timezone:'US/Central' }}
+            {% endif %}
+          </p>
+
+
+          {% if match.match_type == 'duos' %}
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
           {% else %}
-          <h3>{{ match.date|timezone:'US/Central' }}</h3>
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
           {% endif %}
 
-          <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3 mb-4" style="width:40%">
-
           {% if match.search_only %}
-            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+            <p class="p-1 border custom-shadow-small rounded-5 col-md-5 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
           {% else %}
-            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-circle-nodes fa-spin fa-spin"></i> All Gametypes</p>
+            <p class="p-1 border custom-shadow-small rounded-5 col-md-5 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
           {% endif %}
 
           {% if match.controller_only %}
-            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</p>
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
           {% else %}
-            <p class="p-1 border border rounded-4 custom-shadow-small col-md-3 mx-auto"><i class="fa-solid fa-keyboard fa-beat-fade"></i> Any Input</p>
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
           {% endif %}
 
           <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3 mt-4" style="width:40%">
@@ -172,8 +180,8 @@
             {% if twitch_accounts %}
               <div class="list-group d-flex align-items-center">
                 {% for player, twitch_username in twitch_accounts.items %}
-                  <a href="https://www.twitch.tv/{{ twitch_username }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-3 d-flex align-items-center justify-content-center mb-3" style="width:50%">
-                    <i class="fab fa-twitch me-2"></i> {{ player.username }}
+                  <a href="https://www.twitch.tv/{{ twitch_username }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-5 d-flex align-items-center justify-content-center mb-3" style="width:50%">
+                    <i class="fab fa-twitch fa-fade me-2"></i> {{ player.username }}
                   </a>
                 {% endfor %}
               </div>
@@ -202,8 +210,8 @@
             {% if twitch_accounts %}
               <div class="list-group d-flex align-items-center">
                 {% for player, twitch_username in twitch_accounts.items %}
-                  <a href="https://www.twitch.tv/{{ twitch_username }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-3 d-flex align-items-center justify-content-center mb-3" style="width:50%">
-                    <i class="fab fa-twitch me-2"></i> {{ player.username }}
+                  <a href="https://www.twitch.tv/{{ twitch_username }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-5 d-flex align-items-center justify-content-center mb-3" style="width:50%">
+                    <i class="fab fa-twitch fa-fade me-2"></i> {{ player.username }}
                   </a>
                 {% endfor %}
               </div>

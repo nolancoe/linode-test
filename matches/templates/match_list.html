@@ -31,25 +31,26 @@
                     <div class="card border-primary rounded-4 custom-shadow-small">
                       <div class="card-header border-primary text-center">
                         <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
-                          <p> <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"> {{ match.team1 }} vs. {{ match.team2 }} <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"> </p>
+                          <h4 class="mt-2"> <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small">  vs. <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"> </h4>
                         </a>
+                        
+                      </div>
+                      <div class="card-body">
+
                         <p class="text-center">
-                          
                           {% if  match.date > now %}
-                            <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning custom-shadow-warning rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
+                            <button class="col-md-8 text-dark bg-warning custom-shadow-warning rounded-5 btn-warning btn"><i class="fa-regular fa-clock fa-fade"></i> Starts In: {{ match.date|timeuntil }}</button>
                           {% elif match.match_completed %}
                             <span class="text-success">Completed</span>
                           {% else %}
                             {% if match.match_disputed %}
-                              <button type="button" class="btn border-warning custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+                              <button type="button" class="btn border-warning rounded-5 coll-md-8 custom-shadow-warning btn-danger" disabled>DISPUTED</button>
                             {% else %}
-                              <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-light bg-danger border border rounded">Live</span>
+                              <button type="button" class="btn col-md-8 border border-warning custom-shadow-warning btn-danger rounded-5" disabled>Live</button>
                             {% endif %}
                           {% endif %}
-
                         </p>
-                      </div>
-                      <div class="card-body">
+
                         {% if match.match_type == 'duos' %}
                           <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
                         {% else %}
@@ -67,13 +68,7 @@
                         {% else %}
                           <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
                         {% endif %}
-                        <p class="text-center">
-                          1: {{ match.game1 }}
-                          <br>
-                          2: {{ match.game2 }}
-                          <br>
-                          3: {{ match.game3 }}
-                        </p>
+
                       </div>
                     </div>
                   </div>

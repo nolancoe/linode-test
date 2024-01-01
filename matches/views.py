@@ -719,7 +719,15 @@ def past_match_list(request):
     return render(request, 'past_match_list.html', {'matches': matches})
 
 def my_match_list(request):
-    matches = Match.objects.all()
+
+    user_team = request.user.current_team
+
+    matches = Match.objects.filter(
+        Q(team1_players=request.user) | Q(team2_players=request.user),
+        match_completed=False,
+          # Filter matches where the user is in either team1 or team2
+    ).order_by('-date').distinct()
+
     now = timezone.now()
 
     # Loop through each match and run the check_match_time function
