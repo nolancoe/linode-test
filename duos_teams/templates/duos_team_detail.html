@@ -56,7 +56,7 @@
             {% if request.user == team.owner %}
               <div class="text-center">
                 <div class="text-center">
-                  <a href="{% url 'edit_duos_team' team_id=team.id %}" class="btn btn-primary custom-shadow-small rounded-3">Manage Team</a>
+                  <a href="{% url 'edit_duos_team' team_id=team.id %}" class="btn btn-primary custom-shadow-small rounded-3"><i class="fa-solid fa-gears"></i> Manage Team</a>
                 </div>
               </div>
             {% elif request.user.current_duos_team == team %}

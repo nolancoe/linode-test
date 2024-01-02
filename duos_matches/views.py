@@ -17,6 +17,7 @@ from teams.views import check_team_eligibility, reset_team_eligibility
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from core.views import check_players_eligibility, check_user_eligibility
+from django.utils.timesince import timesince
 
 
 
@@ -552,12 +553,15 @@ def submit_duos_results(request, match_id):
                     # Return a success message or redirect to the match details page
                     return redirect('duos_match_details', match_id=match_id)
                 else:
+                    now = timezone.now()
                     team1_owner = match.team1.owner
                     team2_owner = match.team2.owner
 
+                    expire_at = now + timezone.timedelta(hours=1)
+
                     # Create instances of DisputeProof for both team owners
-                    DuosDisputeProof.objects.create(match=match, owner=team1_owner)
-                    DuosDisputeProof.objects.create(match=match, owner=team2_owner)
+                    DuosDisputeProof.objects.create(match=match, owner=team1_owner, expire_at=expire_at)
+                    DuosDisputeProof.objects.create(match=match, owner=team2_owner, expire_at=expire_at)
                     match.match_disputed = True
                     match.dispute_time = timezone.now()
                     match.save()
@@ -722,7 +726,8 @@ def duos_dispute_details(request, dispute_id):
 def duos_disputes_list(request):
     now = timezone.now()
     disputes = DuosDispute.objects.all()
-    return render(request, 'duos_disputes_list.html', {'disputes': disputes})
+
+    return render(request, 'duos_disputes_list.html', {'disputes': disputes, 'now': now})
 
 
 def duos_match_list(request):

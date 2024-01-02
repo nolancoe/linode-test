@@ -54,6 +54,11 @@
         </div>
         <div class="card-body mx-auto">
           <div class="text-center mx-auto">
+
+            <div>
+              <a href="{% url 'message_details' username=other_user.username %}" class="btn btn-primary custom-shadow-small rounded-3 mb-3"><i class="fa-solid fa-envelope"></i> Message</a>
+            </div>
+
             {% if other_user.profile_picture %}
               <img src="{{ other_user.profile_picture.url }}" alt="{{ other_user.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
             {% else %}
@@ -142,7 +147,7 @@
                   
 
 
-                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#inviteToTeamModal">Invite to {{request.user.current_team}}</button>
+                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#inviteToTeamModal"><i class="fa-solid fa-user-plus"></i> Invite to {{request.user.current_team}}</button>
 
                     <!-- Modal for confirming team invitaion send -->
                     <div class="modal fade" id="inviteToTeamModal" tabindex="-1" aria-labelledby="inviteToTeamModal" aria-hidden="true">
@@ -175,7 +180,7 @@
                   
 
 
-                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#inviteToDuosTeamModal">Invite to {{request.user.current_duos_team}}</button>
+                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#inviteToDuosTeamModal"><i class="fa-solid fa-user-plus"></i> Invite to {{request.user.current_duos_team}}</button>
 
                     <!-- Modal for confirming team invitaion send -->
                     <div class="modal fade" id="inviteToDuosTeamModal" tabindex="-1" aria-labelledby="inviteToDuosTeamModal" aria-hidden="true">
@@ -203,11 +208,9 @@
               {% endif %}
 
 
+              
               <div>
-                <a href="{% url 'message_details' username=other_user.username %}" class="btn btn-primary custom-shadow-small rounded-3 mb-3">Message</a>
-              </div>
-              <div>
-                <a href="{% url 'report_user' reported_user.username %}" class="btn btn-danger custom-shadow-danger rounded-3 ">Report {{other_user.username}}</a>
+                <a href="{% url 'report_user' reported_user.username %}" class="btn btn-danger custom-shadow-danger rounded-3 "><i class="fa-solid fa-triangle-exclamation"></i> Report {{other_user.username}}</a>
               </div>
 
             </div>
@@ -218,194 +221,194 @@
   </div>
 </div>
 
+{% if other_user.current_team or other_user.current_duos_team %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card border-5 border-primary rounded-4 custom-shadow">
+          <div class="card-header border-primary text-center">
+            <h1>{{ other_user.username }}'s Teams</h1>
+          </div>
+          <div class="card-body custom-shadow-small">
+            <div class="scrollable-container-challenges">
 
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card border-5 border-primary rounded-4 custom-shadow">
-        <div class="card-header border-primary text-center">
-          <h1>{{ other_user.username }}'s Teams</h1>
-        </div>
-        <div class="card-body custom-shadow-small">
-          <div class="scrollable-container-challenges">
-
-            {% if other_user.current_team %}
-              <div class="container mt-5">
-                <div class="row justify-content-center">
-                  <div class="col-md-8">
-                    <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
-                      <div class="card-header card-border border-primary text-center" >
-                        <a href="{% url 'team_detail' team_id=other_user.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ other_user.current_team.name }}</h1></a>
-                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-                              <h2>{{ other_user.current_team.formatted_rating }}</h2>
-                            </span>
-                      
-                      </div>
-                      <div class="card-body card-border border-primary">
-                        {% if other_user.current_team.logo %}
-                          <div class="text-center">
-                            <img src="{{ other_user.current_team.logo.url }}" alt="{{ other_user.current_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
-                          </div>
-                        {% endif %}
-                        <div class="text-center">
-                          <h3>
-                            <span class="text-success">{{ other_user.current_team.wins }}</span>-<span class="text-danger">{{ other_user.current_team.losses }}</span>
-                          </h3>
-                        </div>
-
-
-                        <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-users"></i>MWIII Squads</a></p>
-                        <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
-                        <p class="text-center">Est. {{ other_user.current_team.established|date:"F d, Y" }}</p>
-
-                        {% if user.is_authenticated and other_user.current_team == user.current_team and user.current_team.owner == user %}
-                          <div class="mt-auto text-center">
-
-                            <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#kickFromTeamModal">Kick {{ other_user.username }} From {{request.user.current_team}}</button>
-
-                            <!-- Modal for confirming Kicking Player -->
-                            <div class="modal fade" id="kickFromTeamModal" tabindex="-1" aria-labelledby="kickFromTeamModal" aria-hidden="true">
-                              <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="kickFromTeamModal">Kick {{ other_user.username }} From {{request.user.current_team}}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                    Are you sure you want to Kick {{ other_user.username }} From {{request.user.current_team}}?
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <input type="hidden" name="invited_user" value="{{ other_user.id }}">
-                                    <a href="{% url 'remove_player_from_team' team_id=other_user.current_team.id player_id=other_user.id %}" class="btn btn-danger">Kick {{ other_user.username }} From {{request.user.current_team}}</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button type="button" class="btn btn-success custom-shadow-success rounded-3" data-bs-toggle="modal" data-bs-target="#transferOwnershipModal">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</button>
-
-                            <!-- Modal for confirming Ownership Transfer -->
-                            <div class="modal fade" id="transferOwnershipModal" tabindex="-1" aria-labelledby="transferOwnershipModal" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="transferOwnershipModal">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                    Are you sure you want to Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}?
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <input type="hidden" name="invited_user" value="{{ other_user.id }}">
-                                    <a href="{% url 'transfer_ownership' team_id=user.current_team.id new_owner_id=other_user.id %}" class="btn btn-success">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-
-                          </div>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-
-            {% if other_user.current_duos_team %}
-              <div class="container mt-5">
-                <div class="row justify-content-center">
-                  <div class="col-md-8">
-                    <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
-                      <div class="card-header card-border border-primary text-center" >
-                          <a href="{% url 'duos_team_detail' team_id=other_user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ other_user.current_duos_team.name }}</h1></a>
+              {% if other_user.current_team %}
+                <div class="container mt-5">
+                  <div class="row justify-content-center">
+                    <div class="col-md-8">
+                      <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
+                        <div class="card-header card-border border-primary text-center" >
+                          <a href="{% url 'team_detail' team_id=other_user.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ other_user.current_team.name }}</h1></a>
                             <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
-                                <h2>{{ other_user.current_duos_team.formatted_rating }}</h2>
+                                <h2>{{ other_user.current_team.formatted_rating }}</h2>
                               </span>
                         
-                      </div>
-                      <div class="card-body card-border border-primary">
+                        </div>
+                        <div class="card-body card-border border-primary">
                           {% if other_user.current_team.logo %}
-                              <div class="text-center">
-                                  <img src="{{ other_user.current_duos_team.logo.url }}" alt="{{ other_user.current_duos_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
-                              </div>
+                            <div class="text-center">
+                              <img src="{{ other_user.current_team.logo.url }}" alt="{{ other_user.current_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                            </div>
                           {% endif %}
                           <div class="text-center">
-                              <h3>
-                                <span class="text-success">{{ other_user.current_duos_team.wins }}</span>-<span class="text-danger">{{ other_user.current_duos_team.losses }}</span>
-                              </h3>
+                            <h3>
+                              <span class="text-success">{{ other_user.current_team.wins }}</span>-<span class="text-danger">{{ other_user.current_team.losses }}</span>
+                            </h3>
                           </div>
 
-                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-user-group"></i>MWIII Duos</a></p>
-                          <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
-                          <p class="text-center">Est. {{ other_user.current_duos_team.established|date:"F d, Y" }}</p>
 
-                          {% if user.is_authenticated and other_user.current_duos_team == user.current_duos_team and user.current_duos_team.owner == user %}
+                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-users"></i>MWIII Squads</a></p>
+                          <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+                          <p class="text-center">Est. {{ other_user.current_team.established|date:"F d, Y" }}</p>
+
+                          {% if user.is_authenticated and other_user.current_team == user.current_team and user.current_team.owner == user %}
                             <div class="mt-auto text-center">
 
-                              <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#kickFromDuosTeamModal">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</button>
+                              <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#kickFromTeamModal">Kick {{ other_user.username }} From {{request.user.current_team}}</button>
 
                               <!-- Modal for confirming Kicking Player -->
-                              <div class="modal fade" id="kickFromDuosTeamModal" tabindex="-1" aria-labelledby="kickFromDuosTeamModal" aria-hidden="true">
-                                  <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal fade" id="kickFromTeamModal" tabindex="-1" aria-labelledby="kickFromTeamModal" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
                                   <div class="modal-content">
-                                      <div class="modal-header">
-                                      <h5 class="modal-title ms-auto" id="kickFromDuosTeamModal">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</h5>
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="kickFromTeamModal">Kick {{ other_user.username }} From {{request.user.current_team}}</h5>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                      </div>
-                                      <div class="modal-body">
-                                      Are you sure you want to Kick {{ other_user.username }} From {{request.user.current_duos_team}}?
-                                      </div>
-                                      <div class="modal-footer">
+                                    </div>
+                                    <div class="modal-body">
+                                      Are you sure you want to Kick {{ other_user.username }} From {{request.user.current_team}}?
+                                    </div>
+                                    <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                       <input type="hidden" name="invited_user" value="{{ other_user.id }}">
-                                      <a href="{% url 'remove_player_from_duos_team' team_id=other_user.current_duos_team.id player_id=other_user.id %}" class="btn btn-danger">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</a>
-                                      </div>
+                                      <a href="{% url 'remove_player_from_team' team_id=other_user.current_team.id player_id=other_user.id %}" class="btn btn-danger">Kick {{ other_user.username }} From {{request.user.current_team}}</a>
+                                    </div>
                                   </div>
-                                  </div>
+                                </div>
                               </div>
 
-                              <button type="button" class="btn btn-success custom-shadow-success rounded-3" data-bs-toggle="modal" data-bs-target="#transferDuosOwnershipModal">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</button>
+                              <button type="button" class="btn btn-success custom-shadow-success rounded-3" data-bs-toggle="modal" data-bs-target="#transferOwnershipModal">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</button>
 
                               <!-- Modal for confirming Ownership Transfer -->
-                              <div class="modal fade" id="transferDuosOwnershipModal" tabindex="-1" aria-labelledby="transferDuosOwnershipModal" aria-hidden="true">
-                                  <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal fade" id="transferOwnershipModal" tabindex="-1" aria-labelledby="transferOwnershipModal" aria-hidden="true">
+                                <div class="modal-dialog">
                                   <div class="modal-content">
-                                      <div class="modal-header">
-                                      <h5 class="modal-title ms-auto" id="transferDuosOwnershipModal">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</h5>
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="transferOwnershipModal">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</h5>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                      </div>
-                                      <div class="modal-body">
-                                      Are you sure you want to Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}?
-                                      </div>
-                                      <div class="modal-footer">
+                                    </div>
+                                    <div class="modal-body">
+                                      Are you sure you want to Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}?
+                                    </div>
+                                    <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                       <input type="hidden" name="invited_user" value="{{ other_user.id }}">
-                                      <a href="{% url 'transfer_duos_ownership' team_id=user.current_duos_team.id new_owner_id=other_user.id %}" class="btn btn-success">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</a>
-                                      </div>
+                                      <a href="{% url 'transfer_ownership' team_id=user.current_team.id new_owner_id=other_user.id %}" class="btn btn-success">Transfer {{request.user.current_team}} Ownership to {{ other_user.username }}</a>
+                                    </div>
                                   </div>
-                                  </div>
+                                </div>
                               </div>
 
 
                             </div>
                           {% endif %}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            {% endif %}
+              {% endif %}
+
+              {% if other_user.current_duos_team %}
+                <div class="container mt-5">
+                  <div class="row justify-content-center">
+                    <div class="col-md-8">
+                      <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
+                        <div class="card-header card-border border-primary text-center" >
+                            <a href="{% url 'duos_team_detail' team_id=other_user.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ other_user.current_duos_team.name }}</h1></a>
+                              <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                                  <h2>{{ other_user.current_duos_team.formatted_rating }}</h2>
+                                </span>
+                          
+                        </div>
+                        <div class="card-body card-border border-primary">
+                            {% if other_user.current_team.logo %}
+                                <div class="text-center">
+                                    <img src="{{ other_user.current_duos_team.logo.url }}" alt="{{ other_user.current_duos_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                                </div>
+                            {% endif %}
+                            <div class="text-center">
+                                <h3>
+                                  <span class="text-success">{{ other_user.current_duos_team.wins }}</span>-<span class="text-danger">{{ other_user.current_duos_team.losses }}</span>
+                                </h3>
+                            </div>
+
+                            <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-user-group"></i>MWIII Duos</a></p>
+                            <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+                            <p class="text-center">Est. {{ other_user.current_duos_team.established|date:"F d, Y" }}</p>
+
+                            {% if user.is_authenticated and other_user.current_duos_team == user.current_duos_team and user.current_duos_team.owner == user %}
+                              <div class="mt-auto text-center">
+
+                                <button type="button" class="btn btn-danger custom-shadow-danger rounded-3 mb-2" data-bs-toggle="modal" data-bs-target="#kickFromDuosTeamModal">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</button>
+
+                                <!-- Modal for confirming Kicking Player -->
+                                <div class="modal fade" id="kickFromDuosTeamModal" tabindex="-1" aria-labelledby="kickFromDuosTeamModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title ms-auto" id="kickFromDuosTeamModal">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        Are you sure you want to Kick {{ other_user.username }} From {{request.user.current_duos_team}}?
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <input type="hidden" name="invited_user" value="{{ other_user.id }}">
+                                        <a href="{% url 'remove_player_from_duos_team' team_id=other_user.current_duos_team.id player_id=other_user.id %}" class="btn btn-danger">Kick {{ other_user.username }} From {{request.user.current_duos_team}}</a>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-success custom-shadow-success rounded-3" data-bs-toggle="modal" data-bs-target="#transferDuosOwnershipModal">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</button>
+
+                                <!-- Modal for confirming Ownership Transfer -->
+                                <div class="modal fade" id="transferDuosOwnershipModal" tabindex="-1" aria-labelledby="transferDuosOwnershipModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title ms-auto" id="transferDuosOwnershipModal">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        Are you sure you want to Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <input type="hidden" name="invited_user" value="{{ other_user.id }}">
+                                        <a href="{% url 'transfer_duos_ownership' team_id=user.current_duos_team.id new_owner_id=other_user.id %}" class="btn btn-success">Transfer {{request.user.current_duos_team}} Ownership to {{ other_user.username }}</a>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+
+                              </div>
+                            {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
+{% endif %}
 
 <div class="container mt-5">
   <div class="row justify-content-center">
@@ -473,7 +476,7 @@
                                 <span class="text-success">Completed</span>
                               {% else %}
                                 {% if upcoming_match.match_disputed %}
-                                  <button type="button" class="btn border-warning rounded-5 coll-md-8 custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+                                  <button type="button" class="btn border-warning rounded-5 col-md-8 custom-shadow-warning btn-danger" disabled>DISPUTED</button>
                                 {% else %}
                                   <button type="button" class="btn col-md-8 border border-warning custom-shadow-warning btn-danger rounded-5" disabled>Live</button>
                                 {% endif %}

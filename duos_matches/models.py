@@ -183,6 +183,7 @@ class DuosDisputeProof(models.Model):
     game3_screenshot = models.ImageField(upload_to='duos_dispute_screenshots/', blank=True, null=True)
     additional_evidence = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
+    expire_at = models.DateTimeField(default=timezone.now)
     updated = models.BooleanField(default=False)
 
     def __str__(self):

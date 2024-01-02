@@ -535,12 +535,15 @@ def submit_results(request, match_id):
                     # Return a success message or redirect to the match details page
                     return redirect('match_details', match_id=match_id)
                 else:
+                    now = timezone.now()
                     team1_owner = match.team1.owner
                     team2_owner = match.team2.owner
 
+                    expire_at = now + timezone.timedelta(hours=1)
+
                     # Create instances of DisputeProof for both team owners
-                    DisputeProof.objects.create(match=match, owner=team1_owner)
-                    DisputeProof.objects.create(match=match, owner=team2_owner)
+                    DisputeProof.objects.create(match=match, owner=team1_owner, expire_at=expire_at)
+                    DisputeProof.objects.create(match=match, owner=team2_owner, expire_at=expire_at)
                     match.match_disputed = True
                     match.dispute_time = timezone.now()
                     match.save()
