@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Open Suggestions -->
+            <div class="card border-5 border-primary mb-4">
+                <div class="card-header border-primary">
+                    <h4 class="card-title text-center">Open Suggestions</h4>
+                </div>
+                <div class="card-body text-center">
+                    <ul class="list-group">
+                        {% for suggestion in open_suggestion %}
+                            <li class="list-group-item">
+                                <a href="{% if suggestion.id %}{% url 'suggestion_detail' suggestion_id=suggestion.id %}{% endif %}">{{ suggestion }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Closed Bug Reports -->
+            <div class="card border-5 border-danger custom-shadow-danger rounded-4">
+                <div class="card-header border-danger">
+                    <h4 class="card-title text-center">Closed Suggestions</h4>
+                </div>
+                <div class="card-body text-center">
+                    <ul class="list-group">
+                        {% for suggestion in closed_suggestion %}
+                            <li class="list-group-item">
+                                <a href="{% if suggestion.id %}{% url 'suggestion_detail' suggestion_id=suggestion.id %}{% endif %}">{{ suggestion }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

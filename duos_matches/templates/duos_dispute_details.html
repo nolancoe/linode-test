@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Dispute Details</h1>
+  <p>Match: {{ dispute.match }}</p>
+  <p>Team Owners: {{ dispute.match.team1.owner }} vs. {{ dispute.match.team2.owner }}</p>
+
+  {% if not dispute.resolved %}
+    <h2>Resolve Dispute</h2>
+    <form method="post" action="{% url 'duos_dispute_details' dispute_id=dispute.id %}">
+      {% csrf_token %}
+      <label for="team1_result">Team 1 Result:</label>
+      <select name="team1_result" id="team1_result">
+        <option value="win">Win</option>
+        <option value="loss">Loss</option>
+        <option value="draw">Draw</option>
+      </select>
+      <br>
+      <label for="team2_result">Team 2 Result:</label>
+      <select name="team2_result" id="team2_result">
+        <option value="win">Win</option>
+        <option value="loss">Loss</option>
+        <option value="draw">Draw</option>
+      </select>
+      <br>
+      <button type="submit">Resolve Dispute</button>
+    </form>
+  {% else %}
+    <p>Dispute Resolved</p>
+  {% endif %}
+
+  <p><strong>Team 1 Owner Proof:</strong>
+    {% if dispute.team1_owner_proof %}
+      <a href="{% url 'duos_dispute_proof_details' proof_id=dispute.team1_owner_proof.id %}">
+        Proof for Match {{ dispute.match }} from {{ dispute.team1_owner_proof.owner }}
+      </a>
+    {% else %}
+      Not available
+    {% endif %}
+  </p>
+  <p><strong>Team 2 Owner Proof:</strong>
+    {% if dispute.team2_owner_proof %}
+      <a href="{% url 'duos_dispute_proof_details' proof_id=dispute.team2_owner_proof.id %}">
+        Proof for Match {{ dispute.match }} from {{ dispute.team2_owner_proof.owner }}
+      </a>
+    {% else %}
+      Not available
+    {% endif %}
+{% endblock %}
+

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_staff %}
+    <h1>All Unresolved Disputes</h1>
+    <ul class="list-unstyled">
+      {% for dispute in disputes %}
+        {% if not dispute.resolved %}
+          <li>
+            <a href="{% url 'duos_dispute_details' dispute_id=dispute.id %}">
+              Dispute for Match {{ dispute.match }} between {{ dispute.match.team1.owner }} and {{ dispute.match.team2.owner }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+
+    <h1>Both Owners Provided Proof</h1>
+    <ul class="list-unstyled">
+      {% for dispute in disputes %}
+        {% if not dispute.resolved %}
+          {% if dispute.team1_owner_proof and dispute.team2_owner_proof %}
+            <li>
+              <a href="{% url 'duos_dispute_details' dispute_id=dispute.id %}">
+                Dispute for Match {{ dispute.match }} between {{ dispute.match.team1.owner }} and {{ dispute.match.team2.owner }}
+              </a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+
+    <h1>One Owner Provided Proof & Time Expired</h1>
+    <ul class="list-unstyled">
+      {% for dispute in disputes %}
+        {% if not dispute.resolved %}
+          {% if dispute.team1_owner_proof and not dispute.team2_owner_proof %}
+            {% if dispute.team1_owner_proof.expire_at >= now %}
+              <li>
+                  <a href="{% url 'duos_dispute_details' dispute_id=dispute.id %}">
+                      Dispute for Match {{ dispute.match }} between {{ dispute.match.team1.owner }} and {{ dispute.match.team2.owner }}
+                  </a>
+              </li>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    
+
+    <ul class="list-unstyled">
+      {% for dispute in disputes %}
+        {% if dispute.team2_owner_proof and not dispute.team1_owner_proof %}
+          {% if dispute.team2_owner_proof.expire_at >= now %}
+            <li>
+                <a href="{% url 'duos_dispute_details' dispute_id=dispute.id %}">
+                    Dispute for Match {{ dispute.match }} between {{ dispute.match.team1.owner }} and {{ dispute.match.team2.owner }}
+                </a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    
+
+    <h1>Resolved Disputes</h1>
+    <ul class="list-unstyled">
+      {% for dispute in disputes %}
+        {% if dispute.resolved %}
+          <li>
+            <a href="{% url 'duos_dispute_details' dispute_id=dispute.id %}">
+              Dispute for Match {{ dispute.match }} between {{ dispute.match.team1.owner }} and {{ dispute.match.team2.owner }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <p><h1 class = "text-center">You do not have permission to access this page.</h1></p>
+  {% endif %}
+{% endblock %}

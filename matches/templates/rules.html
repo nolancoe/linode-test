@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-5 border-primary mt-4 custom-shadow rounded-4">
+                <div class="card-header border-primary text-center">
+                    <h1>Rules</h1>
+                </div>
+                <div class="card-body text-center">
+                    <div class="scrollable-container-challenges">
+                        
+                        <p><h1>Recording</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>It is not required, but it is highly encouraged, for at least one player from each team to screen record the match in it's entirety.</p>
+                        <p>Video evidence of the entire match (including pre-game lobby interaction) will be the easiest way to resolve complicated disputes, catch cheaters, and maintain competetive integrity.</p>
+                        <p>It is also recommended to take screenshots of the post game scoreboard after each map is played, as these screenshots will help expedite the review of simple disputes.</p>
+                        
+                        <p><h1>Hosting</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p>Matches will be played using Custom Games and must use the hosting order defined on the match page.</p>
+                        <p>The Team that is not hosting will pick which side to play on.</p>
+                        <p>If the host starts the wrong map or settings, they must end the game instantly and restart with the proper map and settings.</p>
+                        <p>If the map isn't ended before the first kill, or in the first 20 seconds, the host team will forfeit that map.</p>
+
+                        <p><h1>Delays</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>Both teams must have all players in the lobby, and ready to start the match, no more than 10 minutes after the scheduled start time.</p>
+                        <p>The next map should be started 10 minutes after the previous map has completed.</p>
+                        <p>If a team delays for more than 10 minutes between maps that team will forfeit the match.</p>
+                        <p>Video evidence should be provided in the event of a dispute involving excessive delays.</p>
+                        
+                        <p><h1>Missing Players</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>A Team can start a map with a missing player, unless it is for a "Kill Dependent Game Mode" (Team Deathmatch, Kill Confirmed etc). A Team may only be shorthanded by one Player. For example, in a 4v4, a Team can start a map with 3 Players.</p>
+                        <p>If 10 minutes have passed since a maps scheduled start time, and a team has more than one missing player, the team with missing players will forfeit that map.</p>
+
+                        <p><h1>Tie Game</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>If a map results in a tie, the map will be replayed.</p>
+
+                        <p><h1>Connection Issues</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>If there is a connection related issue in your match, please obtain video proof of the connection issue. After the match has been completed, contact support with any proof you obtained.</p>
+
+                        <p><h1>Disconnections</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>Games must be restarted if a Player disconnects in the first 30 seconds, and before the first kill.</p>
+                        <p>All players must leave the match to end the game.</p>
+                        <p>Proof must be captured and submitted in the event of a dispute.</p>
+                        <p>If a Player disconnects AFTER the first 30 seconds or AFTER the first kill, the map must be continued.</p>
+                        <p>The disconnected player may be reinvited to the game.</p>
+                        <p>The team with the missing player may not leave the game.</p>
+                        <p>If a team fully leaves the game due to a player disconnecting they will forfeit the map in question.</p>
+                        <p>If the Host disconnects after the first 30 seconds or after the first kill, the hosting team will forfeit the map.</p>
+                        <p>This includes the time between the end of the map and loading into the pre-game lobby.</p>
+
+                        <p><h1>Random Player Joining</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>If an unknown player enters the lobby, please request that they leave.</p>
+                        <p>If the player leaves without disrupting the match, the match must continue.</p>
+                        <p>If the player disrupts the match, the host should end the game & restart from the score at which the player entered.</p>
+
+                        <p><h1>Restricted Items</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>If a Player actively uses a restricted item they will forfeit the current map.</p>
+                        <p>The burden of proof is on the opposing team to prove the item was used. Proof of a restricted item being used must be in video format and include the scoreboard.</p>
+                        <p>Leaving a match due to the opposing team equipping a restricted item but not using the item will result in a forfeit for the team that leaves the match unless they can prove that the item was used.</p>
+
+                        <p><h1>No Shows</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>A team has 10 minutes after the scheduled start time to join the lobby with the proper number of players. Failure to do so will result in a forfeit of the match.</p>
+                        <p>If an opposing player fails to show up you should obtain video evidence </p>
+                        <p>Leaving a match due to the opposing team equipping a restricted item but not using the item will result in a forfeit for the team that leaves the match unless they can prove that the item was used.</p>
+
+
+                        <p><h1>Accounts</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>Players are required to play the match from an account that is listed on their profile.</p>
+                        <p>If a player has no account listed on their profile, or if they play from an account that is not listed on their profile, their team will forfeit the match.</p>
+
+                        <p><h1>Forfeits</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p>If the opposing team breaks a rule that results in them forfeiting the match, you should wait until you are able to submit match results, and report that your team won the match.</p>
+                        <p>Be sure that you collect thorough video evidence of the rule violation in case the opposing team decides to initiate a dispute.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</br>
+
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-5 border-primary mt-4 custom-shadow rounded-4">
+                <div class="card-header border-primary text-center">
+                    <h1>Settings</h1>
+                </div>
+                <div class="card-body text-center">
+                    <div class="scrollable-container-challenges">
+                        <p><h1>Search & Destroy</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+                        
+                        <p><h2>Game Settings</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Round Time Limit: 1M:30S</p>
+                        <p>Round Switch: Every Round</p>
+                        <p>Skip Infil: On</p>
+                        <p>Input Swap Allowed: Off</p>
+                        <p>Allow Callout Pings: Off</p>
+
+                        <p><h2>Advanced</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Defuse Time: 7.5 Seconds</p>
+                        <p>Silent Plant: On</p>
+                        <p>Reset Plant/Defuse Progress: On</p>
+
+                        <p><h2>Player</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Health Regeneration: Normal</p>
+                        <p>Weapon Mounting: Off</p>
+
+                        <p><h2>Team</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+                        
+                        <p>3rd Person Spectating: Off</p>
+                        <p>Enemy on Compass: Off</p>
+                        <p>Friendly Fire: On</p>
+
+                        <p><h2>Gameplay</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Equipment Delay: 5 Seconds</p>
+                        <p>Battle Chatter: Off</p>
+                        
+
+                        <p><h1>Hardpoint</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p><h2>Game Settings</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Skip Infil: On</p>
+
+                        <p><h2>Advanced</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Initial Zone Activation Delay: Off</p>
+                        <p>Next Zone Reveal Time: 10 Seconds</p>
+                        <p>Objective Team Spawn Delay: Off</p>
+
+                        <p><h2>Player</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Health Regeneration: Normal</p>
+                        <p>Weapon Mounting: Off</p>
+
+                        <p><h2>Team</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>3rd Person Spectating: Off</p>
+                        <p>Enemy on Compass: Off</p>
+                        <p>Respawn Delay: 3.5 Seconds</p>
+                        <p>Suicide Spawn Delay: 1 Second</p>
+                        <p>Friendly Fire: On</p>
+
+                        <p><h2>Gameplay</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Equipment Delay: 5 Seconds</p>
+                        <p>Battle Chatter: Off</p>
+
+                        <p><h1>Control</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p><h2>Game Settings</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Time Limit: 1 M: 30 S</p>
+                        <p>Round Time Limit 1 M: 30 S</p>
+                        <p>Skip Infil: On</p>
+                        <p>Input Swap Allowed: Off</p>
+
+                        <p><h2>Player</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Health Regeneration: Normal</p>
+                        <p>Weapon Mounting: Off</p>
+
+                        <p><h2>Team</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>3rd Person Spectating: Off</p>
+                        <p>Enemy on Compass: Off</p>
+                        <p>Respawn Delay: 3.5 Seconds</p>
+                        <p>Suicide Spawn Delay: 1 Second</p>
+                        <p>Friendly Fire: On</p>
+
+                        <p><h2>Gameplay</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Killstreak Delay: 10 Seconds</p>
+                        <p>Equipment Delay: 5 Seconds</p>
+                        <p>Battle Chatter: Off</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</br>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-5 border-primary mt-4 custom-shadow rounded-4">
+                <div class="card-header border-primary text-center">
+                    <h1>Restricted Items</h1>
+                </div>
+                <div class="card-body text-center">
+                    <div class="scrollable-container-challenges">
+                        <p><h1>Operators</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p>Gaia</p>
+                        <p>Gaia Blackcell<p>
+
+                        <p><h1>Weapons</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p><h2>Assault Rifles</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>DG-58</p>
+                        <p>FR 5.56</p>
+                        <p>Holger 556</p>
+
+                        <p><h2>Shotguns</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Shotguns</p>
+
+                        <p><h2>Light Machine Guns</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Light Machine Guns</p>
+
+                        <p><h2>Marksman Rifles</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Marksman Rifles</p>
+
+                        <p><h2>Battle Rifles</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Battle Rifles</p>
+
+                        <p><h2>Pistols</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>TYR</p>
+
+                        <p><h2>Melee</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Riot Shield</p>
+
+                        <p><h2>Launchers</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Launchers</p>
+                        
+                        <p><h1>Attachments</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p>All Thermal Optics</p>
+                        <p>All Akimbo Attachments</p>
+
+                        <p><h2>Barrels</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Grenade Launcher attachments</p>
+                        <p>All Masterkey attachments</p>
+
+                        <p><h2>Muzzles</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Suppressors & Silencers</p>
+
+                        <p><h2>Ammunition</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>All Ammo Types Except High Velocity & High Grain</p>
+
+                        <p><h2>Conversion Kits</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Renetti | Jak Ferocity Carbine Kit</p>
+
+                        <p><h1>Killstreaks Allowed</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p>Cruise Missile</p>
+                        <p>Precision Airstrike</p>
+                        <p>SAE</p>
+                        </br>
+                        <p>All other Killstreaks are restricted</p>
+
+                        <p><h1>Gear</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p><h2>Vests</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Demolition</p>
+                        <p>Gunner</p>
+                        <p>CCT Comms</p>
+                        <p>Overkill</p>
+
+                        <p><h2>Gear</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Mission Control Comlink</p>
+                        <p>L/R Detector</p>
+                        <p>Blacklight Flashlight</p>
+                        <p>Threat Identification System</p>
+                        <p>Data Jacker</p>
+                        <p>Bone Conduction Headset</p>
+
+                        <p><h1>Equipment & Field Upgrades</h1></p>
+                        <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-5" style="width:60%">
+
+                        <p><h2>Lethals</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Claymore</p>
+                        <p>Throwing Knife</p>
+                        <p>Thermite</p>
+                        <p>Thermobaric Grenade</p>
+                        <p>Proximity Mine</p>
+                        <p>Drill Charge</p>
+                        <p>C4</p>
+                        <p>Throwing Star</p>
+                        <p>Breacher Drone</p>
+
+                        <p><h2>Tacticals</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Battle Rage</p>
+                        <p>Scatter Mine</p>
+                        <p>Decoy Grenade</p>
+                        <p>Snapshot Grenade</p>
+                        <p>Shock Stick</p>
+                        <p>Stim</p>
+                        <p>Tear Gas</p>
+                        <p>EMD Grenade</p>
+
+                        <p><h2>Field Upgrades</h2></p>
+                        <hr class="mx-auto border-3 custom-shadow-small rounded-5" style="width:20%">
+
+                        <p>Heartbeat Sensor</p>
+                        <p>Med Box</p>
+                        <p>Inflatable Decoy</p>
+                        <p>Comm Scrambler</p>
+                        <p>Tactical Insertion</p>
+                        <p>A.C.S</p>
+                        <p>Tactical Camera</p>
+                        <p>DDoS</p>
+                        <p>Deployable Cover</p>
+                        <p>Recon Drone</p>
+                        <p>Loadout Drop</p>
+                        <p>Portable Radar</p>
+                        <p>Smoke Airdrop</p>
+                        <p>Suppression Mine</p>
+                        <p>Anti-Armor Rounds</p>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</br>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-3 border-primary mt-4 custom-shadow rounded-4">
+                <div class="card-header border-primary text-center">
+                    <h1>Map List</h1>
+                </div>
+                <div class="card-body text-center">
+                    <div class="scrollable-container-challenges">
+                        <div class="container mt-4">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6">
+                                    <div class="card border-3 border-primary mt-4 custom-shadow-small rounded-4">
+                                        <div class="card-header border-primary text-center">
+                                            <h3>Search & Destroy</h3>
+                                        </div>
+                                        <div class="card-body text-center">
+
+                                            <p>Highrise</p>
+                                            <p>Invasion</p>
+                                            <p>Karachi</p>
+                                            <p>Scrapyard</p>
+                                            <p>Skidrow</p>
+                                            <p>Terminal</p>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-4">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6">
+                                    <div class="card border-3 border-primary mt-4 custom-shadow-small rounded-4">
+                                        <div class="card-header border-primary text-center">
+                                            <h3>Hardpoint</h3>
+                                        </div>
+                                        <div class="card-body text-center">
+
+                                            <p>Highrise</p>
+                                            <p>Invasion</p>
+                                            <p>Karachi</p>
+                                            <p>Scrapyard</p>
+                                            <p>Terminal</p>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-4">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6">
+                                    <div class="card border-3 border-primary mt-4 custom-shadow-small rounded-4">
+                                        <div class="card-header border-primary text-center">
+                                            <h3>Control</h3>
+                                        </div>
+                                        <div class="card-body text-center">
+
+                                            <p>Highrise</p>
+                                            <p>Invasion</p>
+                                            <p>Karachi</p>
+                                            <p>Scrapyard</p>
+                                            <p>Terminal</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </br></br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</br></br>
+{% endblock %}

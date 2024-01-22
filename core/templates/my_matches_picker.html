@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block content %}
+
+  
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-5 border-primary rounded-4 custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h1>{{ user.username }}'s Matches</h1>
+        </div>
+        <div class="card-body custom-shadow-small">
+          <div class="scrollable-container-challenges">
+            </br>
+
+            {%if user.current_team %}
+                <div class="text-center mt-3">
+                    <a href="{% url 'my_match_list' %}" class="btn btn-primary custom-shadow-small rounded-3">
+                      <i class="fa-solid fa-users"></i> MWIII Squads Matches
+                      {% for match in matches %}
+                        {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
+                          {% if not match.match_completed %}
+                            {% if not match.date > now and match.match_disputed != True %}
+                              <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                            {% endif %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </a>
+                </div>
+            {% endif %}
+
+            
+
+            {%if user.current_duos_team %}
+                <div class="text-center mt-3">
+                    <a href="{% url 'my_duos_match_list' %}" class="btn btn-primary custom-shadow-small rounded-3">
+                        <i class="fa-solid fa-user-group"></i> MWIII Duos Matches
+                        {% for duos_match in duos_matches %}
+                          {% if duos_match.team1 == request.user.current_duos_team or duos_match.team2 == request.user.current_duos_team %}
+                            {% if not duos_match.match_completed %}
+                              {% if not duos_match.date > now and duos_match.match_disputed != True %}
+                                <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                              {% endif %}
+                            {% endif %}
+                          {% endif %}
+                      {% endfor %}
+                    </a>
+                </div>
+            {% endif %}
+
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+    /* Reset default list styles */
+    .list-group-item {
+      list-style: none;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-5 border-primary">
+        <div class="card-header border-primary">
+          <h4 class="card-title text-center">Report Details</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Reported by:</strong> <a href="{% url 'other_user_profile' report.reporter.username %}">{{ report.reporter }}</a></p>
+            <p><strong>Reported user:</strong> <a href="{% url 'other_user_profile' report.reported_user.username %}">{{ report.reported_user }}</a></p>
+            <p><strong>Reason:</strong> {{ report.reason }}</p>
+            <p><strong>Timestamp:</strong> {{ report.timestamp }}</p>
+
+            {% if user.is_superuser %}
+                {% if report.reported_user.is_banned %}
+                    <p>Reported user is banned</p>
+                {% else %}
+                    <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <button type="submit" name="ban_user" class="btn btn-danger">Ban Reported User</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

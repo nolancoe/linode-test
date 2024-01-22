@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Bootstrap modal for report submission success -->
+<div class="modal fade" id="reportSuccessModal" tabindex="-1" aria-labelledby="reportSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered text-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title ms-auto" id="reportSuccessModalLabel">REPORTED</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          Your report has been submitted successfully.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{% url 'home' %}" class="btn btn-primary">Go to Home</a>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Bootstrap modal for report submission failed -->
+<div class="modal fade" id="reportFailedModal" tabindex="-1" aria-labelledby="reportFailedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered text-center">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title ms-auto" id="reportFailedModalLabel">Report Failed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                Report submission failed. You may have already reported this user.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+            <div class="card border-primary custom-shadow rounded-4 border-5 mt-4 text-center">
+                <div class="card-header border-primary text-center">
+                <h3>Instructions</h3>
+                </div>
+                <div class="card-body text-center">
+                
+                <p>If you suspect that a player was cheating or breaking the rules in some way, and you have evidence, you can use this form to report them.</p>
+                <p>In the text box below write the reason for the report, and provide any links you may have to proof of the claim you are making.</p>
+                <p>All video evidence should be uploaded to a major video hosting platform such as YouTube, Twitch, or Twitter.</p>
+                <p>You can not submit multiple reports for the same user. Staff will resolve reports as swiftly as possible and there is no need to report more thana once.</p>
+                <p>If you have multiple accusations include them all in a single report form.</p>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+        <div class="card custom-shadow rounded-4 border-5 border-primary">
+          <div class="card-header border-primary text-center">
+            <h4 class="card-title">Report for: {{ reported_user.username }}</h4>
+          </div>
+          <div class="card-body text-center">
+            
+            <form id="reportUserForm" method="post">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-primary">Submit Report</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    function showReportSuccessModal() {
+      var reportSuccessModal = new bootstrap.Modal(document.getElementById('reportSuccessModal'));
+      reportSuccessModal.show();
+    }
+    
+    function showReportFailedModal() {
+        var reportFailedModal = new bootstrap.Modal(document.getElementById('reportFailedModal'));
+        reportFailedModal.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var reportUserForm = document.getElementById('reportUserForm');
+        reportUserForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Submit the form using AJAX
+            fetch('{% url "report_user" reported_user.username %}', {
+                method: 'POST',
+                body: new FormData(reportUserForm),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showReportSuccessModal();  // Show the success modal
+                } else {
+                    showReportFailedModal();   // Show the failed modal
+                }
+            })
+            .catch(error => {
+                console.error('AJAX request failed:', error);
+            });
+        });
+    });
+  </script>
+  
+</br></br></br>
+
+{% endblock %}

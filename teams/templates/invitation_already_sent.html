@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-6 mx-auto">
+        <div class="card border-5 border-primary custom-shadow rounded-4 mt-5">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Invite Not Sent</h1>
+          </div>
+          <div class="card-body text-center">
+            <span>You have already invited this user to join {{ user.current_team.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

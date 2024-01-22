@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+          <div class="card border-primary custom-shadow border-5 rounded-4 mt-4 text-center">
+              <div class="card-header border-primary text-center">
+              <h3>Instructions</h3>
+              </div>
+              <div class="card-body text-center">
+              
+              <p>Please only use this form to report bugs you have found, such as serious flaws in the website.</p>
+              <p>Examples of serious flaws could be things such as exploits that make it possible to cheat the system of the website such as getting free wins, vulnerabilities in the code that leak sensitive information or allow for other exploits, unintended functions found on the website.</p>
+              <p>Do not use this form to report players who are suspected of abusing the system by cheating in some way, or to sumbit suggestions of how you think Sweaty Games can improve.</p>
+              <p>If you find a bug that needs to be fixed during the beta, and you are the first user to report this bug, you will be granted a "Bug Hunter" badge that can be displayed on your profile.</p>
+              <p>Please be as thorough as possible in your description of the bug, and include as much information as possible. If possible, please outline the exact steps that need to be taken to replicate the bug.</p>
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+        <div class="card custom-shadow border-5 rounded-4 border-primary">
+          <div class="card-header border-primary text-center">
+            <h4 class="card-title">Bug Report</h4>
+          </div>
+          <div class="card-body text-center">
+            
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary custom-shadow-small rounded-3">Submit</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</br></br>
+
+
+{% endblock %}

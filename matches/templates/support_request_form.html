@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mx-auto">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-5 border-primary mt-5 custom-shadow">
+                <div class="card-header border-primary">
+                <h1 class="card-title text-center">Support Request For<a class="link-underline-dark link-light link-offset-1 p-3 mt-3 link-underline-opacity-0 link-underline-opacity-0-hover" href="{% url 'match_details' match.id %}">{{ match }}</a></h1>
+                </div>
+                <div class="card-body text-center">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <label for="id_category" class="form-label">Category:</label>
+                        <select class="form-select" id="id_category" name="category">
+                            {% for support_category in form.fields.category.queryset %}
+                                <option value="{{ support_category.id }}">{{ support_category.category }}</option>
+                            {% endfor %}
+                        </select>
+
+
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Description:</label>
+                            <textarea class="form-control" id="id_description" name="description" rows="4"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_additional_evidence" class="form-label">Evidence:</label>
+                            <textarea class="form-control" id="id_additional_evidence" name="additional_evidence" rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

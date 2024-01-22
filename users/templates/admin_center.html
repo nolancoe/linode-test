@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-5 border-primary custom-shadow rounded-4">
+        <div class="card-header custom-shadow-small border-primary">
+          <h4 class="card-title text-center">Admin Center</h4>
+        </div>
+
+        <div class="card-body text-center">
+
+          <div class="mb-3">
+            <a href="{% url 'support_list' %}" class="btn btn-primary">Support Tickets</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'duos_support_list' %}" class="btn btn-primary">Duos Support Tickets</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'disputes_list' %}" class="btn btn-primary">View Disputes</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'duos_disputes_list' %}" class="btn btn-primary">View Duos Disputes</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'report_list' %}" class="btn btn-primary">Player Reports</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'bug_report_list' %}" class="btn btn-primary">Bug Reports</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'banned_users_list' %}" class="btn btn-primary">Banned Users</a>
+          </div>
+
+          <div class="mb-3">
+            <a href="{% url 'suggestion_list' %}" class="btn btn-primary">Suggestions</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

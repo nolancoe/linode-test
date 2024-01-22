@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-6 mx-auto">
+        <div class="card border-5 border-primary custom-shadow rounded-4 mt-5">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Invite Sent</h1>
+          </div>
+          <div class="card-body text-center">
+            <span>You have sent this player an invite to join {{ user.current_duos_team.name }}</span>
+            <div class="text-center mt-3"> 
+              <a class="btn btn-primary custom-shadow-small rounded-3" href="{% url 'team_detail' team_id=request.user.current_team.id %}">My Team</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

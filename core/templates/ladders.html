@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-8 mx-auto">
+        <div class="card border-5 rounded-4 border-primary mt-5 custom-shadow">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Ladders</h1>
+          </div>
+          <div class="card-body text-center">
+            <div class="scrollable-container-team-ladder">
+              <div class="text-center mt-4">
+                
+                <div class="card border-5 rounded-4 border-primary mt-5 custom-shadow-small">
+                    <div class="card-header border-primary">
+                      <h1 class="card-title text-center">Call of Duty: MWIII</h1>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="text-center mt-3">
+                            <a href="{% url 'team_ladder' %}" class="btn btn-primary custom-shadow rounded-3"><i class="fa-solid fa-users"></i> Squads Ladder</a>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'duos_team_ladder' %}" class="btn btn-primary custom-shadow rounded-3"><i class="fa-solid fa-user-group"></i> Duos Ladder</a>
+                        </div>
+                    </div>
+                </div>
+
+
+              </div>
+            </div>
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</br></br>
+
+{% endblock %}

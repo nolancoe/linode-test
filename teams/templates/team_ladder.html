@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-8 mx-auto">
+
+        {% if not request.user.current_team %}
+          <div class="text-center mt-5">
+            <a href="{% url 'create_team' %}" class="btn btn-primary custom-shadow rounded-top-5 rounded-bottom-0">Create A Team</a>
+          </div>
+        {% else %}
+          <div class="text-center mt-5">
+            <a href="{% url 'team_detail' team_id=request.user.current_team.id %}" class="btn btn-primary custom-shadow rounded-top-5 rounded-bottom-0">My Team</a>
+          </div>
+        {% endif %}
+
+
+        <div class="card border-5 rounded-4 border-primary custom-shadow">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Call of Duty: MWIII Squads Standings</h1>
+          </div>
+          <div class="card-body text-center">
+            <div class="scrollable-container-team-ladder">
+              <div class="text-center mt-4">
+                <table class="table-bordered border-primary border-5 mx-auto table-striped" style="width=5px">
+                  <thead>
+                    <tr>
+                      <th class="px-2">Rank</th>
+                      <th class="px-2">Team</th>
+                      <th class="px-2">Roster</th>
+                      <th class="px-2">Rating</th>
+                      <th class="px-2">Wins</th>
+                      <th class="px-2">Losses</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for team in active_teams %}
+                      <tr>
+                        <td><h1 class="px-2">{{ forloop.counter }}</h1></td>
+                        <td>
+                          <div>
+                            <p><a href="{% url 'team_detail' team_id=team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover mx-3"><h1>{{ team.name }}</h1></a><p>
+
+                            <img src="{{ team.logo.url }}" alt="{{ team.name }} Logo" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 100px; height: 100px;">
+
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex flex-column">
+                            {% for player in team.players.all %}
+                              <span class="px-3"><h2><a href="{% url 'other_user_profile' username=player.username %}"class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ player.username }}</a></h2></span>
+                            {% endfor %}
+                          </div>
+                        </td>
+                        <td><h1 class="px-2">{{ team.formatted_rating }}</h1></td>
+                        <td><h1 class="px-2 text-success">{{ team.wins }}</h1></td>
+                        <td><h1 class="px-2 text-danger">{{ team.losses }}</h1></td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</br></br>
+
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Custom CSS for hover effect */
+    .link-light:hover {
+      color: #FFC107 !important; /* Yellow color */
+    }
+</style>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card border-5 rounded-4 border-primary custom-shadow">
+        <div class="card-header border-primary text-center" >
+            <h1>{{ team.name }}</h1>
+            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                <h2>{{ team.formatted_rating }}</h2>
+            </span>
+        </div>
+        <div class="card-body">
+
+            {% if team.eligible %}
+              <div class= "text-center">
+                <p>Eligibility <i class="fa-solid fa-square-check" style="color: #5cb85c;"></i></p>
+              </div>
+            {% else %}
+              <div class= "text-center">
+                Eligibility <i class="fa-solid fa-square-xmark" style="color: #d9534f;"></i>
+                <p>Team will be eligible in {{ team.eligible_at|timeuntil }}</p>
+              </div>
+            {% endif %}
+
+            {% if team.logo %}
+              <div class="text-center">
+                <img src="{{ team.logo.url }}" alt="{{ team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+              </div>
+
+            {% else %}
+              <div class="text-center">
+                <img src="\media\sweatygameslogo1.png" alt="{{ team.name }} Logo" width="300" height="300" class="img-fluid">
+              </div>
+            {% endif %}
+            <div class="text-center">
+                <h3>
+                  <span class="text-success">{{ team.wins }}</span>-<span class="text-danger">{{ team.losses }}</span>
+                </h3>
+            </div>
+            <div class="text-center"> 
+              <a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-user-group"></i> MWIII Duos</a>
+            </div>
+              <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+            <p class="text-center">Est. {{ team.established|date:"F d, Y" }}</p>
+            
+            {% if request.user == team.owner %}
+              <div class="text-center">
+                <div class="text-center">
+                  <a href="{% url 'edit_duos_team' team_id=team.id %}" class="btn btn-primary custom-shadow-small rounded-3"><i class="fa-solid fa-gears"></i> Manage Team</a>
+                </div>
+              </div>
+            {% elif request.user.current_duos_team == team %}
+              <div class="text-center">
+                  <button type="button" class="btn btn-danger custom-shadow-danger rounded-3" data-bs-toggle="modal" data-bs-target="#leaveTeamModal">Leave Team</button>
+                  <!-- Modal for confirming Leaving Team -->
+                  <div class="modal fade" id="leaveTeamModal" tabindex="-1" aria-labelledby="leaveTeamModal" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title ms-auto" id="leaveTeamModal">Confirm Leaving {{ team.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure you want to Leave {{ team.name }}?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <a href="{% url 'leave_duos_team' team_id=team.id %}" class="btn btn-danger">Leave Team</a>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            {% endif %}
+            {% if request.user.current_duos_team and request.user.current_duos_team.owner == request.user and request.user.current_duos_team.full_team and request.user.current_duos_team.eligible and team.full_team and team.eligible and team != request.user.current_duos_team %}
+              <div class="text-center">
+                <a href="{% url 'create_direct_duos_challenge' team.id %}" class="btn btn-primary custom-shadow-small rounded-3">Challenge {{ team.name }}</a>
+              </div>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5 ">
+  <div class="row justify-content-center my-4">
+    <div class="col-md-8 my-2">
+      <div class="card border-primary rounded-4 border-5 custom-shadow border-primary">
+        <div class="card-header border-primary text-center"><h2>Roster</h2></div>
+          <div class="card-body text-center ">
+            <div class="row justify-content-center">
+              {% for player in team.players.all %}
+                <div class="col-md-6 my-4">
+                  <div class="card mx-2 border custom-shadow-small rounded-4 text-center mb-4">
+                    <div class="card-header text-center">
+                      <h1><a href="{% url 'other_user_profile' username=player.username %}"class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">{{ player.username }}</a></h1>
+                      <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                        <h2>{{ player.formatted_rating }}</h2>
+                      </span>  
+                    </div>
+                    {% if player.profile_picture%}
+                      <div>
+                        <img src="{{ player.profile_picture.url }}" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                      </div>
+                    {% else %}
+                      <div>
+                        <img src="\media\sweatygameslogo1.png" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                      </div>
+                    {% endif %}
+
+                    {% if player.eligible %}
+                      <p>Eligibility <i class="fa-solid fa-square-check" style="color: #5cb85c;"></i></p>
+                    {% else %}
+                      <div class="tesct-center">
+                        Eligibility <i class="fa-solid fa-square-xmark" style="color: #d9534f;"></i>
+                        <p>Player will be eligible in {{ player.eligible_at|timeuntil }}</p>
+                      </div>
+                    {% endif %}
+
+                  </div>
+                </div>
+              {% endfor %}
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br>
+<hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:65%">
+
+<!--Show Upcoming/Current Matches-->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+      </br>
+        <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
+          <div class="card-header border-primary text-center">
+            <h2>Matches</h2>
+          </div>
+          <div class="card-body text-center">
+            <div class="row">
+              {% for match in matches|dictsort:"date" %}
+                {% if not match.match_completed %}
+                  {% if match.team1 == team or match.team2 == team %}
+                      <div class="col-md-10 mx-auto my-4">
+                        <div class="card border-primary custom-shadow-small rounded-4">
+                          <div class="card-header border-primary text-center">
+                            <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                              <h3><img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid">  vs.  <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid"></h3>
+                            </a>
+                          </div>
+                          <div class="card-body">
+                            <p class="text-center">
+                              {% if  match.date > now %}
+                              <span class="class=position-absolute top-0 start-100 translate-middle p-1 text-dark bg-warning border border rounded"><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</span>
+                              {% elif match.match_completed %}
+                              <span class="text-success">Completed</span>
+                              {% else %}
+                                {% if match.match_disputed %}
+                                  <button type="button" class="btn col-md-8 border border-warning custom-shadow-warning btn-danger rounded-5" disabled>DISPUTED</button>
+                                {% else %}
+                                  <button type="button" class="btn col-md-8 border border-warning custom-shadow-warning btn-danger rounded-5" disabled>Live</button>
+                                {% endif %}
+                              {% endif %}
+                            </p>
+
+                            {% if match.match_type == 'duos' %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                              {% else %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                              {% endif %}
+      
+                              {% if match.search_only %}
+                                <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+                              {% else %}
+                                <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+                              {% endif %}
+      
+                              {% if match.controller_only %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+                              {% else %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                  {% else %}
+                    <p class="mt-3 text-center">No pending matches.</p>
+                  {% endif %}
+                {% endif %}
+              {% empty %}
+                <p class="mt-3 text-center">No pending matches.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+<!--Show Past Matches -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+      </br>
+        <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
+          <div class="card-header border-primary text-center">
+            <h2>Results</h2>
+          </div>
+          <div class="card-body text-center">
+            <div class="row">
+              {% for match in past_matches|dictsort:"date" %}
+                {% if match.match_completed %}
+                  {% if match.team1 == team or match.team2 == team %}
+                    <div class="col-md-10 mx-auto my-4">
+                      <div class="card border-primary custom-shadow-small rounded-4">
+                        <div class="card-header border-primary text-center">
+                            <a href="{% url 'duos_match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                                <h4>
+                                {% if match.team1_result == "win" %}
+                                  <span class="mt-3 text-center text-success">W</span>
+                                {% elif match.team1_result == "loss" %}
+                                  <span class="mt-3 text-center text-danger">L</span>
+                                {% endif %}
+                                
+                                - <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small">  vs.  <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"> -
+                                
+                                {% if match.team2_result == "win" %}
+                                  <span class="mt-3 text-center text-success">W</span>
+                                {% elif match.team2_result == "loss" %}
+                                  <span class="mt-3 text-center text-danger">L</span>
+                                {% endif %}
+                              </h4>
+                              </a>
+
+                            </div>
+                            <div class="card-body">
+
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-clock fa-fade"></i> {{ match.date}}</p>
+
+                              {% if match.match_type == 'duos' %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                              {% else %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                              {% endif %}
+      
+                              {% if match.search_only %}
+                                <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+                              {% else %}
+                                <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+                              {% endif %}
+      
+                              {% if match.controller_only %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+                              {% else %}
+                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
+                              {% endif %}
+
+
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% else %}
+                  <p class="mt-3 text-center">No past matches.</p>
+                {% endif %}
+              {% empty %}
+                <p class="mt-3 text-center">No past matches.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </br></br>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card border-5 border-primary rounded-4 custom-shadow text-center">
+          
+          <div class="card-header border-primary text-center"><h1>Create An Open Challenge</h1></div>
+            {% if request.user.current_duos_team.full_team and request.user.current_duos_team.owner == request.user %}
+              <div class="card-body text-center">
+                <form method="post">
+                  {% csrf_token %}
+
+                  <div class="form-group">
+                    <p><label for="team">Your Team: </label> {{ user.current_duos_team.name }} ({{ user.current_duos_team.formatted_rating }})</p>
+                  </div>
+                  <hr class="mx-auto custom-shadow-small border-4 border-primary rounded-3" style="width:40%">
+
+                  <div class="form-group">
+                    <label for="challenge_players">Select 4 players from your team:</label>
+                    {{ form.challenge_players }}
+                  </div>
+
+
+                  {% if form.errors %}
+                    <div class="alert alert-danger">
+                      <ul class="list-unstyled">
+                        {% for field_errors in form.errors.values %}
+                          {% for error in field_errors %}
+                            <li>{{ error }}</li>
+                          {% endfor %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                  
+                  
+                </br>
+                  <div class="form-group">
+                    <label for="scheduled_date">Select date and time for match to start:</label>
+                    <input type="datetime-local" class="form-control mx-auto custom-shadow-small rounded-3" id="scheduled_date" style="width:50%" name="scheduled_date" required>
+                  </div>
+
+                    <div>
+                      <div class="form-check form-check-inline ms-2">
+                          </br>
+                        <input class="form-check-input" type="checkbox" id="search_only" name="search_only">
+                        <label class="form-check-label" for="search_only"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="form-check form-check-inline ms-2">
+                          </br>
+                        <input class="form-check-input" type="checkbox" id="controller_only" name="controller_only">
+                        <label class="form-check-label" for="controller_only"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</label>
+                      </div>
+                    </div>
+
+
+                  </br> 
+
+                  <button type="button" class="btn btn-primary custom-shadow-small rounded-3 mb-3" data-bs-toggle="modal" data-bs-target="#confirmCreateChallengeModal">Create Challenge</button>
+
+                  <!-- Modal for confirming challenge creation -->
+                  <div class="modal fade" id="confirmCreateChallengeModal" tabindex="-1" aria-labelledby="confirmCreateChallengeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title ms-auto" id="confirmCreateChallengeModalLabel">Confirm Create Challenge</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Are you sure you want to create this challenge?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-danger custom-shadow-danger rounded-3" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-primary custom-shadow-small rounded-3">Create Challenge</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            {% else %}
+            <div class="card-body text-center">
+              <h3>Must be Owner or captain of an eligible team with at least 2 players to create a challenge</h3>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get current date and time
+      const now = new Date();
+  
+      // Calculate 30 minutes from now
+      const thirtyMinutesLater = new Date(now.getTime() + 30 * 60000); // 30 minutes in milliseconds
+  
+      // Format today's date
+      const year = now.getFullYear();
+      let month = (now.getMonth() + 1).toString().padStart(2, '0');
+      let day = now.getDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+  
+      // Format 30 minutes later time
+      let hours = thirtyMinutesLater.getHours().toString().padStart(2, '0');
+      let minutes = thirtyMinutesLater.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}`;
+  
+      // Set the value of the scheduled_date input to today's date and time 30 minutes from now
+      document.getElementById('scheduled_date').value = `${formattedDate}T${formattedTime}`;
+    });
+  </script>
+  
+  
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card border-primary mt-4 custom-shadow rounded-4">
+        <div class="card-header border-primary text-center">
+          <h3>Dispute Instructions</h3>
+        </div>
+        <div class="scrollable-container">
+          <div class="card-body">
+            <p>This dispute was initiated for "<a href="{% url 'match_details' match.id %}">{{ match }}</a>" because you and your opponent submitted conflicting results.</p>
+            <p>If you reported inaccurate results by mistake you can resolve the dispute on your own, without staff intervention, by visiting the match page and submitting the correct results using the "Submit Match Results" Button.</p>
+            <p>If you believe that you have submitted accurate results use the form below to provide information about your match.</p>
+            <p>The screenshot files should be a full size photos of the post game report for each game.</p>
+            <p>The claim field is essentially your side of the story. Explain what you believe the results of the match were, and give any information you would like to share that will help shed light on why there was a dispute.</p>
+            <p>In the additional evidence field provide any links you may have to additional evidence outside of the scoreboard screenshots. For example if a player in your game was streaming the match you could provide a link to the VOD from their stream.
+              All video evidence should be uploaded to a major video hosting platform such as YouTube, Twitch, or Twitter. If you include multpile links they should be separated with a comma. (youtube.com/proof1, youtube.com/proof2, youtube.com/proof3)
+            </p>
+            <p>Both teams have exactly one hour from the time the dispute is initiated to submit their dispute form.</p>
+            <p>Once both teams have submitted their forms the evidence will be reviewed by Sweaty Games staff and a final decision will be made about the results of the match.</p>
+            <p>If one team fails to submit a dispute form within the hour time limit, the match will likely be resolved in favor of the team who did submit a dispute form.</p>
+            <p>If both teams fail to submit a dispute form within the hour time limit, the match will be deleted from the database, and won't count for either team.</p>
+            <p>To help maintain integrity there is a strike system in place for users who incorrectly report match results.</p>
+            <p>If you are on the losing side of a dispute your account will be given a strike. If your account reaches 3 strikes you will be banned from Sweaty Games.</p>
+            <p>Sweaty Games staff will have final say in all disputes, and if neither teams proof is sufficient the match will be deleted from the database.</p>
+          </div>
+        </div>
+      </div>
+    </br>
+      <div class="card border-5 border-primary custom-shadow rounded-4">
+        <div class="card-header border-primary text-center">
+          <h1 class="mb-0">{{ match }}</h1>
+        </div>
+        <div class="card-body text-center">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary custom-shadow-small rounded-3">Submit</button>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+</br></br>
+{% endblock %}

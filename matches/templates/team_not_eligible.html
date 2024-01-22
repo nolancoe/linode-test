@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center mx-auto">
+    <div class="col-md-6 mx-auto">
+      <div class="card border-5 border-primary mt-5 custom-shadow rounded-4">
+        <div class="card-header border-primary">
+          <h1 class="card-title text-center">Team Not Eligible</h1>
+        </div>
+        <div class="card-body text-center">
+          <span>Your team is not currently eligible to play in matches.</span>
+        
+          <div>
+            </br>
+            <a href="{% url 'home' %}" class ="btn btn-primary mx-3 custom-shadow-small rounded-3">Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br></br>
+{% endblock %}

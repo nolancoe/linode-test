@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card border-5 border-primary rounded-4 custom-shadow">
+          <div class="card-header border-primary text-center">
+            <h1>Sending direct challenge to <a href="{% url 'duos_team_detail' team_id=challenged_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ challenged_team.name }}</h1></a>
+          </div>
+          {% if request.user.current_duos_team.full_team and request.user.current_duos_team.eligible and challenged_team.eligible %}
+            <div class="card-body text-center">
+              <form method="post">
+                {% csrf_token %}
+
+
+                <div class="form-group">
+                  <label for="challenge_players">Select 2 players from {{ request.user.current_duos_team.name }} who will participate in the match:</label>
+                  {{ form.challenge_players }}
+                </div>
+
+                {% if form.errors %}
+                  <div class="alert alert-danger">
+                    <ul>
+                      {% for field_errors in form.errors.values %}
+                        {% for error in field_errors %}
+                          <li>{{ error }}</li>
+                        {% endfor %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+                
+                </br>
+                
+                <div class="form-group">
+                  <label for="scheduled_date">Match Date and Time:</label>
+                  <input type="datetime-local" class="form-control mx-auto" id="scheduled_date" style="width: 50%;" name="scheduled_date" required>
+                </div>
+
+                </br>
+
+                <div>
+                  <div class="form-check form-check-inline ms-2">
+                    <input class="form-check-input" type="checkbox" id="search_only" name="search_only">
+                    <label class="form-check-label" for="search_only"><i class="fa-solid fa-bomb fa-beat-fade"></i>Search & Destroy Only</label>
+                  </div>
+                </div>  
+
+
+                <div>
+                  <div class="form-check form-check-inline ms-2">
+                      </br>
+                    <input class="form-check-input" type="checkbox" id="controller_only" name="controller_only">
+                    <label class="form-check-label" for="controller_only"><i class="fa-solid fa-gamepad fa-beat-fade"></i> Controller Only</label>
+                  </div>
+                </div>
+
+
+                </br>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmCreateDirectChallengeModal">Send Direct Challenge</button>
+
+                <!-- Modal for confirming challenge creation -->
+                <div class="modal fade" id="confirmCreateDirectChallengeModal" tabindex="-1" aria-labelledby="confirmCreateDirectChallengeModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title ms-auto" id="confirmCreateDirectChallengeModalLabel">Confirm Create Direct Challenge</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to create this direct challenge?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Direct Challenge</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          {% else %}
+            <div class="card-body text-center">
+              <p>Must be owner or captain of a team with 4 players to create a direct challenge. Additionaly please be sure that the team you are challenging is eligible</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get current date and time
+      const now = new Date();
+  
+      // Calculate 30 minutes from now
+      const thirtyMinutesLater = new Date(now.getTime() + 30 * 60000); // 30 minutes in milliseconds
+  
+      // Format today's date
+      const year = now.getFullYear();
+      let month = (now.getMonth() + 1).toString().padStart(2, '0');
+      let day = now.getDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+  
+      // Format 30 minutes later time
+      let hours = thirtyMinutesLater.getHours().toString().padStart(2, '0');
+      let minutes = thirtyMinutesLater.getMinutes().toString().padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}`;
+  
+      // Set the value of the scheduled_date input to today's date and time 30 minutes from now
+      document.getElementById('scheduled_date').value = `${formattedDate}T${formattedTime}`;
+    });
+  </script>
+
+{% endblock %}

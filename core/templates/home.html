@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block content %}
+
+<style>
+    /* Custom CSS for hover effect */
+    .link-light:hover {
+        color: #FFC107 !important; /* Yellow color */
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            {% if user.is_authenticated %}
+            <div class="row justify-content-center">
+                <div class="card border-5 border-primary border-bottom-0 text-center rounded-top-4 custom-shadow col-md-8 col-sm-8 col-8">
+                    <h1>Welcome back {{ request.user.username }}!</h1>
+                </div>
+            </div>
+            {% else %}
+            <div class="row justify-content-center">
+                <div class="card border-5 border-primary border-bottom-0 text-center rounded-top-4 custom-shadow col-md-8 col-sm-8 col-8">
+                    <a href="/accounts/signup" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>Click here to sign up!</h1></a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+            <div class="card border-5 border-primary text-center custom-shadow rounded-5">
+                <div class="card-body text-center">
+                    <img src="\media\sweatygameslogo1.png" width="280" height="120" class="d-inline-block align-top" alt="Welcome To Sweaty Games">
+                    <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
+                    <p>Tired of waiting for matchmaking to find a match, just for the competition to be subpar once a match found?</p>
+                    <p>Only able to run games at scheduled times, and don't want to pray matchmaking goes well during your gaming window?</p>
+                    <p>Want to make sure you're only playing against other sweaty try hards, so you can prove you're the best of the best?</p>
+                    <p>If you answered yes, then you are in the right place!</p>
+                    <p>Grab some other sweats and put a team together to start builing up your rating, and climbing the ladder.</p>
+                    <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
+                    
+
+                    <div class="container">
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-md-8">
+                                <div class="card border-3 border-danger text-center custom-shadow-danger rounded-4">
+                                    <div class="card-header border-danger"><h1>BETA WARNING</h1></div>
+                                        <div class="card-body text-center">  
+                                            
+                                            <p>Sweaty Games is in early beta testing stages. Please be patient, and expect ocassional bugs.</p>
+                                            <p>If you have discovered a repeatable bug <a href='report_bug' class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">click here</a> to report it.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-md-8 pb-5">
+                                <div class="card border-3 border-warning text-center custom-shadow-warning rounded-4 mb-3">
+                                    <div class="card-header border-warning"><h1>Suggestions</h1></div>
+                                        <div class="card-body text-center">  
+                                            
+                                            <p>If you have any ideas for what we should do differently, or what should be added to make Sweaty Games better please <a href='create_suggestion' class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">click here</a> to submmit your suggestion.</p>
+                        
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</br></br></br>
+{% endblock %}

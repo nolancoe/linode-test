@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+
+<style>
+  /* Custom CSS for hover effect */
+  .link-light:hover {
+    color: #FFC107 !important; /* Yellow color */
+  }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="text-center mt-3 mb-0">
+            <a href="{% url 'my_match_list' %}" class="btn btn-primary custom-shadow rounded-top-5 rounded-bottom-0">My Matches</a>
+        </div>
+        <div class="col-lg-8">
+            <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
+                <div class="card-header border-primary text-center">
+                    <h2>My Results</h2>
+                </div>
+                <div class="scrollable-container-challenges">
+                    <div class="card-body text-center">
+                    
+                        <div class="row justify-content-center">
+                            {% if matches %}
+                                {% for match in matches %}
+                                    <div class="col-md-10 mb-4">
+                                        <div class="card border-primary rounded-4 shadow-lg">
+                                            <div class="card-header border-primary text-center">
+                                                <a href="{% url 'match_details' match_id=match.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                                                    <h4 class="mt-2">
+                                                        {% if match.team1_result == "win" %}
+                                                            <span class="mt-3 text-center text-success">W</span>
+                                                        {% elif match.team1_result == "loss" %}
+                                                            <span class="mt-3 text-center text-danger">L</span>
+                                                        {% endif %}
+                                                        - <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" width="25" height="25" class="img-fluid fixed-logo-small">  vs.  <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="25" height="25" class="img-fluid fixed-logo-small"> -
+                                                        {% if match.team2_result == "win" %}
+                                                            <span class="mt-3 text-center text-success">W</span>
+                                                        {% elif match.team2_result == "loss" %}
+                                                            <span class="mt-3 text-center text-danger">L</span>
+                                                        {% endif %}
+                                                    </h4>
+                                                </a>
+                                            </div>
+                                            <div class="card-body">
+
+                                                <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-clock fa-fade"></i> {{ match.date}}</p>
+
+                                                {% if match.match_type == 'duos' %}
+                                                    <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                                                {% else %}
+                                                    <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                                                {% endif %}
+                        
+                                                {% if match.search_only %}
+                                                    <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+                                                {% else %}
+                                                    <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+                                                {% endif %}
+                        
+                                                {% if match.controller_only %}
+                                                    <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+                                                {% else %}
+                                                    <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-md-12">
+                                    <p class="mt-3 text-center">No previous matches played.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</br></br>
+
+{% endblock %}

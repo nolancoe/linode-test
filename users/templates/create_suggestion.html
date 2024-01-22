@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+          <div class="card border-primary rounded-4 border-5 custom-shadow mt-4 text-center">
+              <div class="card-header border-primary text-center">
+              <h3>Instructions</h3>
+              </div>
+              <div class="card-body text-center">
+              
+              <p>Please only use this form to submit suggestions on how Sweaty Games could improve.</p>
+              <p>If there is a feature that you wish we would implement? A feature we should remove? A game we should add? Use this form to let us know!</p>
+              <p>Do not use this form to report players who are suspected of abusing the system by cheating in some way, or to sumbit a bug report.</p>
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+        <div class="card rounded-4 border-5 custom-shadow border-primary">
+          <div class="card-header border-primary text-center">
+            <h4 class="card-title">Suggestion</h4>
+          </div>
+          <div class="card-body text-center">
+            
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary custom-shadow-small rounded-3">Submit</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</br></br></br>
+
+
+{% endblock %}

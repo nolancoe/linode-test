@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block content %}
+
+  
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-5 border-primary rounded-4 custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h1>{{ user.username }}'s Team Invites</h1>
+        </div>
+        <div class="card-body custom-shadow-small">
+          <div class="scrollable-container-challenges">
+            </br>
+
+          {% if not invites|length and not duos_invites|length %}
+              <p class="text-center">No pending team invites.</p>
+          {% else %}
+            {% for invite in invites %}
+              {% if invite.invited_user == request.user %}
+                <div class="text-center mt-3">
+                  <a href="{% url 'pending_team_invites' %}" class="btn btn-primary custom-shadow-small rounded-3">MWIII Squads Team Invites <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i></a>
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            
+
+            {% for invite in duos_invites %}
+              {% if invite.invited_user == request.user %}
+                <div class="text-center mt-3">
+                  <a href="{% url 'pending_duos_team_invites' %}" class="btn btn-primary custom-shadow-small rounded-3">MWIII Duos Team Invites <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i></a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+    /* Reset default list styles */
+    .list-group-item {
+      list-style: none;
+    }
+</style>
+
+{% endblock %}

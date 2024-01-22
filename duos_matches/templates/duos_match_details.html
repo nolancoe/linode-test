@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+{% load custom_filters %}
+
+{% block content %}
+
+<style>
+  /* Custom CSS for hover effect */
+  .link-light:hover {
+    color: #FFC107 !important; /* Yellow color */
+  }
+</style>
+
+</br>
+
+
+<div class="card card-border border-5 border-primary rounded-4 custom-shadow mt-5">
+  <div class="card-header border-primary text-center">
+    {% if match.date > now %}
+      <button type="button" class="btn btn-lg btn-warning custom-shadow-warning" disabled><i class="fa-regular fa-clock fa-beat-fade"></i> Starts In: {{ match.date|timeuntil }}</button>
+    {% elif match.match_completed %}
+      <button type="button" class="btn btn-lg border-primary rounded-5 custom-shadow-small btn-success" disabled>FINAL</button>
+    {% else %}
+      {% if match.match_disputed %}
+        <button type="button" class="btn btn-lg border-warning rounded-5 custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+      {% else %}
+        <button type="button" class="btn btn-lg border-warning rounded-5 custom-shadow-warning btn-danger" disabled>LIVE</button>
+      {% endif %}
+    {% endif %}
+  </div>
+
+  <div class="row justify-content-center my-4">
+    <div class="col-md-4 my-4">
+      <div class="card border rounded-4 custom-shadow-small">
+        <div class="card-header  text-center">
+          <a href="{% url 'duos_team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team1 }}</h1></a>
+          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+            <h2>{{ match.team1.formatted_rating }}</h2>
+          </span>
+        
+        </div>
+        <div class="card-body">
+          {% if match.team1.logo %}
+          <div class="text-center">
+            <img src="{{ match.team1.logo.url }}" alt="{{ match.team1.name }} Logo" class="img-fluid fixed-logo">
+          </div>
+          {% endif %}
+
+          {% if match.team1_result == "win" %}
+            <p class="mt-3 text-center"><h1 class="mt-3 text-center text-success">W</h1></p>
+          {% elif match.team1_result == "loss" %}
+            <p class="mt-3 text-center"><h1 class="mt-3 text-center text-danger">L</h1></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 align-self-center">
+      <div class="text-center">
+        <h1>VS</h1>
+      </div>
+    </div>
+    <div class="col-md-4 my-4">
+      <div class="card border rounded-4 custom-shadow-small">
+        <div class="card-header text-center">
+          <a href="{% url 'duos_team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link"><h1>{{ match.team2 }}</h1></a>
+          <span class="position-absolute top-0 start-100 translate-middle p-1 border bg-success rounded">
+            <h2>{{ match.team2.formatted_rating }}</h2>
+          </span>
+        </div>
+        <div class="card-body">
+          {% if match.team2.logo %}
+          <div class="text-center">
+            <img src="{{ match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" class="img-fluid fixed-logo">
+          </div>
+          {% endif %}
+
+          {% if match.team2_result == "win" %}
+            <p class="mt-3 text-center"><h1 class="mt-3 text-center text-success">W</h1></p>
+          {% elif match.team2_result == "loss" %}
+            <p class="mt-3 text-center"><h1 class="mt-3 text-center text-danger">L</h1></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if is_match_over and not match.match_completed %}
+      {% if match.team1.owner == request.user or match.team2.owner == request.user %}
+      <div class="col-sm-10 text-center">
+        <a href="{% url 'submit_duos_results' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Submit Match Results</a>
+      </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-2 border-primary rounded-4 custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h1>Details</h1>
+        </div>
+        <div class="card-body text-center ">
+          <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mt-3 mx-auto"><i class="fa-solid fa-clock fa-fade"></i>
+            {% if request.user.timezone %}
+              {{ match.date|timezone:request.user.timezone }}
+            {% else %}
+              {{ match.date|timezone:'US/Central' }}
+            {% endif %}
+          </p>
+
+          {% if match.match_type == 'duos' %}
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+          {% else %}
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+          {% endif %}
+
+          {% if match.search_only %}
+            <p class="p-1 border custom-shadow-small rounded-5 col-md-5 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+          {% else %}
+            <p class="p-1 border custom-shadow-small rounded-5 col-md-5 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+          {% endif %}
+
+          {% if match.controller_only %}
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+          {% else %}
+            <p class="p-1 border rounded-5 custom-shadow-small col-md-5 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
+          {% endif %}
+
+          <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3 mt-4" style="width:40%">
+
+          <h2></h2>
+
+          <h3>Game 1</h3>
+          <p>{{ match.game1 }}</p>
+          <p>Host:<a href="{% url 'duos_team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
+          <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
+          <h3>Game 2</h3>
+          <p>{{ match.game2 }}</p>
+          <p>Host:<a href="{% url 'duos_team_detail' team_id=match.team2.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team2.name }}</a></p>
+          <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
+          <h3>Game 3</h3>
+          <p>{{ match.game3 }}</p>
+          <p>Host:<a href="{% url 'duos_team_detail' team_id=match.team1.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"> {{ match.team1.name }}</a></p>
+          <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-3" style="width:40%">
+        
+        </br>
+          
+        <a href="{% url 'rules' %}" class="btn btn-primary custom-shadow-small rounded-3">Rules</a>
+
+        {% if not match.match_completed %}
+          {% if match.team1.owner == request.user or match.team2.owner == request.user %}
+            <div class="text-center mt-4">
+              <a href="{% url 'request_duos_match_support' match.id %}" class="btn btn-primary custom-shadow-small rounded-3">Request Match Support</a>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br></br>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-2 border-primary custom-shadow rounded-4">
+        <div class="card-header border-primary text-center">
+          <h1>{{ match.team1 }} Streams</h1>
+        </div>
+        <div class="card-body text-center">
+          {% with twitch_accounts=match.team1_players.all|get_connected_twitch_accounts %}
+            {% if twitch_accounts %}
+              <div class="list-group d-flex align-items-center">
+                {% for player, twitch_username in twitch_accounts.items %}
+                  <a href="https://www.twitch.tv/{{ twitch_username }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-5 d-flex align-items-center justify-content-center mb-3" style="width:50%">
+                    <i class="fab fa-twitch fa-fade me-2"></i> {{ player.username }}
+                  </a>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p>{{ match.team1 }} not streaming</p>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br></br>
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-2 border-primary custom-shadow rounded-4">
+        <div class="card-header border-primary text-center">
+          <h1>{{ match.team2 }} Streams</h1>
+        </div>
+        <div class="card-body text-center">
+          {% with twitch_accounts=match.team2_players.all|get_connected_twitch_accounts %}
+            {% if twitch_accounts %}
+              <div class="list-group d-flex align-items-center">
+                {% for player, twitch_username in twitch_accounts.items %}
+                  <a href="https://www.twitch.tv/{{ twitch_username }}" target="_blank" class="list-group-item list-group-item-action custom-shadow-small rounded-5 d-flex align-items-center justify-content-center mb-3" style="width:50%">
+                    <i class="fab fa-twitch fa-fade me-2"></i> {{ player.username }}
+                  </a>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p>{{ match.team2 }} not streaming</p>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</br></br>
+
+<div class="container mt-5">
+  <div class="row justify-content-center my-4">
+    <div class="col-lg-6 col-md-8 col-sm-10 my-4">
+      <div class="card rounded-4 custom-shadow border-primary">
+        <div class="card-header border-primary text-center">
+          <h2>{{ match.team1 }} Roster</h2>
+        </div>
+        <div class="card-body text-center">
+          <div class="row row-cols-1 row-cols-sm-2 g-4 justify-content-center">
+            {% for player in match.team1_players.all %}
+              <div class="col">
+                <div class="card border custom-shadow-small rounded-4 text-center">
+                    <div class="card-header text-center">
+                      <h1><a href="{% url 'other_user_profile' username=player.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">{{ player.username }}</a></h1>
+                      <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                          <h2>{{ player.formatted_rating }}</h2>
+                      </span>  
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      {% if player.profile_picture %}
+                        <img src="{{ player.profile_picture.url }}" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                      {% else %}
+                        <img src="\media\sweatygameslogo1.png" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                      {% endif %}
+                    </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+      
+    <div class="col-lg-6 col-md-8 col-sm-10 my-4">
+      <div class="card rounded-4 custom-shadow border-primary">
+        <div class="card-header border-primary text-center">
+          <h2>{{ match.team2 }} Roster</h2>
+        </div>
+        <div class="card-body text-center">
+          <div class="row row-cols-1 row-cols-sm-2 g-4 justify-content-center">
+            {% for player in match.team2_players.all %}
+              <div class="col">
+                <div class="card border custom-shadow-small rounded-3 text-center">
+                  <div class="card-header text-center">
+                    <h1><a href="{% url 'other_user_profile' username=player.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">{{ player.username }}</a></h1>
+                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                      <h2>{{ player.formatted_rating }}</h2>
+                    </span>  
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    {% if player.profile_picture %}
+                      <img src="{{ player.profile_picture.url }}" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                    {% else %}
+                      <img src="\media\sweatygameslogo1.png" alt="{{ player.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

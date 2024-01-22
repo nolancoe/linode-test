@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Your Connected Accounts" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-md-6">
+            <div class="card border-5 border-primary custom-shadow rounded-4">
+                <div class="card-header border-primary text-center">
+                    <h1>{% trans "Connections" %}</h1>
+                </div>
+                
+                <h2>{% trans 'Add New 3rd Party Account' %}</h2>
+                
+                <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-4" style="width:80%">
+
+                <ul class="socialaccount_providers list-inline">
+                    {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
+                </ul>
+                
+                {% if form.accounts %}
+                <hr class="mx-auto border-5 border-primary custom-shadow-small rounded-4" style="width:80%">
+                
+                <form method="post" action="{% url 'socialaccount_connections' %}">
+                    {% csrf_token %}
+                    <br>
+                    <fieldset>
+                        {% if form.non_field_errors %}
+                            <div id="errorMsg">{{ form.non_field_errors }}</div>
+                        {% endif %}
+                        
+
+                        <h2>{% trans 'Remove A 3rd Party Account' %}</h2>
+
+                        {% for base_account in form.accounts %}
+                            {% with base_account.get_provider_account as account %}
+                                <div>
+                                    <label for="id_account_{{ base_account.id }}">
+                                        <input id="id_account_{{ base_account.id }}" type="radio" name="account" value="{{ base_account.id }}"/>
+                                        <span class="socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}">{{ account.get_brand.name }}:</span>
+                                        {{ account }}
+                                    </label>
+                                </div>
+                            {% endwith %}
+                        {% endfor %}
+
+                        <div>
+                            <button type="submit" class="btn btn-danger mt-2">{% trans 'Remove' %}</button>
+                        </div>
+                    </fieldset>
+                    <br>
+                </form>
+                
+                {% else %}
+                    <p>{% trans 'You currently have no social network accounts connected to this account.' %}</p>
+                {% endif %}
+
+                {% include "socialaccount/snippets/login_extra.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+</br></br>
+{% endblock %}

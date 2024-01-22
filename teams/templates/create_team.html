@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card border-5 border-primary custom-shadow rounded-4 mt-5">
+        <div class="card-header border-primary text-center">
+          <h1>Create a Team</h1>
+        </div>
+        <div class="card-body text-center">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              {{ form.name }}
+            </div>
+          </br>
+            <div class="form-group mx-auto">
+              {{ form.logo }}
+            </div>
+          </br>
+            <button type="submit" class="btn btn-primary custom-shadow-small rounded-3">Create Team</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

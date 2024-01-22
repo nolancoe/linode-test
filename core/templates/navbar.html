@@ -1,0 +1,285 @@
+{% load socialaccount %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark custom-shadow-small">
+    <div class="container-fluid">
+      <a class="navbar-brand text-primary"  href="{% url 'home' %}"><img src="\media\sweatygameslogo1.png" width="140" height="60" class="d-inline-block align-top" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+          <!--User Profile Dropdown -->
+          {% if user.is_authenticated %}
+              
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user 
+                  
+                  
+                  {% if unread_messages %}
+                    fa-bounce
+                  {% endif %}">
+                </i> {{ user.username }}
+              </a>
+              <ul class="dropdown-menu custom-shadow-small">
+                
+                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+
+                <li>
+                  <a class="dropdown-item" href="{% url 'messages' %}" class="btn btn-primary">
+                    Messages 
+                    {% if unread_messages %}
+                        <i class="fa-solid fa-envelope fa-beat-fade" style="color: #ffff00;"></i>
+                    {% endif %}
+                  </a>
+                </li>
+
+                <li><hr class="dropdown-divider custom-shadow-small"></li>
+
+                {%if user.current_team or user.current_duos_team %}
+                  
+                  <li><a class="dropdown-item" href="{% url 'my_teams' %}">My Teams</a></li>
+
+                {% endif %}
+
+
+                
+                <li><a class="dropdown-item" href="{% url 'socialaccount_connections' %}">Connected Accounts</a></li>
+                <li><a class="dropdown-item" href="{% url 'customize_profile' %}">Settings</a></li>
+
+                {% if user.is_staff %}
+                <li><hr class="dropdown-divider custom-shadow-small"></li>
+                  <!-- Link to Admin Center (if user is staff) -->
+                  <li><a class="dropdown-item" href="{% url 'admin_center' %}">Admin Center</a></li>
+                {% endif %}
+
+                <li><hr class="dropdown-divider custom-shadow-small"></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>  
+                
+              </ul>
+            </li>
+          {% else %}
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user"></i> Login
+              </a>
+              <ul class="dropdown-menu custom-shadow-small">
+                <li><a class="dropdown-item" href="/accounts/login">Login</a></li>
+                <li><a class="dropdown-item" href="/accounts/signup">Signup</a></li>
+              </ul>
+            </li>
+
+          {% endif %}
+
+          <!--Play Dropdown-->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-gamepad
+                  {% for direct_challenges in direct_challenges %}
+                    {% if direct_challenges.challenged_team == request.user.current_team %}
+                      fa-bounce
+                    {% endif %}
+                  {% endfor %}
+
+                  {% for direct_duos_challenge in direct_duos_challenges %}
+                    {% if direct_duos_challenge.challenged_team == request.user.current_duos_team %}
+                      fa-bounce
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% for match in matches %}
+                    {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
+                      {% if not match.match_completed %}
+                        {% if not match.date > now %}
+                          fa-bounce
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+
+
+                  {% for proof in dispute_proofs %}
+                    {% if not proof.match.match_completed %}
+                      fa-bounce
+                    {% endif %}
+                  {% endfor %}
+
+                  {% for duos_match in duos_matches %}
+                    {% if duos_match.team1 == request.user.current_duos_team or duos_match.team2 == request.user.current_duos_team %}
+                      {% if not duos_match.match_completed %}
+                        {% if not duos_match.date > now %}
+                          fa-bounce
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% for invites in invites %}
+                    {% if invites.invited_user == request.user %}
+                          fa-bounce
+                    {% endif %}
+                  {% endfor %}">
+                </i> Play
+            </a>
+            <ul class="dropdown-menu custom-shadow-small">
+                <li><a class="dropdown-item" href="{% url 'challenges_picker' %}">Open Challenges</a></li>
+                {% if user.current_team or user.current_duos_team %}
+
+                  <li><hr class="dropdown-divider custom-shadow-small"></li>
+
+                  <li>
+
+                    
+
+                    <a class="dropdown-item" href="{% url 'my_challenges_picker' %}">
+                      My Challenges
+                      {% for direct_challenges in direct_challenges %}
+                        {% if direct_challenges.challenged_team == request.user.current_team %}
+                          <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+                      {% for direct_duos_challenge in direct_duos_challenges %}
+                        {% if direct_duos_challenge.challenged_team == request.user.current_duos_team %}
+                          <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+
+                    </a>
+                  </li>
+
+                  
+
+
+                  <li>
+                    <a class="dropdown-item" href="{% url 'my_matches_picker' %}" class="btn btn-primary">
+                      My Matches
+                      {% for match in matches %}
+                        {% if match.team1 == request.user.current_team or match.team2 == request.user.current_team %}
+                          {% if not match.match_completed %}
+                            {% if not match.date > now and match.match_disputed != True %}
+                              <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                            {% endif %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                      {% for duos_match in duos_matches %}
+                        {% if duos_match.team1 == request.user.current_duos_team or duos_match.team2 == request.user.current_duos_team %}
+                          {% if not duos_match.match_completed %}
+                            {% if not duos_match.date > now and duos_match.match_disputed != True %}
+                              <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                            {% endif %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </a>
+                  </li>
+
+
+                  <li>
+                    <a class="dropdown-item" href="{% url 'disputes_picker' %}">
+                      My Disputes
+                      {% for proof in dispute_proofs %}
+                        {% if not proof.match.match_completed %}
+                            <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+                      {% for proof in duos_dispute_proofs %}
+                        {% if not proof.match.match_completed %}
+                            <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+
+
+                    </a>
+                  </li>
+
+                  <li><hr class="dropdown-divider custom-shadow-small"></li>
+
+                  <li>
+                    <a class="dropdown-item" href="{% url 'team_invites_picker' %}">
+                      Team Invites
+                    {% for invites in invites %}
+                      {% if invites.invited_user == request.user %}
+                        <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                      {% endif %}
+                    {% endfor %}
+                    {% for invites in duos_invites %}
+                      {% if invites.invited_user == request.user %}
+                        <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                      {% endif %}
+                    {% endfor %}
+  
+                  </a>
+                </li>
+
+                {% else %}
+                
+
+                  <li>
+                    <a class="dropdown-item" href="{% url 'team_invites_picker' %}">
+                        Team Invites
+                      {% for invites in invites %}
+                        {% if invites.invited_user == request.user %}
+                          <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+                      {% for invites in duos_invites %}
+                        {% if invites.invited_user == request.user %}
+                          <i class="fa-solid fa-circle-exclamation fa-beat" style="color: #ffff00;"></i>
+                        {% endif %}
+                      {% endfor %}
+
+                    </a>
+                  </li>
+
+                {% endif %}
+                
+            </ul>
+          </li>
+
+          <!--Watch Dropdown-->
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-video"></i> Watch
+              </a>
+              <ul class="dropdown-menu custom-shadow-small">
+                  <li><a class="dropdown-item" href="{% url 'matches_picker' %}">Matches</a></li>
+                  <li><a class="dropdown-item" href="{% url 'results_picker' %}">Results</a></li>
+              </ul>
+          </li>
+
+          <!--stats Dropdown-->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-ranking-star"></i>
+              Stats
+            </a>
+            <ul class="dropdown-menu custom-shadow-small">
+              <li><a class="dropdown-item" href="{% url 'ladders' %}">Ladders</a></li>
+              <li><a class="dropdown-item" href="{% url 'player_ladder' %}">Players</a></li>
+            </ul>
+        
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+  
+<style>
+    /* Change the active and hover link color to yellow */
+    .navbar-dark .navbar-nav .nav-link.active,
+    .navbar-dark .navbar-nav .nav-link:active,
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .dropdown-item:hover {
+        color: #FFC107; /* Yellow color */
+    }
+
+    /* Change the background color of the active link */
+    .navbar-dark .navbar-nav .nav-link.active .dropdown-item {
+        background-color: rgba(240, 173, 78, 0.2); /* Light yellow background */
+    }
+</style>

@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load countries %}
+
+
+{% block content %}
+
+
+
+
+
+<script>
+  function copyToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('BattleTag copied to clipboard: ' + text);
+  }
+
+  function copyActivisionToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Activision ID copied to clipboard: ' + text);
+  }
+
+  function copyGamertagToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Gamertag copied to clipboard: ' + text);
+  }
+
+  function copyPSNIDToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('PSN ID copied to clipboard: ' + text);
+  }
+
+</script>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card card-border border-5 rounded-4 border-primary custom-shadow">
+        <div class="card-header card-border border-primary text-center">
+          
+          <h1>{{ profile.username }} <img src='{{profile.country.flag}}'></h1>
+          
+          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+            <h2>{{ profile.formatted_rating }}</h2>
+          </span>  
+        </div>
+        <div class="card-body mx-auto">
+          <div class="text-center mx-auto">
+            {% if profile.profile_picture %}
+              <img src="{{ profile.profile_picture.url }}" alt="{{ profile.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+            {% else %}
+              <div>
+                <img src="\media\sweatygameslogo1.png" alt="{{ profile.username }} Profile Picture" class="img-fluid rounded-circle mb-3" style="object-fit: cover; width: 150px; height: 150px;">
+              </div>
+            {% endif %}
+            <div class="text-center">
+              <h3>
+                <span class="text-success">{{ profile.wins }}</span>-<span class="text-danger">{{ profile.losses }}</span>
+              </h3>
+            </div>
+            <div>
+              
+              <div class="text-center">
+                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:80%">
+                {% if profile.socialaccount_set.all %}
+                    {% for social_account in profile.socialaccount_set.all %}
+                        {% if social_account.provider == 'twitch' %}
+                            <a href="https://www.twitch.tv/{{ social_account.extra_data.login }}" target="_blank" class="btn btn-dark mx-1">
+                                <i class="fab fa-twitch"></i> Twitch
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if profile.twitter_link %}
+                  <a href="{{ profile.twitter_link }}" target="_blank" class="btn btn-dark mx-1"><i class="fab fa-x-twitter"></i> Twitter</a>
+                {% endif %}
+
+                {% if profile.socialaccount_set.all %}
+                    {% for social_account in profile.socialaccount_set.all %}
+                        {% if social_account.provider == 'discord' %}
+                        <a href="https://discord.com/users/{{ social_account.uid }}" target="_blank" class="btn btn-dark mx-1">
+                                <i class="fab fa-discord"></i> Discord
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if profile.socialaccount_set.all %}
+                    {% for social_account in profile.socialaccount_set.all %}
+                        {% if social_account.provider == 'steam' %}
+                        <a href="https://steamcommunity.com/profiles/{{ social_account.uid }}" target="_blank" class="btn btn-dark mx-1">
+                                <i class="fab fa-steam"></i> Steam
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if profile.socialaccount_set.all %}
+                  {% for social_account in profile.socialaccount_set.all %}
+                    {% if social_account.provider == 'battlenet' %}
+                      <button onclick="copyToClipboard('{{ social_account.extra_data.battletag }}')" class="btn btn-dark mx-1">
+                        <i class="fa-brands fa-battle-net"></i> BattleTag
+                      </button>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+
+                {% if profile.youtube_link %}
+                  <a href="{{ profile.youtube_link }}" target="_blank" class="btn btn-dark mx-1"><i class="fab fa-youtube"></i> YouTube</a>
+                {% endif %}
+                
+
+                {% if profile.activision_id %}
+                  <button onclick="copyActivisionToClipboard('{{ profile.activision_id }}')" class="btn btn-dark mx-1"><i class="fa-solid fa-person-rifle fa-flip-horizontal"></i> Activision ID</button>
+                {% endif %}
+
+                {% if profile.gamertag %}
+                  <button onclick="copyGamertagToClipboard('{{ profile.gamertag }}')" class="btn btn-dark mx-1"><i class="fa-brands fa-xbox"></i> Gamertag</button>
+                {% endif %}
+
+                {% if profile.psnid %}
+                  <button onclick="copyPSNIDToClipboard('{{ profile.psnid }}')" class="btn btn-dark mx-1"><i class="fa-brands fa-playstation"></i> PSN ID</button>
+                {% endif %}
+
+                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-5" style="width:80%">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-5 border-primary rounded-4 custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h1>{{ profile.username }}'s Teams</h1>
+        </div>
+        <div class="card-body custom-shadow-small">
+          <div class="scrollable-container-challenges">
+            {% if profile.current_team %}
+              <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card card-border border-5 rounded-4 border-primary custom-shadow-small">
+                            <div class="card-header card-border border-primary text-center" >
+                              <a href="{% url 'team_detail' team_id=profile.current_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ profile.current_team.name }}</h1></a>
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                                    <h2>{{ profile.current_team.formatted_rating }}</h2>
+                                  </span>
+                            </div>
+                            <div class="card-body">
+                                {% if profile.current_team.logo %}
+                                    <div class="text-center">
+                                        <img src="{{ profile.current_team.logo.url }}" alt="{{ profile.current_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                                    </div>
+                                {% endif %}
+                                <div class="text-center">
+                                    <h3>
+                                      <span class="text-success">{{ profile.current_team.wins }}</span>-<span class="text-danger">{{ profile.current_team.losses }}</span>
+                                    </h3>
+                                </div>
+                                <p class="text-center"><a href="{% url 'team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-users"></i>MWIII Squads</a></p>
+                                <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+                                <p class="text-center">Est. {{ profile.current_team.established|date:"F d, Y" }}</p>
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            {% endif %}
+
+
+            {% if profile.current_duos_team %}
+              <div class="container mt-5">
+                <div class="row justify-content-center">
+                  <div class="col-md-8">
+                    <div class="card card-border border-5 rounded-4 border-primary custom-shadow-small">
+                      <div class="card-header card-border border-primary text-center" >
+                        <a href="{% url 'duos_team_detail' team_id=profile.current_duos_team.id %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><h1>{{ profile.current_duos_team.name }}</h1></a>
+                          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border rounded">
+                              <h2>{{ profile.current_duos_team.formatted_rating }}</h2>
+                            </span>
+                      </div>
+                      <div class="card-body">
+                          {% if profile.current_duos_team.logo %}
+                              <div class="text-center">
+                                  <img src="{{ profile.current_duos_team.logo.url }}" alt="{{ profile.current_duos_team.name }} Logo" width="300" height="300" class="img-fluid fixed-logo">
+                              </div>
+                          {% endif %}
+                          <div class="text-center">
+                              <h3>
+                                <span class="text-success">{{ profile.current_duos_team.wins }}</span>-<span class="text-danger">{{ profile.current_duos_team.losses }}</span>
+                              </h3>
+                          </div>
+                          <p class="text-center"><a href="{% url 'duos_team_ladder' %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover"><i class="fa-solid fa-user-group"></i>MWIII Duos</a></p>
+                          <hr class="mx-auto border-primary border-5 custom-shadow-small rounded-3" style="width:30%">
+                          <p class="text-center">Est. {{ profile.current_duos_team.established|date:"F d, Y" }}</p>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            </br></br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card card-border rounded-4 border-5 border-primary custom-shadow">
+        <div class="card-header card-border border-primary text-center">
+          <h1>{{ profile.username }}'s Badges</h1>
+        </div>
+        <div class="scrollable-container">
+          <div class="card-body">
+            {% if user.badges.all %}
+              <div class="row row-cols-1 row-cols-md-4 g-4">
+                {% for badge in user.badges.all %}
+                  <div class="col mb-4">
+                    <div class="text-center">
+                      <div data-bs-toggle="popover" title="{{ badge.name }}" data-bs-content="{{ badge.description }}">
+                        <img src="{{ badge.icon.url }}" alt="{{ badge.name }}" width="100" height="100" class="img-fluid">
+                      </div>
+                      <h4>{{ badge.name }}</h4>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center">
+                <p>No badges to show.</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Show Upcoming/Current Matches-->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      </br>
+      <div class="card border-5 border-primary rounded-4 text-center custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h2>{{ profile.username }}'s Upcoming/Current Matches</h2>
+        </div>
+
+        <div class="scrollable-container">
+          <div class="card-body text-center">
+            <div class="row justify-content-center">
+              {% if upcoming_matches %}
+                {% for upcoming_match in upcoming_matches %}
+                    <div class="col-md-10 mb-4">
+                      <div class="card border-primary rounded-4 custom-shadow-small">
+                        <div class="card-header border-primary text-center">
+                          <a href="{% if upcoming_match.match_type == 'duos' %}{% url 'duos_match_details' match_id=upcoming_match.id %}{% else %}{% url 'match_details' match_id=upcoming_match.id %}{% endif %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                            <h4 class="mt-2"><img src="{{ upcoming_match.team1.logo.url }}" alt="{{ upcoming_match.team1.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small">  VS.  <img src="{{ upcoming_match.team2.logo.url }}" alt="{{ upcoming_match.team2.name }} Logo" width="30" height="30" class="img-fluid fixed-logo-small"></h4>
+                          </a>
+                         
+                          </div>
+                          <div class="card-body">
+
+                            <p class="text-center">
+                              {% if  upcoming_match.date > now %}
+                                <button class="col-md-8 text-dark bg-warning custom-shadow-warning rounded-5 btn-warning btn"><i class="fa-regular fa-clock fa-fade"></i> Starts In: {{ upcoming_match.date|timeuntil }}</button>
+                              {% elif upcoming_match.match_completed %}
+                                <span class="text-success">Completed</span>
+                              {% else %}
+                                {% if upcoming_match.match_disputed %}
+                                  <button type="button" class="btn border-warning rounded-5 col-md-8 custom-shadow-warning btn-danger" disabled>DISPUTED</button>
+                                {% else %}
+                                  <button type="button" class="btn col-md-8 border border-warning custom-shadow-warning btn-danger rounded-5" disabled>Live</button>
+                                {% endif %}
+                              {% endif %}
+                            </p>
+
+                            {% if upcoming_match.match_type == 'duos' %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                            {% else %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                            {% endif %}
+
+                            {% if upcoming_match.search_only %}
+                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-fade"></i> Search & Destroy Only</p>
+                            {% else %}
+                              <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+                            {% endif %}
+
+                            {% if upcoming_match.controller_only %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+                            {% else %}
+                              <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
+                            {% endif %}
+
+                        </div>
+                      </div>
+                    </div>
+                {% endfor %}
+              {% else %}
+                <p class="mt-3 text-center">No pending matches.</p>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Show Past Matches -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+    </br>
+      <div class="card border-primary border-5 rounded-4 text-center custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h2>{{ profile.username }}'s Results</h2>
+        </div>
+        <div class="scrollable-container">
+          <div class="card-body text-center">
+            <div class="row justify-content-center">
+                {% if past_matches %}
+                  {% for past_match in past_matches %}
+                    <div class="col-md-10 mb-4">
+                      <div class="card border-primary rounded-4 custom-shadow-small">
+                        <div class="card-header border-primary text-center">
+                          <a href="{% if past_match.match_type == 'duos' %}{% url 'duos_match_details' match_id=past_match.id %}{% else %}{% url 'match_details' match_id=past_match.id %}{% endif %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover stretched-link">
+                            <h4 class="mt-2">
+                              {% if past_match.team1_result == "win" %}
+                                <span class="mt-3 text-center text-success">W</span>
+                              {% elif past_match.team1_result == "loss" %}
+                                <span class="mt-3 text-center text-danger">L</span>
+                              {% endif %}
+                              
+                              - <img src="{{ past_match.team1.logo.url }}" alt="{{ past_match.team1.name }} Logo" width="25" height="25" class="img-fluid fixed-logo-small">  VS.  <img src="{{ past_match.team2.logo.url }}" alt="{{ match.team2.name }} Logo" width="25" height="25" class="img-fluid fixed-logo-small"> -
+                              
+                              {% if past_match.team2_result == "win" %}
+                                <span class="mt-3 text-center text-success">W</span>
+                              {% elif past_match.team2_result == "loss" %}
+                                <span class="mt-3 text-center text-danger">L</span>
+                              {% endif %}
+                            </h4>
+                          </a>
+                          
+                        </div>
+                        <div class="card-body">
+
+                          <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-clock fa-fade"></i> {{ past_match.date}}</p>
+
+                          {% if past_match.match_type == 'duos' %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-user-group fa-fade"></i> MWIII Duos</p>
+                          {% else %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-users fa-fade"></i> MWIII Squads</p>
+                          {% endif %}
+
+                          {% if past_match.search_only %}
+                            <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-bomb fa-beat-fade"></i> Search & Destroy Only</p>
+                          {% else %}
+                            <p class="p-1 border custom-shadow-small rounded-5 col-md-8 mx-auto"><i class="fa-solid fa-circle-nodes fa-fade"></i> All Gametypes</p>
+                          {% endif %}
+
+                          {% if past_match.controller_only %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-gamepad fa-fade"></i> Controller Only</p>
+                          {% else %}
+                            <p class="p-1 border rounded-5 custom-shadow-small col-md-8 mx-auto"><i class="fa-solid fa-keyboard fa-fade"></i> Any Input</p>
+                          {% endif %}
+
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <p class="mt-3 text-center">No previous matches.</p>
+                {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</br></br>
+{% endblock %}

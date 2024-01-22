@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-6 mx-auto">
+        <div class="card border-5 border-primary mt-5">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Email Verification Required</h1>
+          </div>
+          <div class="card-body text-center">
+            <span>In order to prevent fake accounts, and bots, email verification is required before participating on Sweaty Games.
+            Please follow the instructions in the verification Email to finish verifying your account.</span>
+            <hr class="mx-auto border-5" style="width:80%">
+            <p>You signed up using: {{ user_email }}</p>
+
+            <!-- Button to resend verification -->
+            <form method="POST" action="{% url 'resend_verification' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary mt-3">Resend Verification Email</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

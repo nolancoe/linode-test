@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
+
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-md-4">
+            <div class="card border-5 border-primary shadow-lg">
+                <div class="card-header border-primary text-center">
+                    <h1>{% trans "Confirm E-mail" %}</h1>
+                </div>
+                    {% if confirmation %}
+
+                    {% user_display confirmation.email_address.user as user_display %}
+                
+                    <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
+
+                    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+                    {% csrf_token %}
+                        <button type="submit" class="btn btn-primary mb-3">{% trans 'Confirm' %}</button>
+                    </form>
+
+                    {% else %}
+
+                    {% url 'account_email' as email_url %}
+
+                    <p>{% blocktrans %}This e-mail confirmation link expired or is invalid.{% endblocktrans %}</p>
+
+                    <!-- Button to resend verification -->
+                    <form method="POST" action="{% url 'resend_verification' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">Resend Verification Email</button>
+                    </form>
+
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

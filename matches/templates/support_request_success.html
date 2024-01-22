@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mx-auto">
+      <div class="col-md-6 mx-auto">
+        <div class="card border-5 border-primary mt-5 custom-shadow rounded-4">
+          <div class="card-header border-primary">
+            <h1 class="card-title text-center">Support Request Submitted</h1>
+          </div>
+          <div class="card-body text-center">
+            <span>Support Request submitted successfully. We will try to respond as quickly as possible.</span>
+            <hr class="mx-auto border-5 custom-shadow-small rounded-5" style="width:80%">
+
+            <div class="text-center mt-3">
+                <a href="{% url 'home' %}" class="btn btn-primary custom-shadow-small rounded-3">Home</a>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

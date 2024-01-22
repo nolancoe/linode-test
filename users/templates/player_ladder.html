@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row justify-content-center mx-auto">
+    <div class="col-md-8 mx-auto">
+      <div class="card border-5 border-primary rounded-4 mt-5 custom-shadow">
+        <div class="card-header border-primary">
+          <h1 class="card-title text-center">Player Standings</h1>
+        </div>
+        <div class="card-body text-center">
+          <div class="scrollable-container-team-ladder">
+            <div class="text-center mt-4">
+              <table class="table-bordered border-primary border-5 mx-auto table-striped" style="width=5px">
+                <thead>
+                  <tr>
+                    <th class="px-2">Rank</th>
+                    <th class="px-2">Player</th>
+                    <th class="px-2">Rating</th>
+                    <th class="px-2">Wins</th>
+                    <th class="px-2">Losses</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in all_users %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>
+                        <div class="text-center">
+                        </br>
+                          <div class="ms-2">
+                            <strong><a href="{% url 'other_user_profile' username=user.username %}" class="link-underline-dark link-light link-offset-1 link-underline-opacity-25 link-underline-opacity-0-hover">{{ user.username }}</a></strong><br>
+                          </div>
+                          {% if user.profile_picture%}
+                            <div>
+                              <img src="{{ user.profile_picture.url }}" alt="{{ user.username }} Profile Picture" class="img-fluid rounded-circle mt-1 mb-3" style="object-fit: cover; width: 50px; height: 50px;">
+                            </div>
+                          {% else %}
+                            <div>
+                              <img src="\media\favicon.ico" alt="{{ user.username }} Profile Picture" class="img-fluid rounded-circle mt-1 mb-3" style="object-fit: cover; width: 50px; height: 50px;">
+                            </div>
+                          {% endif %}
+                          
+                        </div>
+                      </td>
+
+                      <td><h2>{{ user.formatted_rating }}</h2></td>
+                      <td class="px-2 text-success"><h2>{{ user.wins }}</h2></td>
+                      <td class="px-2 text-danger"><h2>{{ user.losses }}</h2></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
+{% endblock %}

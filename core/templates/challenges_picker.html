@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block content %}
+
+  
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card border-5 border-primary rounded-4 custom-shadow">
+        <div class="card-header border-primary text-center">
+          <h1>Open Challenges</h1>
+        </div>
+        <div class="card-body custom-shadow-small">
+          <div class="scrollable-container-challenges">
+            </br>
+
+              <div class="text-center mt-3">
+                  <a href="{% url 'challenges' %}" class="btn btn-primary custom-shadow-small rounded-3">
+                    <i class="fa-solid fa-users"></i> MWIII Squads Challenges
+                  </a>
+              </div>
+
+            
+
+              <div class="text-center mt-3">
+                  <a href="{% url 'duos_challenges' %}" class="btn btn-primary custom-shadow-small rounded-3">
+                    <i class="fa-solid fa-user-group"></i> MWIII Duos Challenges
+                  </a>
+              </div>
+
+            </br></br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+    /* Reset default list styles */
+    .list-group-item {
+      list-style: none;
+    }
+</style>
+
+{% endblock %}
